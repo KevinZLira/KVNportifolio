@@ -1,0 +1,46 @@
+.scroll-hud {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dimmer);
+}
+
+.scroll-hud-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.scroll-hud-track {
+  width: 1px;
+  height: 90px;
+  background: var(--line-strong);
+  position: relative;
+}
+
+.scroll-hud-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary-glow);
+  transition: height 0.1s linear;
+}
+
+.scroll-hud-pct {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 860px) {
+  .scroll-hud {
+    display: none;
+  }
+}

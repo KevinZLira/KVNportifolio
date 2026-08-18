@@ -1,0 +1,135 @@
+.sysbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  background: linear-gradient(to bottom, rgba(5, 6, 4, 0.92), rgba(5, 6, 4, 0.7));
+  backdrop-filter: blur(6px);
+}
+
+.sysbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  gap: 16px;
+}
+
+.sysbar-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.sysbar-cluster--center {
+  flex: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sysbar-cluster--right {
+  gap: 14px;
+}
+
+.sysbar-logo {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.sysbar-dot {
+  color: var(--primary);
+  font-size: 8px;
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.sysbar-status {
+  color: var(--primary);
+}
+
+.sysbar-section {
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sysbar-user {
+  color: var(--fg-dimmer);
+  display: none;
+}
+
+.sysbar-time {
+  color: var(--fg);
+  min-width: 6.5ch;
+}
+
+.sysbar-sfx {
+  color: var(--fg-dimmer);
+  border: 1px solid var(--line-strong);
+  padding: 4px 8px;
+}
+
+.sysbar-sfx.is-on {
+  color: var(--primary);
+  border-color: var(--primary-dim);
+}
+
+.sysbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line-strong);
+  padding: 4px 10px;
+  color: var(--fg);
+}
+
+.sysbar-menu:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.sysbar-menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sysbar-menu-icon i {
+  display: block;
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+}
+
+.sysbar-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong) 20%, var(--line-strong) 80%, transparent);
+}
+
+@media (min-width: 720px) {
+  .sysbar-user {
+    display: inline;
+  }
+}
+
+@media (max-width: 560px) {
+  .sysbar-row {
+    padding: 10px 14px;
+    font-size: 10px;
+  }
+  .sysbar-cluster--center {
+    display: none;
+  }
+  .sysbar-sfx span {
+    display: none;
+  }
+}

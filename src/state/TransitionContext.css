@@ -1,0 +1,45 @@
+.sys-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: var(--bg-000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: transition-in 0.25s ease-out;
+}
+
+.sys-transition.is-out {
+  animation: transition-out 0.42s ease-in forwards;
+}
+
+@keyframes transition-in {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes transition-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.sys-transition-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sys-transition-text {
+  position: relative;
+  font-size: clamp(13px, 2vw, 18px);
+  letter-spacing: 0.14em;
+  color: var(--primary);
+  text-shadow: 0 0 14px var(--primary-glow);
+}
+
+.sys-transition-text::after {
+  content: "";
+  display: inline-block;
+  width: 1ch;
+}

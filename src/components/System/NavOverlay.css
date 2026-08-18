@@ -1,0 +1,116 @@
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--bg-000);
+  flex-direction: column;
+  justify-content: center;
+  padding: 10vh 8vw;
+  will-change: clip-path;
+}
+
+.nav-overlay-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.nav-item {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3vw, 40px);
+  padding: clamp(14px, 2.4vh, 22px) 4px;
+  border-bottom: 1px solid var(--line-strong);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  transform: translateX(-101%);
+  transition: transform 0.3s var(--ease-snap);
+  z-index: -1;
+  mix-blend-mode: difference;
+}
+
+.nav-item:hover::before {
+  transform: translateX(0);
+}
+
+.nav-item-index {
+  font-size: clamp(12px, 1.4vw, 16px);
+  color: var(--fg-dimmer);
+  width: 3ch;
+}
+
+.nav-item-label {
+  font-size: clamp(32px, 8vw, 88px);
+  line-height: 1;
+  flex: 1;
+}
+
+.nav-item-arrow {
+  font-size: clamp(18px, 2.4vw, 28px);
+  color: var(--fg-dimmer);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-item:hover .nav-item-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nav-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 12px;
+  color: var(--fg-dim);
+  letter-spacing: 0.1em;
+}
+
+.nav-close:hover {
+  color: var(--accent);
+}
+
+.nav-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 8vw;
+  right: 8vw;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--fg-dimmer);
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 640px) {
+  .nav-overlay {
+    padding: 12vh 6vw;
+  }
+  .nav-item {
+    gap: 14px;
+  }
+  .nav-item-label {
+    font-size: 12vw;
+  }
+  .nav-footer span:last-child {
+    display: none;
+  }
+}

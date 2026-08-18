@@ -1,0 +1,213 @@
+.workdb {
+  position: relative;
+  padding: 14vh 6vw 12vh;
+  border-top: 1px solid var(--line-strong);
+}
+
+.workdb-header {
+  margin-bottom: 3vh;
+}
+
+.workdb-title-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dim);
+  margin-bottom: 0.6em;
+}
+
+.workdb-comment {
+  color: var(--primary);
+}
+
+.workdb-heading {
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  line-height: 1;
+}
+
+.workdb-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 1.4em 0;
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: 0.5em;
+}
+
+.workdb-filters-label {
+  color: var(--fg-dimmer);
+  margin-right: 4px;
+}
+
+.workdb-filter {
+  color: var(--fg-dim);
+  padding: 4px 2px;
+}
+
+.workdb-filter:hover {
+  color: var(--fg);
+}
+
+.workdb-filter.is-active {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.workdb-list {
+  border-top: 1px solid var(--line);
+}
+
+.workdb-row {
+  border-bottom: 1px solid var(--line);
+  transition: background 0.2s ease;
+}
+
+.workdb-row:hover,
+.workdb-row.is-active {
+  background: rgba(109, 255, 168, 0.03);
+}
+
+.workdb-row-main {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 1.1em 4px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.workdb-row-id {
+  color: var(--fg-dimmer);
+  white-space: nowrap;
+}
+
+.workdb-row-title {
+  font-size: clamp(1.1rem, 2.6vw, 1.9rem);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform 0.2s var(--ease-snap), color 0.2s ease;
+}
+
+.workdb-row:hover .workdb-row-title {
+  color: var(--primary);
+  transform: translateX(6px);
+}
+
+.workdb-row-cat {
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.workdb-row-year {
+  color: var(--fg-dimmer);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.workdb-row-open {
+  justify-self: end;
+  color: var(--fg-dimmer);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.workdb-row:hover .workdb-row-open {
+  opacity: 1;
+  color: var(--primary);
+}
+
+.workdb-row-expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s var(--ease-system);
+}
+
+.workdb-row.is-active .workdb-row-expand {
+  max-height: 220px;
+}
+
+.workdb-row-expand-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 280px) 1fr;
+  gap: 24px;
+  padding-bottom: 1.4em;
+}
+
+.workdb-preview {
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line-strong);
+}
+
+.workdb-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.8em;
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+
+.workdb-details-desc {
+  margin: 0;
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+.workdb-details-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workdb-tool {
+  border: 1px solid var(--line-strong);
+  padding: 3px 8px;
+  font-size: 10px;
+  color: var(--fg-dimmer);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 720px) {
+  .workdb {
+    padding: 10vh 6vw 8vh;
+  }
+  .workdb-row-main {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "title open"
+      "id cat";
+    row-gap: 4px;
+  }
+  .workdb-row-id {
+    grid-area: id;
+  }
+  .workdb-row-title {
+    grid-area: title;
+  }
+  .workdb-row-cat {
+    grid-area: cat;
+    text-align: right;
+  }
+  .workdb-row-year {
+    display: none;
+  }
+  .workdb-row-open {
+    grid-area: open;
+    opacity: 1;
+  }
+  .workdb-row-expand-inner {
+    grid-template-columns: 1fr;
+  }
+  .workdb-preview {
+    aspect-ratio: 16 / 9;
+  }
+}

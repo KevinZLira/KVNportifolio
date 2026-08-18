@@ -1,0 +1,95 @@
+.kvn-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+
+.kvn-cursor.is-visible {
+  opacity: 1;
+}
+
+.kvn-cursor-mark {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+}
+
+.kvn-cursor-line {
+  position: absolute;
+  background: var(--primary);
+  opacity: 0.85;
+}
+
+.kvn-cursor-line--h {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.kvn-cursor-line--v {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.kvn-cursor-ring {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--primary);
+  border-radius: 0;
+  transition: inset 0.15s var(--ease-snap), border-color 0.15s ease, transform 0.15s ease;
+}
+
+.kvn-cursor.is-clicking .kvn-cursor-ring {
+  inset: 2px;
+}
+
+.kvn-cursor.mode-link .kvn-cursor-ring,
+.kvn-cursor.mode-project .kvn-cursor-ring {
+  inset: -3px;
+  border-color: var(--accent);
+  transform: rotate(45deg);
+}
+
+.kvn-cursor.mode-link .kvn-cursor-line,
+.kvn-cursor.mode-project .kvn-cursor-line {
+  background: var(--accent);
+}
+
+.kvn-cursor-label {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  padding: 3px 7px;
+  background: var(--bg-000);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.kvn-cursor-coords {
+  position: absolute;
+  top: 16px;
+  left: -2px;
+  font-size: 9px;
+  color: var(--fg-dimmer);
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.kvn-cursor.mode-link .kvn-cursor-coords,
+.kvn-cursor.mode-project .kvn-cursor-coords {
+  display: none;
+}

@@ -1,0 +1,125 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6vw;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(to right, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 0%, transparent 80%);
+}
+
+.hero-hud {
+  position: absolute;
+  top: 88px;
+  left: 6vw;
+  right: 6vw;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+}
+
+.hero-hud-coords {
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-layer {
+  will-change: transform;
+}
+
+.hero-title {
+  overflow: hidden;
+}
+
+.hero-line-wrap {
+  overflow: hidden;
+}
+
+.hero-line {
+  margin: 0;
+  font-size: clamp(3.2rem, 14vw, 11rem);
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+}
+
+.hero-role {
+  font-size: clamp(1.1rem, 3.4vw, 2.6rem);
+  color: var(--primary);
+  margin-top: 0.3em;
+  text-shadow: 0 0 20px var(--primary-glow);
+}
+
+.hero-sub {
+  margin: 1.6em 0 0;
+  font-size: clamp(12px, 1.4vw, 15px);
+  color: var(--fg-dim);
+  letter-spacing: 0.06em;
+  max-width: 40ch;
+}
+
+.hero-meta {
+  position: absolute;
+  bottom: 32px;
+  left: 6vw;
+  right: 6vw;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dimmer);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-meta-scroll {
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-meta-arrow {
+  display: inline-block;
+  animation: bob 1.6s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 0 6vw;
+  }
+  .hero-hud {
+    top: 76px;
+  }
+  .hero-line {
+    font-size: 16vw;
+  }
+  .hero-role {
+    font-size: 5.4vw;
+  }
+  .hero-meta {
+    position: static;
+    margin-top: 3em;
+    flex-direction: column;
+  }
+  .hero-meta-scroll {
+    order: -1;
+  }
+}

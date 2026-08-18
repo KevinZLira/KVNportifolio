@@ -1,0 +1,130 @@
+.contact {
+  position: relative;
+  padding: 14vh 6vw 8vh;
+  border-top: 1px solid var(--line-strong);
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-header {
+  margin-bottom: 6vh;
+}
+
+.contact-comment {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+
+.contact-heading {
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  line-height: 1;
+  margin-top: 0.3em;
+}
+
+.contact-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+}
+
+.contact-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dimmer);
+  margin-bottom: 1.4em;
+}
+
+.contact-channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-channel {
+  display: flex;
+  gap: 0.4em;
+  font-size: clamp(14px, 2vw, 18px);
+  padding: 0.5em 0;
+  color: var(--fg);
+  text-align: left;
+  width: fit-content;
+}
+
+.contact-channel-bracket {
+  color: var(--fg-dimmer);
+}
+
+.contact-channel:hover .contact-channel-bracket {
+  color: var(--primary);
+}
+
+.contact-channel:hover .contact-channel-label {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.contact-channel.state-opening .contact-channel-label {
+  color: var(--warn);
+}
+
+.contact-channel.state-established .contact-channel-label {
+  color: var(--primary);
+}
+
+.contact-transmit {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-textarea {
+  background: var(--bg-050);
+  border: 1px solid var(--line-strong);
+  color: var(--fg);
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.7;
+  resize: vertical;
+  margin-bottom: 1em;
+  cursor: auto;
+}
+
+.contact-textarea:focus {
+  outline: none;
+  border-color: var(--primary-dim);
+}
+
+.contact-send {
+  align-self: flex-start;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  padding: 10px 18px;
+}
+
+.contact-send:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.contact-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+  margin-top: 8vh;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 780px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

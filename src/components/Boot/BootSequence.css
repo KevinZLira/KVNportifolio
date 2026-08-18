@@ -1,0 +1,170 @@
+.boot-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8vh 6vw 3vh;
+  overflow: hidden;
+  transition: opacity 0.6s var(--ease-system), filter 0.6s var(--ease-system);
+}
+
+.boot-root.is-exiting {
+  opacity: 0;
+  filter: brightness(3) blur(6px);
+}
+
+.boot-root.is-glitching .boot-content {
+  transform: translate(1px, 0);
+}
+
+.boot-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.5s steps(2) infinite;
+  pointer-events: none;
+}
+
+.boot-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(109, 255, 168, 0.05) 0px,
+    rgba(109, 255, 168, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.boot-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6vh;
+  max-width: 720px;
+}
+
+.boot-log {
+  font-size: clamp(11px, 1.6vw, 15px);
+  line-height: 1.9;
+  text-shadow: 0 0 8px var(--primary-glow);
+}
+
+.boot-line {
+  opacity: 0;
+  animation: boot-line-in 0.25s ease-out forwards;
+  white-space: pre;
+}
+
+.is-glitch-line {
+  color: var(--accent);
+}
+
+@keyframes boot-line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.boot-progress {
+  letter-spacing: 0.02em;
+}
+
+.boot-cursor {
+  display: inline-block;
+}
+
+.boot-enter {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s var(--ease-system), transform 0.5s var(--ease-system);
+  pointer-events: none;
+}
+
+.boot-enter.is-ready {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.boot-enter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: clamp(16px, 2.4vw, 22px);
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  padding: 0.4em 0;
+  position: relative;
+}
+
+.boot-enter-btn:disabled {
+  opacity: 0.4;
+}
+
+.boot-enter-bracket {
+  color: var(--fg-dimmer);
+  transition: transform 0.2s var(--ease-snap);
+}
+
+.boot-enter-btn:hover:not(:disabled) .boot-enter-bracket {
+  color: var(--accent);
+}
+
+.boot-enter-btn:hover:not(:disabled) .boot-enter-bracket:first-child {
+  transform: translateX(-4px);
+}
+
+.boot-enter-btn:hover:not(:disabled) .boot-enter-bracket:last-child {
+  transform: translateX(4px);
+}
+
+.boot-enter-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.boot-enter-label {
+  text-shadow: 0 0 12px var(--primary-glow);
+}
+
+.boot-enter-hint {
+  margin-top: 0.6em;
+  font-size: 15px;
+  color: var(--fg-dim);
+}
+
+.boot-footer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .boot-root {
+    padding: 10vh 6vw 4vh;
+  }
+  .boot-content {
+    gap: 8vh;
+  }
+  .boot-footer span:nth-child(3) {
+    display: none;
+  }
+}
