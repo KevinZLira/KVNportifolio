@@ -91,7 +91,21 @@ export default function Hero() {
       <div ref={layerRef} className="hero-layer">
         <div ref={titleRef} className="hero-title is-revealing">
           <div className="hero-line-wrap">
-            <h1 className="hero-line t-display">KVN</h1>
+            <h1 className="hero-line hero-logo" aria-label="KVN">
+              <svg
+                className="hero-logo-mark"
+                viewBox="0 0 240 240"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M65.44 217.72 34.56 192.28 174.56 22.28 205.44 47.72Z
+                     M63.53 198.01 54.27 190.37 176.47 41.99 185.73 49.63Z"
+                />
+              </svg>
+            </h1>
           </div>
           <div className="hero-line-wrap">
             <p className="hero-line hero-role t-display">VISUAL DESIGNER / VIDEO MAKER</p>

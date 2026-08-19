@@ -56,6 +56,20 @@
   letter-spacing: -0.01em;
 }
 
+.hero-logo {
+  display: block;
+  line-height: 0;
+}
+
+.hero-logo-mark {
+  display: block;
+  height: clamp(3.2rem, 14vw, 11rem);
+  width: auto;
+  aspect-ratio: 1 / 1;
+  fill: var(--primary);
+  filter: drop-shadow(0 0 22px var(--primary-glow));
+}
+
 .hero-role {
   font-size: clamp(1.1rem, 3.4vw, 2.6rem);
   color: var(--primary);
