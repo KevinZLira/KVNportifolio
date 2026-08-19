@@ -5,8 +5,6 @@ import { useSystem } from "../state/SystemContext";
 import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
 import MediaPreview from "../components/Media/MediaPreview";
-import RaccoonSpot from "../raccoon/RaccoonSpot";
-import { emitRaccoonSignal } from "../raccoon/raccoonBus";
 import "./ProjectPage.css";
 
 export default function ProjectPage() {
@@ -20,11 +18,6 @@ export default function ProjectPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     setSectionLabel(project ? `PROJECT_${project.id}` : "FILE_NOT_FOUND");
-    if (project) {
-      emitRaccoonSignal({ type: "project-category", category: project.category });
-    } else {
-      emitRaccoonSignal({ type: "error-seen" });
-    }
   }, [project, setSectionLabel]);
 
   if (!project) {
@@ -87,13 +80,6 @@ export default function ProjectPage() {
         <MediaPreview accent={project.accent} id={project.id} label={project.title} />
       </div>
 
-      <RaccoonSpot
-        id={`project-${project.id}-line`}
-        layer="front_decoration"
-        wanderRadius={20}
-        cell={2.2}
-        creatureStyle={{ left: "68%" }}
-      />
       <div className="project-body">
         <section className="project-section">
           <h2 className="t-mono project-section-title">DESCRIPTION</h2>

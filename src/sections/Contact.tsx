@@ -2,10 +2,6 @@ import { useState } from "react";
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
-import RaccoonSpot from "../raccoon/RaccoonSpot";
-import PixelSprite from "../raccoon/PixelSprite";
-import { CAN_GRID } from "../raccoon/pixelSprites";
-import { emitRaccoonSignal } from "../raccoon/raccoonBus";
 import "./Contact.css";
 
 interface Channel {
@@ -55,7 +51,6 @@ export default function Contact() {
     }
     sfx.confirm();
     setSent(true);
-    emitRaccoonSignal({ type: "celebrate" });
     const body = encodeURIComponent(message);
     window.setTimeout(() => {
       window.location.href = `mailto:contact@kvnlira.com?subject=TRANSMISSION%20FROM%20KVN_OS&body=${body}`;
@@ -99,22 +94,6 @@ export default function Contact() {
                 </button>
               );
             })}
-          </div>
-
-          <div className="contact-trash-scene" aria-hidden="true">
-            <div className="contact-trash-falling">
-              <span className="contact-trash-bit bit-1" />
-              <span className="contact-trash-bit bit-2" />
-              <span className="contact-trash-bit bit-3" />
-            </div>
-            <PixelSprite grid={CAN_GRID} cell={4} color="var(--primary-dim)" glow={false} />
-            <RaccoonSpot
-              id="contact-trash"
-              layer="front_decoration"
-              wanderRadius={6}
-              wrapperClassName="contact-trash-raccoon-spot"
-              cell={3}
-            />
           </div>
         </div>
 

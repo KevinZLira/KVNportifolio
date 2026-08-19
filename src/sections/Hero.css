@@ -102,26 +102,6 @@
   50% { transform: translateY(4px); }
 }
 
-.hero-mascot-spot {
-  display: none;
-}
-
-@media (min-width: 900px) {
-  .hero-mascot-spot {
-    display: block;
-    position: absolute;
-    left: 61vw;
-    top: calc(50% + 120px);
-    z-index: 2;
-  }
-}
-
-@media (min-width: 1300px) {
-  .hero-mascot-spot {
-    left: 63vw;
-  }
-}
-
 @media (max-width: 720px) {
   .hero {
     padding: 0 6vw;

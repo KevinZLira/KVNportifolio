@@ -1,6 +1,5 @@
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import { sfx } from "../lib/sound";
-import RaccoonSpot from "../raccoon/RaccoonSpot";
 import "./About.css";
 
 const ROLES = ["GRAPHIC DESIGNER", "VIDEO MAKER", "MOTION DESIGNER"];
@@ -92,19 +91,10 @@ export default function About() {
 
         <div className="about-col about-col--software">
           <span className="about-software-label t-mono">SOFTWARE</span>
-          <div className="about-wall-scene">
-            <RaccoonSpot
-              id="about-wall"
-              layer="behind_ui"
-              wanderRadius={6}
-              wrapperClassName="about-wall-raccoon-spot"
-              cell={3}
-            />
-            <div className="sw-grid">
-              {SOFTWARE.map((sw) => (
-                <SoftwareModule key={sw.code} {...sw} />
-              ))}
-            </div>
+          <div className="sw-grid">
+            {SOFTWARE.map((sw) => (
+              <SoftwareModule key={sw.code} {...sw} />
+            ))}
           </div>
         </div>
       </div>

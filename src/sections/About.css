@@ -98,20 +98,7 @@
   margin-bottom: 1.4em;
 }
 
-.about-wall-scene {
-  position: relative;
-}
-
-.about-wall-raccoon-spot {
-  position: absolute !important;
-  left: 50%;
-  top: 88px;
-  margin-left: -46px;
-}
-
 .sw-grid {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;

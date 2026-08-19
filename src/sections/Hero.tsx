@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
-import RaccoonSpot from "../raccoon/RaccoonSpot";
 import "./Hero.css";
 
 export default function Hero() {
@@ -113,16 +112,6 @@ export default function Hero() {
       </div>
 
       <div className="hero-grid" aria-hidden="true" />
-
-      <RaccoonSpot
-        id="hero-mascot"
-        layer="near_foreground"
-        wanderRadius={0}
-        wrapperClassName="hero-mascot-spot"
-        cell={6}
-        fleeOnScroll
-        isFirstVisitSpot
-      />
     </section>
   );
 }

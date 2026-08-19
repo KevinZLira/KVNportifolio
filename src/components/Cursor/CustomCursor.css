@@ -94,12 +94,3 @@
   display: none;
 }
 
-/* Raccoon "stole" the on-screen mark: hide it without ever pausing the
-   real tracking underneath, so it snaps back exactly on drop. */
-.kvn-cursor.is-captured .kvn-cursor-mark,
-.kvn-cursor.is-captured .kvn-cursor-coords,
-.kvn-cursor.is-captured .kvn-cursor-label {
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
