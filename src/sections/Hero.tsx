@@ -91,7 +91,7 @@ export default function Hero() {
       <div ref={layerRef} className="hero-layer">
         <div ref={titleRef} className="hero-title is-revealing">
           <div className="hero-line-wrap">
-            <h1 className="hero-line t-display">KVN LIRA</h1>
+            <h1 className="hero-line t-display">KVN</h1>
           </div>
           <div className="hero-line-wrap">
             <p className="hero-line hero-role t-display">VISUAL DESIGNER / VIDEO MAKER</p>
