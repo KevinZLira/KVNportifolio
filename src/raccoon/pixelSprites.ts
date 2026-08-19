@@ -83,11 +83,11 @@ export const RACCOON_EARS_ROWS = 6;
 export const RACCOON_EYES_ROWS = 12;
 
 const raccoonShapes: Shape[] = [
-  // ears
-  ellipse(7, 4.5, 3.6, 4.2),
-  ellipse(19, 4.5, 3.6, 4.2),
-  ellipse(7.2, 4.9, 1.4, 1.9, "sub"),
-  ellipse(18.8, 4.9, 1.4, 1.9, "sub"),
+  // ears — narrower + taller so tips read as pointed, not round bear ears
+  ellipse(6.6, 4.2, 3.1, 4.6),
+  ellipse(19.4, 4.2, 3.1, 4.6),
+  ellipse(6.7, 5.3, 1.5, 2.3, "sub"),
+  ellipse(19.3, 5.3, 1.5, 2.3, "sub"),
 
   // tail — a curved sweep of overlapping circles behind/right of the body
   ellipse(22.5, 23.5, 4.8, 4.8),
@@ -99,8 +99,8 @@ const raccoonShapes: Shape[] = [
   ellipse(26.3, 15.4, 4.7, 1.25, "sub", -72),
   ellipse(26, 9.7, 4.3, 1.2, "sub", -84),
 
-  // head
-  ellipse(13, 11.5, 8.6, 7.4),
+  // head — slightly narrower/taller oval, less round-bear
+  ellipse(13, 11.8, 7.9, 7.6),
 
   // body
   ellipse(13, 21.5, 7.6, 7),
@@ -118,14 +118,15 @@ const raccoonShapes: Shape[] = [
   // belly hint (unfilled patch)
   ellipse(13, 24.3, 3, 2.2, "sub"),
 
-  // eyes (holes) + pupils
-  ellipse(9.6, 10.4, 2.3, 2.5, "sub"),
-  ellipse(16.4, 10.4, 2.3, 2.5, "sub"),
-  ellipse(9.9, 11, 0.95, 1.05),
-  ellipse(16.7, 11, 0.95, 1.05),
+  // mask band — eyes sit inside one continuous dark swath, bandit-style
+  ellipse(9.5, 10.5, 2.5, 2.7, "sub"),
+  ellipse(16.5, 10.5, 2.5, 2.7, "sub"),
+  ellipse(9.85, 11.1, 1, 1.1),
+  ellipse(16.85, 11.1, 1, 1.1),
 
-  // nose
-  ellipse(13, 14.6, 1.1, 0.85),
+  // pale, pointed snout under the mask, small dark nose at the tip
+  ellipse(13, 14.3, 3.1, 2.6, "sub"),
+  ellipse(13, 15.6, 1.15, 0.9),
 ];
 
 export const RACCOON_GRID: boolean[][] = rasterize(RACCOON_W, RACCOON_H, raccoonShapes);

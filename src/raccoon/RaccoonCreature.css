@@ -109,6 +109,36 @@
   animation: rc-walk-bob 0.16s ease-in-out infinite;
 }
 
+/* ---------- petted: cursor passed over it ---------- */
+[data-behavior="petted"] .raccoon-flip {
+  animation: rc-pet-wiggle 0.42s ease-in-out 2;
+}
+
+@keyframes rc-pet-wiggle {
+  0%, 100% { transform: scaleX(var(--rc-facing, 1)) rotate(0deg) scale(1); }
+  25% { transform: scaleX(var(--rc-facing, 1)) rotate(-9deg) scale(1.05); }
+  75% { transform: scaleX(var(--rc-facing, 1)) rotate(9deg) scale(1.05); }
+}
+
+[data-behavior="petted"] .raccoon-sprite {
+  animation: rc-pet-bounce 0.42s ease-in-out 2;
+}
+
+@keyframes rc-pet-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8%); }
+}
+
+/* ---------- fleeing: page scrolled, run off to the right and vanish ---------- */
+[data-behavior="fleeing"] {
+  transition: transform 0.85s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease-in 0.35s;
+  opacity: 0;
+}
+
+[data-behavior="fleeing"] .raccoon-sprite {
+  animation: rc-walk-bob 0.15s ease-in-out infinite;
+}
+
 /* ---------- glitch ---------- */
 [data-behavior="glitching"] .raccoon-sprite {
   animation: rc-glitch 0.45s steps(6);

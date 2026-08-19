@@ -13,6 +13,7 @@ interface RaccoonCreatureProps {
   isFirstVisitSpot?: boolean;
   /** px per bitmap cell — this is what makes the hero raccoon big and the others small. */
   cell?: number;
+  fleeOnScroll?: boolean;
 }
 
 export default function RaccoonCreature({
@@ -21,11 +22,13 @@ export default function RaccoonCreature({
   wanderRadius,
   isFirstVisitSpot,
   cell = 4,
+  fleeOnScroll,
 }: RaccoonCreatureProps) {
   const { rootRef, behavior, facing, bubble, walkOffset, visibility } = useRaccoonBehavior({
     spotId,
     wanderRadius,
     isFirstVisitSpot,
+    fleeOnScroll,
   });
 
   const rowEnd =

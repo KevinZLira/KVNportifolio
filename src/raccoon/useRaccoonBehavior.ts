@@ -12,6 +12,8 @@ const SLEEP_AFTER_MS = 24_000;
 const WATCH_RADIUS = 150;
 const CLICK_REACT_RADIUS = 160;
 const CLICK_COOLDOWN_MS = 20_000;
+const PET_COOLDOWN_MS = 1800;
+const PET_PAD_PX = 10;
 
 function sleep(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -28,9 +30,11 @@ interface Options {
   spotId: string;
   wanderRadius: number;
   isFirstVisitSpot?: boolean;
+  /** Runs off to the right the moment the page scrolls, instead of just unmounting when it scrolls out of view. */
+  fleeOnScroll?: boolean;
 }
 
-export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) {
+export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot, fleeOnScroll }: Options) {
   const { isReturning } = useRaccoon();
   const { setCursorCaptured } = useSystem();
 
@@ -128,6 +132,67 @@ export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFirstVisitSpot]);
 
+  // ---------------- petting: cursor passes directly over the sprite ----------------
+  useEffect(() => {
+    if (reduceMotion.current) return;
+    let lastPetAt = 0;
+    let wasOver = false;
+
+    const id = window.setInterval(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      const b = behaviorRef.current;
+      if (sequenceActive.current || b === "hidden" || b === "sleeping" || b === "fleeing") {
+        wasOver = false;
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 4) {
+        wasOver = false;
+        return;
+      }
+      const over =
+        raccoonMemory.mouse.x > rect.left - PET_PAD_PX &&
+        raccoonMemory.mouse.x < rect.right + PET_PAD_PX &&
+        raccoonMemory.mouse.y > rect.top - PET_PAD_PX &&
+        raccoonMemory.mouse.y < rect.bottom + PET_PAD_PX;
+
+      if (over && !wasOver && Date.now() - lastPetAt > PET_COOLDOWN_MS) {
+        lastPetAt = Date.now();
+        setBehavior("petted");
+        setBubble("<3");
+        window.setTimeout(() => {
+          setBubble(null);
+          if (!sequenceActive.current && behaviorRef.current === "petted") setBehavior("idle_stand");
+        }, 850);
+      }
+      wasOver = over;
+    }, 120);
+
+    return () => window.clearInterval(id);
+  }, []);
+
+  // ---------------- flee on scroll: run off to the right, once ----------------
+  useEffect(() => {
+    if (!fleeOnScroll || reduceMotion.current) return;
+    let fled = false;
+
+    function onScroll() {
+      if (fled || sequenceActive.current) return;
+      fled = true;
+      setCursorCaptured(false);
+      setBubble(null);
+      setFacing(1);
+      setBehavior("fleeing");
+      setWalkOffset(560);
+      window.removeEventListener("scroll", onScroll);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fleeOnScroll]);
+
   // ---------------- signals: project category / error ----------------
   useEffect(() => {
     return subscribeRaccoonSignal((signal) => {
@@ -181,7 +246,15 @@ export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) 
 
       if (sequenceActive.current) return;
       const b = behaviorRef.current;
-      if (b === "hidden" || b === "peek_ears" || b === "peek_eyes" || b === "emerging" || b === "greeting_wave") {
+      if (
+        b === "hidden" ||
+        b === "peek_ears" ||
+        b === "peek_eyes" ||
+        b === "emerging" ||
+        b === "greeting_wave" ||
+        b === "petted" ||
+        b === "fleeing"
+      ) {
         return; // still inside a scripted moment
       }
 

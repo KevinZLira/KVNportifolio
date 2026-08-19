@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useRaccoon } from "./RaccoonContext";
 import RaccoonCreature from "./RaccoonCreature";
 import type { RaccoonLayer } from "./types";
@@ -15,6 +15,7 @@ interface RaccoonSpotProps {
   isFirstVisitSpot?: boolean;
   /** px per bitmap cell — bigger for a hero-sized mascot, small elsewhere. */
   cell?: number;
+  fleeOnScroll?: boolean;
 }
 
 export default function RaccoonSpot({
@@ -26,9 +27,28 @@ export default function RaccoonSpot({
   wrapperClassName,
   isFirstVisitSpot,
   cell,
+  fleeOnScroll,
 }: RaccoonSpotProps) {
   const { activeSpotId, registerSpotVisibility, systemReady } = useRaccoon();
   const anchorRef = useRef<HTMLDivElement>(null);
+  const [fleeHold, setFleeHold] = useState(false);
+
+  // Keep the creature mounted for the length of its "run off to the right"
+  // exit even if the section crosses the intersection threshold first —
+  // otherwise a fast scroll unmounts it mid-animation, a visible pop.
+  useEffect(() => {
+    if (!fleeOnScroll) return;
+    let triggered = false;
+    function onScroll() {
+      if (triggered) return;
+      triggered = true;
+      setFleeHold(true);
+      window.setTimeout(() => setFleeHold(false), 900);
+      window.removeEventListener("scroll", onScroll);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [fleeOnScroll]);
 
   useEffect(() => {
     if (!systemReady) return;
@@ -51,7 +71,7 @@ export default function RaccoonSpot({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, systemReady]);
 
-  const isActive = systemReady && activeSpotId === id;
+  const isActive = systemReady && (activeSpotId === id || fleeHold);
 
   return (
     <div
@@ -84,6 +104,7 @@ export default function RaccoonSpot({
           wanderRadius={wanderRadius}
           isFirstVisitSpot={isFirstVisitSpot}
           cell={cell}
+          fleeOnScroll={fleeOnScroll}
         />
       )}
     </div>

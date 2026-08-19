@@ -120,6 +120,7 @@ export default function Hero() {
         wanderRadius={0}
         wrapperClassName="hero-mascot-spot"
         cell={8}
+        fleeOnScroll
         isFirstVisitSpot
       />
     </section>

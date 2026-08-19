@@ -21,7 +21,9 @@ export type RaccoonBehavior =
   | "steal_approach"
   | "steal_reach"
   | "steal_run"
-  | "steal_return";
+  | "steal_return"
+  | "petted"
+  | "fleeing";
 
 export type RaccoonLayer =
   | "background"
