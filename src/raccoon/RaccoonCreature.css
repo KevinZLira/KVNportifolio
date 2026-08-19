@@ -8,250 +8,128 @@
   transition: transform 1.6s cubic-bezier(0.45, 0, 0.2, 1);
 }
 
-.raccoon-svg {
+.raccoon-flip {
+  transform: scaleX(var(--rc-facing, 1));
+  transition: transform 0.3s ease-out;
+}
+
+.raccoon-sprite {
   display: block;
-  overflow: visible;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
 }
 
-/* ---------- palette ---------- */
-.rc-fill-body { fill: #9aa08f; }
-.rc-fill-shadow { fill: #6d7266; }
-.rc-fill-light { fill: #e4e8dc; }
-.rc-fill-dark { fill: #23261f; }
-.rc-eye { fill: #0c0d0a; }
-
-/* ---------- visibility states ---------- */
-.vis-hidden { opacity: 0; }
-
-.vis-peek_ears .rc-tail,
-.vis-peek_ears .rc-leg,
-.vis-peek_ears .rc-body,
-.vis-peek_ears .rc-arm,
-.vis-peek_ears .rc-face,
-.vis-peek_ears .rc-eyes {
-  opacity: 0;
-}
-
-.vis-peek_eyes .rc-tail,
-.vis-peek_eyes .rc-leg,
-.vis-peek_eyes .rc-body,
-.vis-peek_eyes .rc-arm,
-.vis-peek_eyes .rc-face,
-.vis-peek_eyes .rc-ears {
-  opacity: 0;
-}
-
-.vis-peek_eyes .rc-eye {
-  fill: var(--primary, #6dffa8);
-  filter: drop-shadow(0 0 3px var(--primary-glow, rgba(109, 255, 168, 0.6)));
-}
-
-/* emerge: top-down reveal */
-[data-behavior="emerging"] {
-  animation: rc-emerge 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes rc-emerge {
-  from { clip-path: inset(0 0 68% 0); }
-  to { clip-path: inset(0 0 0% 0); }
+.raccoon-sprite .pixel-sprite-dot {
+  transition: opacity 0.1s steps(2);
 }
 
 /* ---------- breathing / idle ---------- */
-.rc-body {
-  transform-origin: 17px 26px;
-  animation: rc-breathe 3.4s ease-in-out infinite;
+[data-behavior="idle_stand"] .raccoon-sprite,
+[data-behavior="watching_cursor"] .raccoon-sprite,
+[data-behavior="curious"] .raccoon-sprite {
+  animation: rc-breathe 3.6s ease-in-out infinite;
 }
 
 @keyframes rc-breathe {
   0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(1.035); }
+  50% { transform: scaleY(1.028); }
 }
 
-[data-behavior="sleeping"] .rc-body,
-[data-behavior="hiding"] .rc-body {
-  animation-duration: 2.2s;
-}
-
-/* ---------- tail wag ---------- */
-.rc-tail {
-  transform-origin: 11px 22px;
-  animation: rc-tailwag 2.8s ease-in-out infinite;
-}
-
-@keyframes rc-tailwag {
-  0%, 100% { transform: rotate(-4deg); }
-  50% { transform: rotate(5deg); }
-}
-
-[data-behavior="walking"] .rc-tail,
-[data-behavior="steal_run"] .rc-tail,
-[data-behavior="excited"] .rc-tail {
-  animation-duration: 0.5s;
-}
-
-[data-behavior="sleeping"] .rc-tail,
-[data-behavior="hiding"] .rc-tail {
-  animation-play-state: paused;
-  transform: rotate(-2deg);
-}
-
-/* ---------- blink / ear twitch (JS-triggered, transient) ---------- */
-.is-blinking .rc-eye {
-  transform: scaleY(0.15);
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.is-eartwitch .rc-ear-l {
-  animation: rc-eartwitch 0.35s ease-in-out;
-}
-.is-eartwitch .rc-ear-r {
-  animation: rc-eartwitch 0.35s ease-in-out 0.08s;
-}
-
-@keyframes rc-eartwitch {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(10deg); }
-}
-.rc-ear-l, .rc-ear-r {
-  transform-box: fill-box;
+/* ---------- sitting / sleeping / hiding: squash low ---------- */
+[data-behavior="idle_sit"] .raccoon-sprite,
+[data-behavior="sleeping"] .raccoon-sprite,
+[data-behavior="hiding"] .raccoon-sprite,
+[data-behavior="eating"] .raccoon-sprite {
+  transform: scaleY(0.86) translateY(6%);
   transform-origin: bottom center;
 }
 
-/* ---------- sitting ---------- */
-[data-behavior="idle_sit"] .rc-leg,
-[data-behavior="sleeping"] .rc-leg,
-[data-behavior="hiding"] .rc-leg,
-[data-behavior="eating"] .rc-leg {
-  transform: scaleY(0.4) translateY(7px);
-}
-.rc-leg {
-  transform-box: fill-box;
-  transform-origin: bottom center;
-  transition: transform 0.4s ease-out;
+[data-behavior="sleeping"] .raccoon-sprite {
+  opacity: 0.7;
+  animation: rc-sleep-breathe 3s ease-in-out infinite;
 }
 
-[data-behavior="idle_sit"] .rc-body,
-[data-behavior="sleeping"] .rc-body,
-[data-behavior="hiding"] .rc-body,
-[data-behavior="eating"] .rc-body {
-  transform: scaleY(0.9) translateY(2px);
+@keyframes rc-sleep-breathe {
+  0%, 100% { transform: scaleY(0.86) translateY(6%); }
+  50% { transform: scaleY(0.9) translateY(5%); }
 }
 
-/* ---------- walk cycle (legs only; horizontal drift handled by JS on root) ---------- */
-[data-behavior="walking"] .rc-leg-back {
-  animation: rc-legcycle-a 0.42s steps(2) infinite;
+/* ---------- walking: gentle bob, horizontal drift via inline walkOffset ---------- */
+[data-behavior="walking"] .raccoon-sprite {
+  animation: rc-walk-bob 0.34s ease-in-out infinite;
 }
-[data-behavior="walking"] .rc-leg-front {
-  animation: rc-legcycle-b 0.42s steps(2) infinite;
-}
-@keyframes rc-legcycle-a {
+
+@keyframes rc-walk-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
-}
-@keyframes rc-legcycle-b {
-  0%, 100% { transform: translateY(-2px); }
-  50% { transform: translateY(0); }
+  50% { transform: translateY(-6%); }
 }
 
-[data-behavior="steal_run"] .rc-leg-back,
-[data-behavior="steal_run"] .rc-leg-front {
-  animation-duration: 0.16s;
+/* ---------- greeting wave: friendly tilt ---------- */
+[data-behavior="greeting_wave"] .raccoon-flip {
+  animation: rc-wave-tilt 0.5s ease-in-out 3;
 }
 
-/* ---------- arm: wave / reach / steal ---------- */
-.rc-arm {
-  transform-box: fill-box;
-  transform-origin: top center;
-  transition: transform 0.3s ease-out;
+@keyframes rc-wave-tilt {
+  0%, 100% { transform: scaleX(var(--rc-facing, 1)) rotate(0deg); }
+  50% { transform: scaleX(var(--rc-facing, 1)) rotate(-6deg); }
 }
 
-[data-behavior="greeting_wave"] .rc-arm {
-  animation: rc-wave 0.5s ease-in-out 3;
-}
-@keyframes rc-wave {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-55deg); }
+/* ---------- confused: head tilt via whole-body rotate ---------- */
+[data-behavior="confused"] .raccoon-flip {
+  transform: scaleX(var(--rc-facing, 1)) rotate(10deg);
 }
 
-[data-behavior="steal_reach"] .rc-arm,
-[data-behavior="steal_observe"] .rc-arm {
-  transform: rotate(-35deg) translateX(2px);
+/* ---------- excited: hop ---------- */
+[data-behavior="excited"] .raccoon-sprite {
+  animation: rc-hop 0.45s ease-in-out infinite;
 }
 
-[data-behavior="curious"] .rc-arm,
-[data-behavior="confused"] .rc-arm {
-  transform: rotate(-18deg);
+@keyframes rc-hop {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  40% { transform: translateY(-14%) scaleY(1.04); }
+  60% { transform: translateY(-14%) scaleY(1.04); }
 }
 
-/* ---------- head tilt / eyes ---------- */
-.rc-head {
-  transform-box: fill-box;
-  transform-origin: 22px 13px;
-  transition: transform 0.35s ease-out;
-}
-
-[data-behavior="confused"] .rc-head {
-  transform: rotate(14deg);
-}
-
-[data-behavior="curious"] .rc-head,
-[data-behavior="watching_cursor"] .rc-head {
-  transform: rotate(-4deg);
-}
-
-[data-behavior="sleeping"] .rc-eye,
-[data-behavior="hiding"] .rc-eye {
-  fill: #0c0d0a;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scaleY(0.15);
-}
-
-[data-behavior="startled"] .rc-eye {
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(1.6);
-}
-
-[data-behavior="startled"] .raccoon-svg {
+/* ---------- startled: pop ---------- */
+[data-behavior="startled"] .raccoon-sprite {
   animation: rc-startle-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
 @keyframes rc-startle-pop {
   0% { transform: scaleY(1); }
-  35% { transform: scaleY(1.22) translateY(-6px); }
+  35% { transform: scaleY(1.16) translateY(-10%); }
   100% { transform: scaleY(1) translateY(0); }
 }
 
-/* ---------- excited hop ---------- */
-[data-behavior="excited"] .raccoon-svg {
-  animation: rc-hop 0.5s ease-in-out infinite;
+/* ---------- reaching for the cursor ---------- */
+[data-behavior="steal_reach"] .raccoon-flip,
+[data-behavior="steal_observe"] .raccoon-flip {
+  transform: scaleX(var(--rc-facing, 1)) rotate(-8deg);
 }
-@keyframes rc-hop {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+
+[data-behavior="steal_run"] .raccoon-sprite {
+  animation: rc-walk-bob 0.16s ease-in-out infinite;
 }
 
 /* ---------- glitch ---------- */
-[data-behavior="glitching"] .raccoon-svg {
+[data-behavior="glitching"] .raccoon-sprite {
   animation: rc-glitch 0.45s steps(6);
 }
+
 @keyframes rc-glitch {
   0% { transform: translate(0, 0); filter: hue-rotate(0deg); }
-  16% { transform: translate(-3px, 1px); filter: hue-rotate(90deg); opacity: 0.6; }
-  32% { transform: translate(3px, -1px); filter: hue-rotate(-90deg); }
-  48% { transform: translate(-2px, 0); opacity: 0.8; }
-  64% { transform: translate(2px, 1px); filter: hue-rotate(45deg); }
+  16% { transform: translate(-6%, 2%); filter: hue-rotate(90deg); opacity: 0.6; }
+  32% { transform: translate(6%, -2%); filter: hue-rotate(-90deg); }
+  48% { transform: translate(-4%, 0); opacity: 0.8; }
+  64% { transform: translate(4%, 2%); filter: hue-rotate(45deg); }
   100% { transform: translate(0, 0); filter: hue-rotate(0deg); opacity: 1; }
 }
 
 /* ---------- speech bubble ---------- */
 .raccoon-bubble {
   position: absolute;
-  bottom: 46px;
+  bottom: 100%;
   left: 4px;
-  font-size: 9px;
+  margin-bottom: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   white-space: nowrap;
   color: var(--primary, #6dffa8);
@@ -269,8 +147,8 @@
 /* ---------- zzz ---------- */
 .raccoon-zzz {
   position: absolute;
-  top: -6px;
-  right: -2px;
+  top: -4px;
+  right: -6px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -295,8 +173,8 @@
 /* ---------- stolen cursor glyph, carried during steal_run ---------- */
 .raccoon-stolen-cursor {
   position: absolute;
-  top: 6px;
-  left: 26px;
+  top: 10%;
+  left: 90%;
 }
 .raccoon-stolen-cursor-mark {
   display: block;
@@ -312,16 +190,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .raccoon-root {
+  .raccoon-root, .raccoon-flip {
     transition: none;
   }
-  .rc-body, .rc-tail, .rc-leg, .rc-arm, .rc-head {
+  .raccoon-sprite {
     animation: none !important;
-    transition: none !important;
-  }
-  [data-behavior="glitching"] .raccoon-svg,
-  [data-behavior="excited"] .raccoon-svg,
-  [data-behavior="startled"] .raccoon-svg {
-    animation: none !important;
+    transform: none !important;
   }
 }

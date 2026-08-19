@@ -8,6 +8,8 @@ import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
 import MediaPreview from "../components/Media/MediaPreview";
 import RaccoonSpot from "../raccoon/RaccoonSpot";
+import PixelSprite from "../raccoon/PixelSprite";
+import { FOLDER_GRID } from "../raccoon/pixelSprites";
 import { emitRaccoonSignal } from "../raccoon/raccoonBus";
 import "./WorkDatabase.css";
 
@@ -41,10 +43,21 @@ export default function WorkDatabase() {
           <span className="workdb-comment t-mono">// WORK_DATABASE</span>
           <span className="workdb-count t-mono">
             TOTAL PROJECTS: {String(projects.length).padStart(3, "0")}
-            <RaccoonSpot id="workdb-counter" layer="behind_ui" wanderRadius={16} inline />
           </span>
         </div>
-        <h2 className="workdb-heading t-display">ARCHIVE</h2>
+        <div className="workdb-heading-row">
+          <h2 className="workdb-heading t-display">ARCHIVE</h2>
+          <div className="workdb-folder-scene" aria-hidden="true">
+            <PixelSprite grid={FOLDER_GRID} cell={4} color="var(--primary-dim)" glow={false} />
+            <RaccoonSpot
+              id="workdb-folder"
+              layer="front_decoration"
+              wanderRadius={4}
+              wrapperClassName="workdb-folder-raccoon-spot"
+              cell={2}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="workdb-filters t-mono" role="tablist" aria-label="Filter projects">

@@ -88,15 +88,23 @@ export default function About() {
               ))}
             </span>
           </div>
-          <RaccoonSpot id="about-corner" layer="front_decoration" wanderRadius={14} creatureStyle={{ left: "88%" }} />
         </div>
 
         <div className="about-col about-col--software">
           <span className="about-software-label t-mono">SOFTWARE</span>
-          <div className="sw-grid">
-            {SOFTWARE.map((sw) => (
-              <SoftwareModule key={sw.code} {...sw} />
-            ))}
+          <div className="about-wall-scene">
+            <RaccoonSpot
+              id="about-wall"
+              layer="behind_ui"
+              wanderRadius={6}
+              wrapperClassName="about-wall-raccoon-spot"
+              cell={4}
+            />
+            <div className="sw-grid">
+              {SOFTWARE.map((sw) => (
+                <SoftwareModule key={sw.code} {...sw} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

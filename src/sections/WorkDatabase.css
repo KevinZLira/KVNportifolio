@@ -26,6 +26,31 @@
   line-height: 1;
 }
 
+.workdb-heading-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.workdb-folder-scene {
+  position: relative;
+  flex-shrink: 0;
+  margin-bottom: 0.6em;
+  display: none;
+}
+
+.workdb-folder-raccoon-spot {
+  position: absolute !important;
+  left: 34px;
+  bottom: 12px;
+}
+
+@media (min-width: 640px) {
+  .workdb-folder-scene {
+    display: block;
+  }
+}
+
 .workdb-filters {
   display: flex;
   flex-wrap: wrap;

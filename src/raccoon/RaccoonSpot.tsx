@@ -10,7 +10,11 @@ interface RaccoonSpotProps {
   inline?: boolean;
   /** Overrides where the creature grows from its zero-size anchor point. */
   creatureStyle?: CSSProperties;
+  /** Extra class on the anchor itself — for responsive placement via CSS. */
+  wrapperClassName?: string;
   isFirstVisitSpot?: boolean;
+  /** px per bitmap cell — bigger for a hero-sized mascot, small elsewhere. */
+  cell?: number;
 }
 
 export default function RaccoonSpot({
@@ -19,7 +23,9 @@ export default function RaccoonSpot({
   wanderRadius = 18,
   inline = false,
   creatureStyle,
+  wrapperClassName,
   isFirstVisitSpot,
+  cell,
 }: RaccoonSpotProps) {
   const { activeSpotId, registerSpotVisibility, systemReady } = useRaccoon();
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -50,6 +56,7 @@ export default function RaccoonSpot({
   return (
     <div
       ref={anchorRef}
+      className={wrapperClassName}
       style={{
         position: "relative",
         display: inline ? "inline-block" : "block",
@@ -76,6 +83,7 @@ export default function RaccoonSpot({
           layer={layer}
           wanderRadius={wanderRadius}
           isFirstVisitSpot={isFirstVisitSpot}
+          cell={cell}
         />
       )}
     </div>

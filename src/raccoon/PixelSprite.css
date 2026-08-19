@@ -1,0 +1,8 @@
+.pixel-sprite {
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.pixel-sprite-dot {
+  position: absolute;
+}

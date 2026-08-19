@@ -44,6 +44,62 @@
   gap: 10px;
 }
 
+.contact-trash-scene {
+  position: relative;
+  width: fit-content;
+  margin-top: 22vh;
+}
+
+.contact-trash-falling {
+  position: absolute;
+  left: 6px;
+  top: -40px;
+  width: 40px;
+  height: 40px;
+}
+
+.contact-trash-bit {
+  position: absolute;
+  left: 14px;
+  width: 4px;
+  height: 4px;
+  background: var(--fg-dimmer);
+  animation: trash-fall 3.2s linear infinite;
+}
+
+.bit-2 {
+  left: 22px;
+  animation-delay: 1.1s;
+  animation-duration: 2.6s;
+}
+
+.bit-3 {
+  left: 8px;
+  animation-delay: 2.1s;
+  animation-duration: 3.6s;
+}
+
+@keyframes trash-fall {
+  0% { top: -6px; opacity: 0; transform: rotate(0deg); }
+  10% { opacity: 1; }
+  75% { opacity: 1; }
+  85% { top: 34px; opacity: 0.6; transform: rotate(200deg); }
+  100% { top: 34px; opacity: 0; transform: rotate(220deg); }
+}
+
+.contact-trash-raccoon-spot {
+  position: absolute !important;
+  left: 56px;
+  bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-trash-bit {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 .contact-channel {
   display: flex;
   gap: 0.4em;
@@ -97,14 +153,8 @@
   border-color: var(--primary-dim);
 }
 
-.contact-send-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  align-self: flex-start;
-}
-
 .contact-send {
+  align-self: flex-start;
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--fg);

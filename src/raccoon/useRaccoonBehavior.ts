@@ -39,8 +39,6 @@ export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) 
   const [facing, setFacing] = useState<1 | -1>(1);
   const [bubble, setBubble] = useState<string | null>(null);
   const [walkOffset, setWalkOffset] = useState(0);
-  const [blinking, setBlinking] = useState(false);
-  const [earTwitch, setEarTwitch] = useState(false);
 
   const behaviorRef = useRef(behavior);
   behaviorRef.current = behavior;
@@ -129,45 +127,6 @@ export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) 
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFirstVisitSpot]);
-
-  // ---------------- transient blink / ear twitch, organic timing ----------------
-  useEffect(() => {
-    if (reduceMotion.current) return;
-    let blinkTimer: number;
-    let earTimer: number;
-
-    function scheduleBlink() {
-      blinkTimer = window.setTimeout(
-        () => {
-          if (behaviorRef.current !== "hidden" && behaviorRef.current !== "sleeping") {
-            setBlinking(true);
-            window.setTimeout(() => setBlinking(false), 140);
-          }
-          scheduleBlink();
-        },
-        2200 + Math.random() * 4200,
-      );
-    }
-    function scheduleEarTwitch() {
-      earTimer = window.setTimeout(
-        () => {
-          if (behaviorRef.current === "idle_stand" || behaviorRef.current === "idle_sit") {
-            setEarTwitch(true);
-            window.setTimeout(() => setEarTwitch(false), 400);
-          }
-          scheduleEarTwitch();
-        },
-        5000 + Math.random() * 9000,
-      );
-    }
-
-    scheduleBlink();
-    scheduleEarTwitch();
-    return () => {
-      window.clearTimeout(blinkTimer);
-      window.clearTimeout(earTimer);
-    };
-  }, []);
 
   // ---------------- signals: project category / error ----------------
   useEffect(() => {
@@ -377,8 +336,6 @@ export function useRaccoonBehavior({ wanderRadius, isFirstVisitSpot }: Options) 
     facing,
     bubble,
     walkOffset,
-    blinking,
-    earTwitch,
     visibility: deriveVisibility(behavior),
   };
 }

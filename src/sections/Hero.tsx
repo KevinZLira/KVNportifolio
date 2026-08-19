@@ -92,11 +92,7 @@ export default function Hero() {
       <div ref={layerRef} className="hero-layer">
         <div ref={titleRef} className="hero-title is-revealing">
           <div className="hero-line-wrap">
-            <h1 className="hero-line t-display">
-              <span>KVN</span>
-              <RaccoonSpot id="hero-kvn" layer="behind_ui" wanderRadius={22} inline isFirstVisitSpot />
-              <span> LIRA</span>
-            </h1>
+            <h1 className="hero-line t-display">KVN LIRA</h1>
           </div>
           <div className="hero-line-wrap">
             <p className="hero-line hero-role t-display">VISUAL DESIGNER / VIDEO MAKER</p>
@@ -117,6 +113,15 @@ export default function Hero() {
       </div>
 
       <div className="hero-grid" aria-hidden="true" />
+
+      <RaccoonSpot
+        id="hero-mascot"
+        layer="near_foreground"
+        wanderRadius={0}
+        wrapperClassName="hero-mascot-spot"
+        cell={8}
+        isFirstVisitSpot
+      />
     </section>
   );
 }
