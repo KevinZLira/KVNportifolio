@@ -54,7 +54,7 @@ export default function WorkDatabase() {
               layer="front_decoration"
               wanderRadius={4}
               wrapperClassName="workdb-folder-raccoon-spot"
-              cell={2}
+              cell={1.5}
             />
           </div>
         </div>

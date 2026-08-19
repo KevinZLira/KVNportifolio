@@ -91,7 +91,7 @@ export default function ProjectPage() {
         id={`project-${project.id}-line`}
         layer="front_decoration"
         wanderRadius={20}
-        cell={3}
+        cell={2.2}
         creatureStyle={{ left: "68%" }}
       />
       <div className="project-body">

@@ -113,7 +113,7 @@ export default function Contact() {
               layer="front_decoration"
               wanderRadius={6}
               wrapperClassName="contact-trash-raccoon-spot"
-              cell={4}
+              cell={3}
             />
           </div>
         </div>

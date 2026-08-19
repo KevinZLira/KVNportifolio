@@ -119,7 +119,7 @@ export default function Hero() {
         layer="near_foreground"
         wanderRadius={0}
         wrapperClassName="hero-mascot-spot"
-        cell={8}
+        cell={6}
         fleeOnScroll
         isFirstVisitSpot
       />

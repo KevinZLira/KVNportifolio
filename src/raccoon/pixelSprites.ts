@@ -58,6 +58,13 @@ function paint(px: number, py: number, s: Shape): boolean {
   return Math.abs(dx) <= s.w / 2 && Math.abs(dy) <= s.h / 2;
 }
 
+function scaleShape(s: Shape, k: number): Shape {
+  if (s.kind === "ellipse") {
+    return { ...s, cx: s.cx * k, cy: s.cy * k, rx: s.rx * k, ry: s.ry * k };
+  }
+  return { ...s, x: s.x * k, y: s.y * k, w: s.w * k, h: s.h * k };
+}
+
 function rasterize(w: number, h: number, shapes: Shape[]): boolean[][] {
   const grid: boolean[][] = Array.from({ length: h }, () => Array(w).fill(false));
   for (let y = 0; y < h; y++) {
@@ -74,60 +81,68 @@ function rasterize(w: number, h: number, shapes: Shape[]): boolean[][] {
   return grid;
 }
 
-export const RACCOON_W = 31;
-export const RACCOON_H = 30;
+// Authored at a small "unit" scale, then rasterized onto a finer grid —
+// more cells per curve makes the ellipses read as round instead of
+// blocky, without hand-editing every coordinate.
+const RACCOON_SCALE = 1.35;
+export const RACCOON_W = 45;
+export const RACCOON_H = 41;
 
 // Row bands used by the "peek" crops (folder / wall) — how many rows from
 // the top are needed to still read as "ears" vs "ears + eyes".
-export const RACCOON_EARS_ROWS = 6;
-export const RACCOON_EYES_ROWS = 12;
+export const RACCOON_EARS_ROWS = 8;
+export const RACCOON_EYES_ROWS = 16;
 
-const raccoonShapes: Shape[] = [
-  // ears — narrower + taller so tips read as pointed, not round bear ears
-  ellipse(6.6, 4.2, 3.1, 4.6),
-  ellipse(19.4, 4.2, 3.1, 4.6),
-  ellipse(6.7, 5.3, 1.5, 2.3, "sub"),
-  ellipse(19.3, 5.3, 1.5, 2.3, "sub"),
+const rawRaccoonShapes: Shape[] = [
+  // ears — attached higher on a bigger head, chibi proportions
+  ellipse(6.8, 3.6, 3.3, 4.3),
+  ellipse(20.2, 3.6, 3.3, 4.3),
+  ellipse(6.9, 4.7, 1.5, 2, "sub"),
+  ellipse(20.1, 4.7, 1.5, 2, "sub"),
 
-  // tail — a curved sweep of overlapping circles behind/right of the body
-  ellipse(22.5, 23.5, 4.8, 4.8),
-  ellipse(25.6, 18.2, 4.3, 4.3),
-  ellipse(26.6, 12.3, 3.8, 4),
-  ellipse(24.8, 7, 3.3, 3.5),
+  // tail — bigger, thicker sweep
+  ellipse(23, 23.5, 5.2, 5.2),
+  ellipse(26.3, 18, 4.6, 4.6),
+  ellipse(27.3, 12, 4.1, 4.3),
+  ellipse(25.3, 6.5, 3.6, 3.8),
   // stripe gaps cut across the tail
-  ellipse(23.7, 21, 5, 1.3, "sub", -58),
-  ellipse(26.3, 15.4, 4.7, 1.25, "sub", -72),
-  ellipse(26, 9.7, 4.3, 1.2, "sub", -84),
+  ellipse(24.2, 21, 5.6, 1.4, "sub", -58),
+  ellipse(27, 15.2, 5.2, 1.35, "sub", -72),
+  ellipse(26.8, 9.3, 4.7, 1.3, "sub", -84),
 
-  // head — slightly narrower/taller oval, less round-bear
-  ellipse(13, 11.8, 7.9, 7.6),
+  // head — large, round, chibi
+  ellipse(13.5, 12, 8.6, 8.3),
 
-  // body
-  ellipse(13, 21.5, 7.6, 7),
+  // body — small under the big head
+  ellipse(13.5, 21.8, 6.6, 5.8),
 
   // legs / feet
-  rect(8.5, 26.5, 3.4, 3.6, "add"),
-  rect(15.5, 26.5, 3.4, 3.6, "add"),
+  rect(9.5, 26.6, 3.2, 3.2, "add"),
+  rect(15.3, 26.6, 3.2, 3.2, "add"),
 
   // paws + held object (small screen/frame, front and center)
-  ellipse(9.3, 19.5, 2.1, 2.4),
-  ellipse(17, 19.5, 2.1, 2.4),
-  rect(9.5, 16.8, 7.2, 6, "add"),
-  rect(10.6, 17.9, 5, 3.8, "sub"),
+  ellipse(9.8, 19.8, 2, 2.2),
+  ellipse(17.2, 19.8, 2, 2.2),
+  rect(10, 17.2, 7, 5.6, "add"),
+  rect(11, 18.2, 5, 3.6, "sub"),
 
   // belly hint (unfilled patch)
-  ellipse(13, 24.3, 3, 2.2, "sub"),
+  ellipse(13.5, 24, 2.6, 2, "sub"),
 
-  // mask band — eyes sit inside one continuous dark swath, bandit-style
-  ellipse(9.5, 10.5, 2.5, 2.7, "sub"),
-  ellipse(16.5, 10.5, 2.5, 2.7, "sub"),
-  ellipse(9.85, 11.1, 1, 1.1),
-  ellipse(16.85, 11.1, 1, 1.1),
+  // mask band — two round eye-holes bridged by a thin connecting cut,
+  // reading as one continuous visor/mask instead of two separate patches
+  ellipse(9.6, 10.6, 2.4, 2.6, "sub"),
+  ellipse(17.4, 10.6, 2.4, 2.6, "sub"),
+  rect(11.6, 9.5, 4, 2.1, "sub"),
+  ellipse(9.95, 11.2, 0.98, 1.08),
+  ellipse(17.05, 11.2, 0.98, 1.08),
 
   // pale, pointed snout under the mask, small dark nose at the tip
-  ellipse(13, 14.3, 3.1, 2.6, "sub"),
-  ellipse(13, 15.6, 1.15, 0.9),
+  ellipse(13.5, 14.8, 3.3, 2.7, "sub"),
+  ellipse(13.5, 16.1, 1.2, 0.95),
 ];
+
+const raccoonShapes: Shape[] = rawRaccoonShapes.map((s) => scaleShape(s, RACCOON_SCALE));
 
 export const RACCOON_GRID: boolean[][] = rasterize(RACCOON_W, RACCOON_H, raccoonShapes);
 

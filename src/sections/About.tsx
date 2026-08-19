@@ -98,7 +98,7 @@ export default function About() {
               layer="behind_ui"
               wanderRadius={6}
               wrapperClassName="about-wall-raccoon-spot"
-              cell={4}
+              cell={3}
             />
             <div className="sw-grid">
               {SOFTWARE.map((sw) => (
