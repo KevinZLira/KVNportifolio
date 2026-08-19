@@ -41,10 +41,11 @@
 }
 
 .hero-title {
-  overflow: hidden;
+  position: relative;
+  overflow: visible;
 }
 
-.hero-line-wrap {
+.hero-title.is-revealing .hero-line-wrap {
   overflow: hidden;
 }
 

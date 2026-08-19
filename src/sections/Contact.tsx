@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
+import RaccoonSpot from "../raccoon/RaccoonSpot";
+import { emitRaccoonSignal } from "../raccoon/raccoonBus";
 import "./Contact.css";
 
 interface Channel {
@@ -51,6 +53,7 @@ export default function Contact() {
     }
     sfx.confirm();
     setSent(true);
+    emitRaccoonSignal({ type: "celebrate" });
     const body = encodeURIComponent(message);
     window.setTimeout(() => {
       window.location.href = `mailto:contact@kvnlira.com?subject=TRANSMISSION%20FROM%20KVN_OS&body=${body}`;
@@ -108,14 +111,17 @@ export default function Contact() {
             onChange={(e) => setMessage(e.target.value)}
             rows={5}
           />
-          <button
-            type="button"
-            className="contact-send t-mono"
-            onClick={sendTransmission}
-            onMouseEnter={() => sfx.hover()}
-          >
-            {sent ? "TRANSMISSION SENT." : "[ SEND TRANSMISSION ]"}
-          </button>
+          <div className="contact-send-row">
+            <button
+              type="button"
+              className="contact-send t-mono"
+              onClick={sendTransmission}
+              onMouseEnter={() => sfx.hover()}
+            >
+              {sent ? "TRANSMISSION SENT." : "[ SEND TRANSMISSION ]"}
+            </button>
+            <RaccoonSpot id="contact-send" layer="front_decoration" wanderRadius={16} inline />
+          </div>
         </div>
       </div>
 

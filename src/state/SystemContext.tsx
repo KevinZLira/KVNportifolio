@@ -21,6 +21,8 @@ interface SystemContextValue {
   pendingFilter: string | null;
   requestFilter: (f: string) => void;
   clearPendingFilter: () => void;
+  cursorCaptured: boolean;
+  setCursorCaptured: (v: boolean) => void;
 }
 
 const SystemContext = createContext<SystemContextValue | null>(null);
@@ -31,6 +33,7 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   const [cursorMode, setCursorMode] = useState<CursorMode>({ kind: "default" });
   const [sectionLabel, setSectionLabel] = useState("KVN_SYSTEM");
   const [pendingFilter, setPendingFilter] = useState<string | null>(null);
+  const [cursorCaptured, setCursorCaptured] = useState(false);
 
   const enterSystem = useCallback(() => setSystemState("ONLINE"), []);
   const requestFilter = useCallback((f: string) => setPendingFilter(f), []);
@@ -58,6 +61,8 @@ export function SystemProvider({ children }: { children: ReactNode }) {
       pendingFilter,
       requestFilter,
       clearPendingFilter,
+      cursorCaptured,
+      setCursorCaptured,
     }),
     [
       systemState,
@@ -69,6 +74,7 @@ export function SystemProvider({ children }: { children: ReactNode }) {
       pendingFilter,
       requestFilter,
       clearPendingFilter,
+      cursorCaptured,
     ],
   );
 

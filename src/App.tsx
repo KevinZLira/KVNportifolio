@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { SystemProvider, useSystem } from "./state/SystemContext";
 import { TransitionProvider } from "./state/TransitionContext";
+import { RaccoonProvider } from "./raccoon/RaccoonContext";
 import BootSequence from "./components/Boot/BootSequence";
 import CustomCursor from "./components/Cursor/CustomCursor";
 import SystemBar from "./components/System/SystemBar";
@@ -31,26 +32,28 @@ function AppShell() {
   }
 
   return (
-    <div className="app-shell">
-      <CustomCursor />
-      <SystemBar onMenu={() => setNavOpen((v) => !v)} />
-      <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
-      <SystemToaster />
-      <RandomEvents />
-      {location.pathname === "/" && <ScrollHUD />}
+    <RaccoonProvider systemReady={systemState === "ONLINE"}>
+      <div className="app-shell">
+        <CustomCursor />
+        <SystemBar onMenu={() => setNavOpen((v) => !v)} />
+        <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
+        <SystemToaster />
+        <RandomEvents />
+        {location.pathname === "/" && <ScrollHUD />}
 
-      <main className="app-main" key={location.pathname}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Home />} />
-          <Route path="/work/:slug" element={<ProjectPage />} />
-        </Routes>
-      </main>
+        <main className="app-main" key={location.pathname}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/work" element={<Home />} />
+            <Route path="/work/:slug" element={<ProjectPage />} />
+          </Routes>
+        </main>
 
-      <div className="crt-layer crt-scanlines" />
-      <div className="crt-layer crt-vignette" />
-      <div className="crt-layer crt-grain" />
-    </div>
+        <div className="crt-layer crt-scanlines" />
+        <div className="crt-layer crt-vignette" />
+        <div className="crt-layer crt-grain" />
+      </div>
+    </RaccoonProvider>
   );
 }
 

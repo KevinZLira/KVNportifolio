@@ -156,6 +156,14 @@ export default function BootSequence({ onEnter }: { onEnter: () => void }) {
         <span>BUILD 2026.08</span>
         <span>NO SIGNAL LOST</span>
       </div>
+
+      {visibleLines > LINES.length - 4 && (
+        <div className={`boot-visitor ${ready ? "is-blinking" : ""}`} aria-hidden="true">
+          <span className="boot-visitor-ear" />
+          <span className="boot-visitor-eye" />
+          <span className="boot-visitor-eye" />
+        </div>
+      )}
     </div>
   );
 }

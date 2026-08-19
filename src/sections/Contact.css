@@ -97,8 +97,14 @@
   border-color: var(--primary-dim);
 }
 
-.contact-send {
+.contact-send-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   align-self: flex-start;
+}
+
+.contact-send {
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--fg);

@@ -1,5 +1,6 @@
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import { sfx } from "../lib/sound";
+import RaccoonSpot from "../raccoon/RaccoonSpot";
 import "./About.css";
 
 const ROLES = ["GRAPHIC DESIGNER", "VIDEO MAKER", "MOTION DESIGNER"];
@@ -87,6 +88,7 @@ export default function About() {
               ))}
             </span>
           </div>
+          <RaccoonSpot id="about-corner" layer="front_decoration" wanderRadius={14} creatureStyle={{ left: "88%" }} />
         </div>
 
         <div className="about-col about-col--software">

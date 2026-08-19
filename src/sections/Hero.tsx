@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import RaccoonSpot from "../raccoon/RaccoonSpot";
 import "./Hero.css";
 
 export default function Hero() {
@@ -21,7 +22,10 @@ export default function Hero() {
     // competing tweens fighting over the same transform.
     const ctx = gsap.context(() => {
       gsap
-        .timeline({ delay: reduce ? 0 : 0.1 })
+        .timeline({
+          delay: reduce ? 0 : 0.1,
+          onComplete: () => titleRef.current?.classList.remove("is-revealing"),
+        })
         .from(".hero-line", {
           yPercent: reduce ? 0 : 110,
           duration: reduce ? 0 : 0.9,
@@ -86,9 +90,13 @@ export default function Hero() {
       </div>
 
       <div ref={layerRef} className="hero-layer">
-        <div ref={titleRef} className="hero-title">
+        <div ref={titleRef} className="hero-title is-revealing">
           <div className="hero-line-wrap">
-            <h1 className="hero-line t-display">KVN LIRA</h1>
+            <h1 className="hero-line t-display">
+              <span>KVN</span>
+              <RaccoonSpot id="hero-kvn" layer="behind_ui" wanderRadius={22} inline isFirstVisitSpot />
+              <span> LIRA</span>
+            </h1>
           </div>
           <div className="hero-line-wrap">
             <p className="hero-line hero-role t-display">VISUAL DESIGNER / VIDEO MAKER</p>

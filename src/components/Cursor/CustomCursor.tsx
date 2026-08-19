@@ -3,7 +3,7 @@ import { useSystem } from "../../state/SystemContext";
 import "./CustomCursor.css";
 
 export default function CustomCursor() {
-  const { cursorMode } = useSystem();
+  const { cursorMode, cursorCaptured } = useSystem();
   const dotRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
@@ -69,7 +69,7 @@ export default function CustomCursor() {
   return (
     <div
       ref={dotRef}
-      className={`kvn-cursor ${visible ? "is-visible" : ""} ${clicking ? "is-clicking" : ""} mode-${cursorMode.kind}`}
+      className={`kvn-cursor ${visible ? "is-visible" : ""} ${clicking ? "is-clicking" : ""} ${cursorCaptured ? "is-captured" : ""} mode-${cursorMode.kind}`}
       aria-hidden="true"
     >
       <div className="kvn-cursor-mark">

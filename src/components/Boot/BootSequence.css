@@ -157,6 +157,56 @@
   text-transform: uppercase;
 }
 
+/* a small, easily-missed visitor peeking up from the bottom edge —
+   discovered, never announced */
+.boot-visitor {
+  position: absolute;
+  bottom: 0;
+  right: 8vw;
+  width: 26px;
+  height: 14px;
+  animation: boot-visitor-rise 0.6s ease-out forwards;
+}
+
+@keyframes boot-visitor-rise {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.boot-visitor-ear {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background: #9aa08f;
+}
+
+.boot-visitor-eye {
+  position: absolute;
+  top: 5px;
+  width: 3px;
+  height: 3px;
+  background: var(--primary);
+  box-shadow: 0 0 4px var(--primary-glow);
+}
+
+.boot-visitor-eye:nth-of-type(2) {
+  left: 4px;
+}
+.boot-visitor-eye:nth-of-type(3) {
+  left: 13px;
+}
+
+.boot-visitor.is-blinking .boot-visitor-eye {
+  animation: boot-visitor-blink 0.5s ease-in-out 0.3s;
+}
+
+@keyframes boot-visitor-blink {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
 @media (max-width: 640px) {
   .boot-root {
     padding: 10vh 6vw 4vh;

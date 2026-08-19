@@ -7,6 +7,8 @@ import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
 import MediaPreview from "../components/Media/MediaPreview";
+import RaccoonSpot from "../raccoon/RaccoonSpot";
+import { emitRaccoonSignal } from "../raccoon/raccoonBus";
 import "./WorkDatabase.css";
 
 export default function WorkDatabase() {
@@ -39,6 +41,7 @@ export default function WorkDatabase() {
           <span className="workdb-comment t-mono">// WORK_DATABASE</span>
           <span className="workdb-count t-mono">
             TOTAL PROJECTS: {String(projects.length).padStart(3, "0")}
+            <RaccoonSpot id="workdb-counter" layer="behind_ui" wanderRadius={16} inline />
           </span>
         </div>
         <h2 className="workdb-heading t-display">ARCHIVE</h2>
@@ -75,6 +78,7 @@ export default function WorkDatabase() {
               onMouseEnter={() => {
                 setActiveId(project.id);
                 setCursorMode({ kind: "project", id: project.id });
+                emitRaccoonSignal({ type: "project-category", category: project.category });
               }}
               onMouseLeave={() => {
                 setActiveId((cur) => (cur === project.id ? null : cur));
