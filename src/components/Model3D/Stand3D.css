@@ -10,11 +10,20 @@
 
 .stand3d-label {
   position: absolute;
-  top: -22px;
+  top: -38px;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
   font-size: 10px;
   letter-spacing: 0.12em;
   color: var(--fg-dimmer);
+  white-space: nowrap;
+}
+
+.stand3d-label-accent {
+  color: var(--primary);
 }
 
 .stand3d-canvas {
