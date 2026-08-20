@@ -145,6 +145,73 @@ export default function Stand3D() {
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
+    // Drag-to-rotate with inertia — while held, rotation tracks the pointer
+    // directly; on release the last drag speed carries on and decays, then
+    // blends back into the idle auto-spin once it's slow enough to not read
+    // as a jump.
+    const DRAG_SENSITIVITY = 0.012;
+    const INERTIA_DECAY = 1.8;
+    const INERTIA_EPSILON = 0.05;
+    const AUTO_SPIN_SPEED = 0.9;
+
+    let isDragging = false;
+    let activePointerId: number | null = null;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
+    let lastMoveT = performance.now();
+    let velocityX = 0;
+    let velocityY = 0;
+
+    container.style.cursor = "grab";
+    container.style.touchAction = "none";
+
+    function onPointerDown(e: PointerEvent) {
+      isDragging = true;
+      activePointerId = e.pointerId;
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+      lastMoveT = performance.now();
+      velocityX = 0;
+      velocityY = 0;
+      container?.setPointerCapture(e.pointerId);
+      if (container) container.style.cursor = "grabbing";
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!isDragging || e.pointerId !== activePointerId) return;
+      const now = performance.now();
+      const dt = Math.max((now - lastMoveT) / 1000, 1 / 120);
+      const dx = e.clientX - lastPointerX;
+      const dy = e.clientY - lastPointerY;
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+      lastMoveT = now;
+
+      const rotDeltaY = dx * DRAG_SENSITIVITY;
+      const rotDeltaX = dy * DRAG_SENSITIVITY;
+      floppyGroup.rotation.y += rotDeltaY;
+      floppyGroup.rotation.x += rotDeltaX;
+
+      velocityY = rotDeltaY / dt;
+      velocityX = rotDeltaX / dt;
+    }
+
+    function endDrag(e: PointerEvent) {
+      if (e.pointerId !== activePointerId) return;
+      isDragging = false;
+      activePointerId = null;
+      if (container) container.style.cursor = "grab";
+      if (reduce) {
+        velocityX = 0;
+        velocityY = 0;
+      }
+    }
+
+    container.addEventListener("pointerdown", onPointerDown);
+    container.addEventListener("pointermove", onPointerMove);
+    container.addEventListener("pointerup", endDrag);
+    container.addEventListener("pointercancel", endDrag);
+
     let raf = 0;
     let lastT = performance.now();
     let elapsed = 0;
@@ -152,9 +219,19 @@ export default function Stand3D() {
       const delta = (t - lastT) / 1000;
       lastT = t;
 
-      if (!reduce) {
+      const coasting = Math.abs(velocityX) > INERTIA_EPSILON || Math.abs(velocityY) > INERTIA_EPSILON;
+
+      if (isDragging) {
+        // rotation already applied directly in onPointerMove
+      } else if (!reduce && coasting) {
+        floppyGroup.rotation.y += velocityY * delta;
+        floppyGroup.rotation.x += velocityX * delta;
+        const decay = Math.exp(-INERTIA_DECAY * delta);
+        velocityX *= decay;
+        velocityY *= decay;
+      } else if (!reduce) {
         elapsed += delta;
-        floppyGroup.rotation.y += delta * 0.9;
+        floppyGroup.rotation.y += delta * AUTO_SPIN_SPEED;
         floppyGroup.position.y = Math.sin(elapsed * 1.4) * 0.05;
       }
 
@@ -167,6 +244,10 @@ export default function Stand3D() {
       disposed = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
+      container.removeEventListener("pointerdown", onPointerDown);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerup", endDrag);
+      container.removeEventListener("pointercancel", endDrag);
       disposables.forEach((d) => {
         d.geometry?.dispose();
         d.material?.dispose();
