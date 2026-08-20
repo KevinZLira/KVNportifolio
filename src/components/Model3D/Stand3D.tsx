@@ -49,9 +49,9 @@ export default function Stand3D() {
     const disposables: { geometry?: THREE.BufferGeometry; material?: THREE.Material }[] = [];
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 2.7, 3.9);
-    camera.lookAt(0, 0.95, 0);
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 3.4, 6.8);
+    camera.lookAt(0, 2.0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -142,7 +142,7 @@ export default function Stand3D() {
     let pedestalTopY = 0.2;
     let floppyBottomY = 0.7;
     let floppyBaseY = 0.75;
-    const FLOPPY_GAP = 0.32;
+    const FLOPPY_GAP = 0.45;
     const FLOPPY_TILT = THREE.MathUtils.degToRad(14);
     const rings: THREE.Mesh[] = [];
 
@@ -155,7 +155,7 @@ export default function Stand3D() {
       standGroup.add(standObj);
       pedestalTopY = standFit.size.y / 2;
 
-      fitAndCenter(floppyObj, 1.05);
+      fitAndCenter(floppyObj, 3.1);
       applyHologram(floppyObj);
       // stand the disk upright on its edge, leaning slightly, instead of
       // lying flat — its own bounding box after fitAndCenter is centered
