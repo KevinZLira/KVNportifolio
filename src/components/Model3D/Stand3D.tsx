@@ -153,7 +153,7 @@ export default function Stand3D() {
     let floppyBottomY = 0.7;
     let floppyBaseY = 0.75;
     const FLOPPY_GAP = 0.45;
-    const FLOPPY_TILT = THREE.MathUtils.degToRad(14);
+    const FLOPPY_TILT = 0;
     const rings: THREE.Mesh[] = [];
 
     async function build() {
