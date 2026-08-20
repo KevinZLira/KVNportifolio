@@ -1,0 +1,49 @@
+.stand3d {
+  position: absolute;
+  right: 4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(38vw, 460px);
+  height: min(38vw, 460px);
+  z-index: 1;
+}
+
+.stand3d-label {
+  position: absolute;
+  top: -22px;
+  right: 0;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.stand3d-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.stand3d-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 1099px) {
+  .stand3d {
+    width: min(46vw, 340px);
+    height: min(46vw, 340px);
+  }
+}
+
+@media (max-width: 720px) {
+  .stand3d {
+    position: static;
+    transform: none;
+    width: min(70vw, 300px);
+    height: min(70vw, 300px);
+    margin: 2em auto 0;
+  }
+  .stand3d-label {
+    text-align: right;
+  }
+}

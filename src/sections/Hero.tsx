@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import Stand3D from "../components/Model3D/Stand3D";
 import "./Hero.css";
 
 export default function Hero() {
@@ -132,6 +133,8 @@ export default function Hero() {
       </div>
 
       <div className="hero-grid" aria-hidden="true" />
+
+      <Stand3D />
     </section>
   );
 }
