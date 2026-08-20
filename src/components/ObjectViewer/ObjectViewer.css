@@ -85,28 +85,94 @@
   }
 }
 
-/* incomplete frame — two opposing corners, in front of the object */
+/* incomplete frame — four reticle marks, in front of the object. Each is
+   two short arms with a gap at the true corner, so it reads as a targeting
+   mark rather than a fragment of a missing rectangle. */
 .ov-corner {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   z-index: 3;
-  opacity: 0.55;
   pointer-events: none;
+}
+
+.ov-corner::before,
+.ov-corner::after {
+  content: "";
+  position: absolute;
+  background: var(--line-strong);
+}
+
+.ov-corner::before {
+  width: 11px;
+  height: 1px;
+}
+
+.ov-corner::after {
+  width: 1px;
+  height: 11px;
+}
+
+.ov-corner-tl,
+.ov-corner-br {
+  opacity: 0.85;
+}
+
+.ov-corner-tr,
+.ov-corner-bl {
+  opacity: 0.45;
 }
 
 .ov-corner-tl {
   top: 0;
   left: 0;
-  border-top: 1px solid var(--fg-dimmer);
-  border-left: 1px solid var(--fg-dimmer);
+}
+.ov-corner-tl::before {
+  top: 0;
+  left: 5px;
+}
+.ov-corner-tl::after {
+  top: 5px;
+  left: 0;
+}
+
+.ov-corner-tr {
+  top: 0;
+  right: 0;
+}
+.ov-corner-tr::before {
+  top: 0;
+  right: 5px;
+}
+.ov-corner-tr::after {
+  top: 5px;
+  right: 0;
+}
+
+.ov-corner-bl {
+  bottom: 0;
+  left: 0;
+}
+.ov-corner-bl::before {
+  bottom: 0;
+  left: 5px;
+}
+.ov-corner-bl::after {
+  bottom: 5px;
+  left: 0;
 }
 
 .ov-corner-br {
   bottom: 0;
   right: 0;
-  border-bottom: 1px solid var(--fg-dimmer);
-  border-right: 1px solid var(--fg-dimmer);
+}
+.ov-corner-br::before {
+  bottom: 0;
+  right: 5px;
+}
+.ov-corner-br::after {
+  bottom: 5px;
+  right: 0;
 }
 
 /* ---- HUD text, anchored to the stage's own edges ---- */
@@ -166,28 +232,51 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 6px;
   animation: ov-boot-in 0.4s ease-out;
 }
 
 .ov-meta-label {
   font-size: 9px;
-  opacity: 0.7;
+  letter-spacing: 0.16em;
+  opacity: 0.65;
 }
 
 .ov-meta-name {
   color: var(--primary);
-  font-size: 11px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 14px var(--primary-glow);
 }
 
 .ov-meta-name i {
   font-style: normal;
   color: var(--fg-dimmer);
-  margin: 0 3px;
+  opacity: 0.6;
+  margin: 0 5px;
+  text-shadow: none;
 }
 
 .ov-meta-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 9px;
+}
+
+.ov-meta-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ov-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary-glow);
+  animation: pulse-dot 2.4s ease-in-out infinite;
 }
 
 .ov-rot {

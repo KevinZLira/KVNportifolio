@@ -322,6 +322,8 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         </div>
 
         <span className="ov-corner ov-corner-tl" aria-hidden="true" />
+        <span className="ov-corner ov-corner-tr" aria-hidden="true" />
+        <span className="ov-corner ov-corner-bl" aria-hidden="true" />
         <span className="ov-corner ov-corner-br" aria-hidden="true" />
 
         <div className="ov-hud ov-hud-top t-mono">
@@ -335,12 +337,16 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
             </div>
           ) : (
             <div className="ov-meta">
-              <span className="ov-meta-label">OBJECT_VIEWER_01</span>
+              <span className="ov-meta-label">/ OBJECT_VIEWER_01</span>
               <span className="ov-meta-name">
                 {object.id} <i>/</i> {object.name}
               </span>
               <span className="ov-meta-sub">
-                {object.category} · {object.status}
+                <span>{object.category}</span>
+                <span className="ov-meta-status">
+                  <i className="ov-dot" />
+                  {object.status}
+                </span>
               </span>
             </div>
           )}
