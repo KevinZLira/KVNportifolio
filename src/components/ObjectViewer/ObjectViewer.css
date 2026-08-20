@@ -46,45 +46,6 @@
     drop-shadow(0 0 110px rgba(128, 244, 37, 0.4));
 }
 
-/* object anchor — sits behind the canvas so the model's own opaque pixels
-   occlude it naturally as it rotates, while it shows through the canvas's
-   transparent background elsewhere */
-.ov-anchor {
-  position: absolute;
-  left: 50%;
-  bottom: -6%;
-  width: 120px;
-  height: 120px;
-  transform: translate(-50%, 45%);
-  z-index: 0;
-  pointer-events: none;
-  animation: ov-anchor-pulse 5s ease-in-out infinite;
-}
-
-.ov-anchor svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.ov-anchor path,
-.ov-anchor line {
-  fill: none;
-  stroke: var(--primary);
-  stroke-width: 1;
-  opacity: 0.4;
-}
-
-@keyframes ov-anchor-pulse {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 /* incomplete frame — four reticle marks, in front of the object. Each is
    two short arms with a gap at the true corner, so it reads as a targeting
    mark rather than a fragment of a missing rectangle. */
@@ -189,9 +150,12 @@
   white-space: nowrap;
 }
 
+/* anchored straight to .hero's own right:6vw margin — the same edge
+   .hero-hud's "X:0000 Y:0000" readout uses — not to .ov-stage, so the two
+   line up exactly regardless of how the object itself is nudged. */
 .ov-hud-top {
-  top: -58px;
-  right: 0;
+  bottom: calc(100px + 38vw + 6px);
+  right: 6vw;
   align-items: flex-end;
   text-align: right;
 }
