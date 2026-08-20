@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import "./Stand3D.css";
-
-const FLOPPY_URL = "/models/floppy.obj";
+import { CURRENT_OBJECT, type ViewerObject } from "./objects";
+import "./ObjectViewer.css";
 
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
@@ -40,11 +39,63 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
 // rather than just hiding it with CSS, on both tablet and mobile.
 const COMPACT_QUERY = "(max-width: 1099px)";
 
-export default function Stand3D() {
+const BOOT_LOG = [
+  "OBJECT DETECTED",
+  "LOADING ARCHIVE...",
+  "OBJECT_VIEWER INITIALIZED",
+];
+
+function pad3(n: number) {
+  return String(Math.abs(Math.round(n)) % 1000).padStart(3, "0");
+}
+
+function toDeg(rad: number) {
+  const deg = (rad * 180) / Math.PI;
+  return ((deg % 360) + 360) % 360;
+}
+
+interface ObjectViewerProps {
+  object?: ViewerObject;
+}
+
+export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isCompact = useRef(
     typeof window !== "undefined" && window.matchMedia(COMPACT_QUERY).matches,
   ).current;
+
+  const [phase, setPhase] = useState<"boot" | "idle">("boot");
+  const [readout, setReadout] = useState({ rotX: 0, rotY: 0, coordX: 52, coordY: 64, coordZ: 1 });
+  const liveRef = useRef({ rotX: 0, rotY: 0, posY: 0, startT: performance.now() });
+
+  // Boot log plays once on mount, then the HUD settles into the live
+  // metadata/readout state that persists for the rest of the visit.
+  useEffect(() => {
+    if (isCompact) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => setPhase("idle"), reduce ? 0 : 2500);
+    return () => window.clearTimeout(timer);
+  }, [isCompact]);
+
+  // Low-frequency poll of the live rotation/position ref (written every
+  // frame inside the render loop below) so the HUD readout updates without
+  // forcing a React re-render on every animation frame.
+  useEffect(() => {
+    if (isCompact) return;
+    const id = window.setInterval(() => {
+      const live = liveRef.current;
+      const rotXdeg = toDeg(live.rotX);
+      const rotYdeg = toDeg(live.rotY);
+      setReadout({
+        rotX: rotXdeg,
+        rotY: rotYdeg,
+        coordX: 52 + Math.round(rotYdeg * 0.6),
+        coordY: 64 + Math.round(live.posY * 400),
+        coordZ: 1 + Math.round((performance.now() - live.startT) / 1000),
+      });
+    }, 180);
+    return () => window.clearInterval(id);
+  }, [isCompact]);
 
   useEffect(() => {
     if (isCompact) return;
@@ -80,11 +131,11 @@ export default function Stand3D() {
     rim2.position.set(2, -0.5, -1.5);
     scene.add(rim2);
 
-    const floppyGroup = new THREE.Group();
-    scene.add(floppyGroup);
+    const objectGroup = new THREE.Group();
+    scene.add(objectGroup);
 
-    function applyHologram(object: THREE.Group) {
-      object.traverse((child) => {
+    function applyHologram(mesh: THREE.Group) {
+      mesh.traverse((child) => {
         if (!(child instanceof THREE.Mesh)) return;
         const material = new THREE.MeshStandardMaterial({
           color: 0x0a2e08,
@@ -114,19 +165,19 @@ export default function Stand3D() {
     }
 
     async function build() {
-      const floppyObj = await loadObj(FLOPPY_URL);
+      const mesh = await loadObj(object.modelUrl);
       if (disposed) return;
 
-      fitAndCenter(floppyObj, 2.3);
-      applyHologram(floppyObj);
-      // stand the disk upright on its edge (90° to how it was authored,
+      fitAndCenter(mesh, object.targetSize);
+      applyHologram(mesh);
+      // stand the object upright on its edge (90° to how it was authored,
       // lying flat) — its bounding box after fitAndCenter is centered on
       // the object's local origin, so rotating in place keeps it centered
-      floppyObj.rotation.x = Math.PI / 2;
-      floppyGroup.add(floppyObj);
+      mesh.rotation.x = Math.PI / 2;
+      objectGroup.add(mesh);
       // start at a 3/4 angle instead of face-on — face-on reads as an
       // oversized close-up (and is the only frame reduced-motion users see)
-      floppyGroup.rotation.y = 0.7;
+      objectGroup.rotation.y = 0.7;
     }
 
     build().catch((err) => console.error("Failed to load 3D model", err));
@@ -189,8 +240,8 @@ export default function Stand3D() {
 
       const rotDeltaY = dx * DRAG_SENSITIVITY;
       const rotDeltaX = dy * DRAG_SENSITIVITY;
-      floppyGroup.rotation.y += rotDeltaY;
-      floppyGroup.rotation.x += rotDeltaX;
+      objectGroup.rotation.y += rotDeltaY;
+      objectGroup.rotation.x += rotDeltaX;
 
       velocityY = rotDeltaY / dt;
       velocityX = rotDeltaX / dt;
@@ -224,16 +275,20 @@ export default function Stand3D() {
       if (isDragging) {
         // rotation already applied directly in onPointerMove
       } else if (!reduce && coasting) {
-        floppyGroup.rotation.y += velocityY * delta;
-        floppyGroup.rotation.x += velocityX * delta;
+        objectGroup.rotation.y += velocityY * delta;
+        objectGroup.rotation.x += velocityX * delta;
         const decay = Math.exp(-INERTIA_DECAY * delta);
         velocityX *= decay;
         velocityY *= decay;
       } else if (!reduce) {
         elapsed += delta;
-        floppyGroup.rotation.y += delta * AUTO_SPIN_SPEED;
-        floppyGroup.position.y = Math.sin(elapsed * 1.4) * 0.05;
+        objectGroup.rotation.y += delta * AUTO_SPIN_SPEED;
+        objectGroup.position.y = Math.sin(elapsed * 1.4) * 0.05;
       }
+
+      liveRef.current.rotX = objectGroup.rotation.x;
+      liveRef.current.rotY = objectGroup.rotation.y;
+      liveRef.current.posY = objectGroup.position.y;
 
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
@@ -257,17 +312,89 @@ export default function Stand3D() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [isCompact]);
+  }, [isCompact, object]);
 
   if (isCompact) return null;
 
   return (
-    <div className="stand3d">
-      <div className="stand3d-label t-mono">
-        <span>DATA_DISK.OBJ</span>
-        <span className="stand3d-label-accent">HOLOGRAM ACTIVE</span>
+    <div className={`object-viewer is-${phase}`}>
+      <svg className="ov-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <circle cx="50" cy="56" r="34" />
+        <circle cx="50" cy="56" r="21" />
+        <line x1="0" y1="56" x2="100" y2="56" />
+        <line x1="50" y1="8" x2="50" y2="104" />
+      </svg>
+
+      <div className="ov-anchor" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <path d="M 60 8 A 52 52 0 1 1 16 84" />
+          <line x1="60" y1="48" x2="60" y2="72" />
+          <line x1="48" y1="60" x2="72" y2="60" />
+        </svg>
       </div>
-      <div ref={containerRef} className="stand3d-canvas" />
+
+      <div className="ov-frame" aria-hidden="true">
+        <span className="ov-corner ov-corner-tl" />
+        <span className="ov-corner ov-corner-tr" />
+        <span className="ov-corner ov-corner-bl" />
+        <span className="ov-stray ov-stray-a" />
+        <span className="ov-stray ov-stray-b" />
+      </div>
+
+      <div className="ov-scan" aria-hidden="true" />
+
+      <div className="ov-hud ov-hud-top t-mono">
+        <span className="ov-breadcrumb">
+          KVN_SYSTEM<span className="ov-breadcrumb-sep">›</span>OBJECT_VIEWER_01
+        </span>
+        {phase === "boot" ? (
+          <div className="ov-boot">
+            {BOOT_LOG.map((line, i) => (
+              <p key={line} style={{ animationDelay: `${i * 0.5}s` }}>
+                &gt; {line}
+              </p>
+            ))}
+            <p style={{ animationDelay: "1.5s" }}>
+              &gt; {object.id}: {object.name}
+            </p>
+            <p style={{ animationDelay: "2s" }}>&gt; MANUAL INSPECTION ENABLED</p>
+          </div>
+        ) : (
+          <div className="ov-meta">
+            <span className="ov-meta-id">{object.id}</span>
+            <span className="ov-meta-name">{object.name}</span>
+            <span>TYPE: {object.category}</span>
+            <span>
+              STATUS: <i className="ov-dot" />
+              {object.status}
+            </span>
+            <span>ROTATION: {object.rotationMode}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="ov-hud ov-hud-bottom t-mono">
+        <div className="ov-readout">
+          <span>ROT_X: {pad3(readout.rotX)}°</span>
+          <span>ROT_Y: {pad3(readout.rotY)}°</span>
+          <span>ROT_Z: 000°</span>
+        </div>
+        <div className="ov-readout">
+          <span>X: {pad3(readout.coordX)}</span>
+          <span>Y: {pad3(readout.coordY)}</span>
+          <span>Z: {pad3(readout.coordZ)}</span>
+        </div>
+        <div className="ov-instruction">[ CLICK + DRAG / INSPECT ]</div>
+      </div>
+
+      <div className="ov-tracking ov-tracking-a t-mono" aria-hidden="true">
+        <span>{object.sectorLabel}</span>
+      </div>
+      <div className="ov-tracking ov-tracking-b t-mono" aria-hidden="true">
+        <span>{object.unitLabel}</span>
+      </div>
+
+      <div ref={containerRef} className="ov-canvas" />
     </div>
   );
 }
