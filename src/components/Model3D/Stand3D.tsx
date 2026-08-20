@@ -117,7 +117,7 @@ export default function Stand3D() {
       const floppyObj = await loadObj(FLOPPY_URL);
       if (disposed) return;
 
-      fitAndCenter(floppyObj, 3.1);
+      fitAndCenter(floppyObj, 2.3);
       applyHologram(floppyObj);
       // stand the disk upright on its edge (90° to how it was authored,
       // lying flat) — its bounding box after fitAndCenter is centered on
