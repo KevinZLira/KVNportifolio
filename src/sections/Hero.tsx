@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import BeaconArray from "../components/Beacons/BeaconArray";
 import "./Hero.css";
 
 export default function Hero() {
@@ -41,6 +42,18 @@ export default function Hero() {
             ease: "power2.out",
           },
           reduce ? 0 : "-=0.3",
+        )
+        .from(
+          ".beacon",
+          {
+            opacity: reduce ? 1 : 0,
+            scaleY: reduce ? 1 : 0.3,
+            transformOrigin: "bottom",
+            duration: reduce ? 0 : 0.4,
+            stagger: reduce ? 0 : 0.12,
+            ease: "power2.out",
+          },
+          reduce ? 0 : "-=0.2",
         );
     }, section);
 
@@ -132,6 +145,8 @@ export default function Hero() {
       </div>
 
       <div className="hero-grid" aria-hidden="true" />
+
+      <BeaconArray />
     </section>
   );
 }
