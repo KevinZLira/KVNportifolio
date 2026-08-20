@@ -1,11 +1,7 @@
 .stand3d {
   position: absolute;
-  /* Capped in px so the mount stays anchored near the (fixed-max-width)
-     hero text on very wide/2K+ screens instead of drifting away from
-     it — a plain percentage keeps growing with viewport width even
-     after the text block itself stops scaling. */
-  left: min(34%, 653px);
-  right: min(4vw, 90px);
+  left: 34%;
+  right: 4vw;
   bottom: 250px;
   display: flex;
   justify-content: center;
@@ -31,8 +27,8 @@
 }
 
 .stand3d-canvas {
-  width: min(38vw, 620px);
-  height: min(38vw, 620px);
+  width: 38vw;
+  height: 38vw;
 }
 
 .stand3d-canvas canvas {
