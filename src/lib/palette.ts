@@ -5,6 +5,8 @@ interface Palette {
   accent: string;
   accentDim: string;
   accentGlow: string;
+  logoBody: string;
+  logoAccent: string;
 }
 
 const PALETTES: Palette[] = [
@@ -15,6 +17,8 @@ const PALETTES: Palette[] = [
     accent: "#ff2ec4",
     accentDim: "#7a1a63",
     accentGlow: "rgba(255, 46, 196, 0.3)",
+    logoBody: "#eef2e8",
+    logoAccent: "#80f425",
   },
   {
     primary: "#f6ef03",
@@ -23,6 +27,8 @@ const PALETTES: Palette[] = [
     accent: "#fb3d87",
     accentDim: "#691a39",
     accentGlow: "rgba(251, 61, 135, 0.3)",
+    logoBody: "#f6ef03",
+    logoAccent: "#fb3d87",
   },
 ];
 
@@ -35,4 +41,6 @@ export function applyRandomPalette() {
   root.setProperty("--accent", palette.accent);
   root.setProperty("--accent-dim", palette.accentDim);
   root.setProperty("--accent-glow", palette.accentGlow);
+  root.setProperty("--logo-body", palette.logoBody);
+  root.setProperty("--logo-accent", palette.logoAccent);
 }
