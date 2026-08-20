@@ -21,8 +21,19 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
   const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
   const scale = targetSize / maxDim;
+
+  // Bake the centering offset into the geometry itself (not object.position)
+  // so it survives any rotation applied to the object afterward — position
+  // is applied *after* rotation in the local transform, so a position-based
+  // offset computed for the unrotated object would land in the wrong place
+  // once the object is rotated.
+  object.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.geometry.translate(-center.x, -center.y, -center.z);
+    }
+  });
   object.scale.setScalar(scale);
-  object.position.sub(center.multiplyScalar(scale));
+
   return { size: size.multiplyScalar(scale), scale };
 }
 
@@ -39,8 +50,8 @@ export default function Stand3D() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 2.3, 3.1);
-    camera.lookAt(0, 0.55, 0);
+    camera.position.set(0, 2.7, 3.9);
+    camera.lookAt(0, 0.95, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -62,14 +73,18 @@ export default function Stand3D() {
     rim2.position.set(2, -0.5, -1.5);
     scene.add(rim2);
 
+    const rig = new THREE.Group();
+    rig.position.y = 0.4;
+    scene.add(rig);
+
     const standGroup = new THREE.Group();
-    scene.add(standGroup);
+    rig.add(standGroup);
 
     const beamGroup = new THREE.Group();
-    scene.add(beamGroup);
+    rig.add(beamGroup);
 
     const floppyGroup = new THREE.Group();
-    scene.add(floppyGroup);
+    rig.add(floppyGroup);
 
     function applyMetal(object: THREE.Group) {
       object.traverse((child) => {
@@ -126,6 +141,9 @@ export default function Stand3D() {
 
     let pedestalTopY = 0.2;
     let floppyBottomY = 0.7;
+    let floppyBaseY = 0.75;
+    const FLOPPY_GAP = 0.32;
+    const FLOPPY_TILT = THREE.MathUtils.degToRad(14);
     const rings: THREE.Mesh[] = [];
 
     async function build() {
@@ -137,15 +155,22 @@ export default function Stand3D() {
       standGroup.add(standObj);
       pedestalTopY = standFit.size.y / 2;
 
-      const floppyFit = fitAndCenter(floppyObj, 1.05);
+      fitAndCenter(floppyObj, 1.05);
       applyHologram(floppyObj);
-      const floppyBaseY = pedestalTopY + 0.55;
+      // stand the disk upright on its edge, leaning slightly, instead of
+      // lying flat — its own bounding box after fitAndCenter is centered
+      // on the object's local origin, so rotating in place keeps it centered
+      floppyObj.rotation.x = Math.PI / 2 + FLOPPY_TILT;
+      const standingBox = new THREE.Box3().setFromObject(floppyObj);
+      const standingSize = standingBox.getSize(new THREE.Vector3());
+
+      floppyBottomY = pedestalTopY + FLOPPY_GAP;
+      floppyBaseY = floppyBottomY + standingSize.y / 2;
       floppyGroup.position.y = floppyBaseY;
       floppyGroup.add(floppyObj);
-      floppyBottomY = floppyBaseY - floppyFit.size.y / 2 - 0.06;
 
       const coneHeight = floppyBottomY - pedestalTopY;
-      const topRadius = Math.max(floppyFit.size.x, floppyFit.size.z) * 0.42;
+      const topRadius = Math.max(standingSize.x, standingSize.z) * 0.55;
       const coneGeo = new THREE.CylinderGeometry(topRadius, 0.04, coneHeight, 28, 1, true);
       const coneMat = new THREE.MeshBasicMaterial({
         color: PRIMARY,
@@ -208,7 +233,7 @@ export default function Stand3D() {
         elapsed += delta;
         standGroup.rotation.y += delta * 0.5;
         floppyGroup.rotation.y += delta * 0.9;
-        floppyGroup.position.y = pedestalTopY + 0.55 + Math.sin(elapsed * 1.4) * 0.03;
+        floppyGroup.position.y = floppyBaseY + Math.sin(elapsed * 1.4) * 0.03;
 
         const coneHeight = floppyBottomY - pedestalTopY;
         rings.forEach((ring) => {
