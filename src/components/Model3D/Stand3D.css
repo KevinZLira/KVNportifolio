@@ -5,7 +5,6 @@
   bottom: 100px;
   display: flex;
   justify-content: center;
-  transform: translateX(60px);
   z-index: 1;
 }
 
@@ -30,10 +29,12 @@
 .stand3d-canvas {
   width: 38vw;
   height: 38vw;
+  transform: translateX(60px);
 }
 
 .stand3d-canvas canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+  filter: drop-shadow(0 0 14px rgba(128, 244, 37, 0.55)) drop-shadow(0 0 36px rgba(128, 244, 37, 0.35));
 }
