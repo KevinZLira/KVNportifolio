@@ -65,9 +65,16 @@
   display: block;
   height: clamp(3.2rem, 14vw, 11rem);
   width: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1900 / 700;
+}
+
+.hero-logo-white {
+  fill: var(--fg);
+}
+
+.hero-logo-accent {
   fill: var(--primary);
-  filter: drop-shadow(0 0 22px var(--primary-glow));
+  filter: drop-shadow(0 0 16px var(--primary-glow));
 }
 
 .hero-role {
