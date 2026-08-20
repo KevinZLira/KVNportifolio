@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import "./Stand3D.css";
 
-const STAND_URL = "/models/stand.obj";
 const FLOPPY_URL = "/models/floppy.obj";
 
 const PRIMARY = 0x80f425;
@@ -43,8 +42,6 @@ const COMPACT_QUERY = "(max-width: 1099px)";
 
 export default function Stand3D() {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Not planned for mobile at all — skip mounting the WebGL scene entirely
-  // there rather than just hiding it with CSS.
   const isCompact = useRef(
     typeof window !== "undefined" && window.matchMedia(COMPACT_QUERY).matches,
   ).current;
@@ -59,9 +56,9 @@ export default function Stand3D() {
     const disposables: { geometry?: THREE.BufferGeometry; material?: THREE.Material }[] = [];
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 3.4, 6.8);
-    camera.lookAt(0, 2.0, 0);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0.4, 4.8);
+    camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -83,41 +80,8 @@ export default function Stand3D() {
     rim2.position.set(2, -0.5, -1.5);
     scene.add(rim2);
 
-    const rig = new THREE.Group();
-    rig.position.y = 0.4;
-    scene.add(rig);
-
-    const standGroup = new THREE.Group();
-    rig.add(standGroup);
-
-    const beamGroup = new THREE.Group();
-    rig.add(beamGroup);
-
     const floppyGroup = new THREE.Group();
-    rig.add(floppyGroup);
-
-    function applyMetal(object: THREE.Group) {
-      object.traverse((child) => {
-        if (!(child instanceof THREE.Mesh)) return;
-        const material = new THREE.MeshStandardMaterial({
-          color: 0x232323,
-          metalness: 0.7,
-          roughness: 0.3,
-        });
-        child.material = material;
-        disposables.push({ geometry: child.geometry, material });
-
-        const wireGeo = new THREE.EdgesGeometry(child.geometry, 20);
-        const wireMat = new THREE.LineBasicMaterial({
-          color: PRIMARY,
-          transparent: true,
-          opacity: 0.5,
-        });
-        const wire = new THREE.LineSegments(wireGeo, wireMat);
-        child.add(wire);
-        disposables.push({ geometry: wireGeo, material: wireMat });
-      });
-    }
+    scene.add(floppyGroup);
 
     function applyHologram(object: THREE.Group) {
       object.traverse((child) => {
@@ -149,74 +113,23 @@ export default function Stand3D() {
       });
     }
 
-    let pedestalTopY = 0.2;
-    let floppyBottomY = 0.7;
-    let floppyBaseY = 0.75;
-    const FLOPPY_GAP = 0.45;
-    const FLOPPY_TILT = 0;
-    const rings: THREE.Mesh[] = [];
-
     async function build() {
-      const [standObj, floppyObj] = await Promise.all([loadObj(STAND_URL), loadObj(FLOPPY_URL)]);
+      const floppyObj = await loadObj(FLOPPY_URL);
       if (disposed) return;
-
-      const standFit = fitAndCenter(standObj, 3.3);
-      applyMetal(standObj);
-      standGroup.add(standObj);
-      pedestalTopY = standFit.size.y / 2;
 
       fitAndCenter(floppyObj, 3.1);
       applyHologram(floppyObj);
-      // stand the disk upright on its edge, leaning slightly, instead of
-      // lying flat — its own bounding box after fitAndCenter is centered
-      // on the object's local origin, so rotating in place keeps it centered
-      floppyObj.rotation.x = Math.PI / 2 + FLOPPY_TILT;
-      const standingBox = new THREE.Box3().setFromObject(floppyObj);
-      const standingSize = standingBox.getSize(new THREE.Vector3());
-
-      floppyBottomY = pedestalTopY + FLOPPY_GAP;
-      floppyBaseY = floppyBottomY + standingSize.y / 2;
-      floppyGroup.position.y = floppyBaseY;
+      // stand the disk upright on its edge (90° to how it was authored,
+      // lying flat) — its bounding box after fitAndCenter is centered on
+      // the object's local origin, so rotating in place keeps it centered
+      floppyObj.rotation.x = Math.PI / 2;
       floppyGroup.add(floppyObj);
-
-      const coneHeight = floppyBottomY - pedestalTopY;
-      const topRadius = Math.max(standingSize.x, standingSize.z) * 0.3;
-      const coneGeo = new THREE.CylinderGeometry(topRadius, 0.04, coneHeight, 28, 1, true);
-      const coneMat = new THREE.MeshBasicMaterial({
-        color: PRIMARY,
-        transparent: true,
-        opacity: 0.09,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      });
-      const cone = new THREE.Mesh(coneGeo, coneMat);
-      cone.position.y = pedestalTopY + coneHeight / 2;
-      beamGroup.add(cone);
-      disposables.push({ geometry: coneGeo, material: coneMat });
-
-      const ringCount = 4;
-      for (let i = 0; i < ringCount; i++) {
-        const ringGeo = new THREE.RingGeometry(0.01, 0.03, 24);
-        const ringMat = new THREE.MeshBasicMaterial({
-          color: PRIMARY,
-          transparent: true,
-          opacity: 0,
-          side: THREE.DoubleSide,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-        });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = -Math.PI / 2;
-        ring.userData.phase = i / ringCount;
-        ring.position.y = pedestalTopY + coneHeight * ring.userData.phase;
-        beamGroup.add(ring);
-        rings.push(ring);
-        disposables.push({ geometry: ringGeo, material: ringMat });
-      }
+      // start at a 3/4 angle instead of face-on — face-on reads as an
+      // oversized close-up (and is the only frame reduced-motion users see)
+      floppyGroup.rotation.y = 0.7;
     }
 
-    build().catch((err) => console.error("Failed to load 3D models", err));
+    build().catch((err) => console.error("Failed to load 3D model", err));
 
     function resize() {
       if (!container) return;
@@ -241,19 +154,8 @@ export default function Stand3D() {
 
       if (!reduce) {
         elapsed += delta;
-        standGroup.rotation.y += delta * 0.5;
         floppyGroup.rotation.y += delta * 0.9;
-        floppyGroup.position.y = floppyBaseY + Math.sin(elapsed * 1.4) * 0.03;
-
-        const coneHeight = floppyBottomY - pedestalTopY;
-        rings.forEach((ring) => {
-          const phase = (ring.userData.phase + elapsed * 0.18) % 1;
-          ring.userData.phase = phase;
-          ring.position.y = pedestalTopY + coneHeight * phase;
-          ring.scale.setScalar(1 + phase * 10);
-          const mat = ring.material as THREE.MeshBasicMaterial;
-          mat.opacity = Math.sin(phase * Math.PI) * 0.35;
-        });
+        floppyGroup.position.y = Math.sin(elapsed * 1.4) * 0.05;
       }
 
       renderer.render(scene, camera);
@@ -274,15 +176,15 @@ export default function Stand3D() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [isCompact]);
 
   if (isCompact) return null;
 
   return (
     <div className="stand3d">
       <div className="stand3d-label t-mono">
-        <span>STAND_MODEL.OBJ</span>
-        <span className="stand3d-label-accent">PROJECTING: DATA_DISK</span>
+        <span>DATA_DISK.OBJ</span>
+        <span className="stand3d-label-accent">HOLOGRAM ACTIVE</span>
       </div>
       <div ref={containerRef} className="stand3d-canvas" />
     </div>
