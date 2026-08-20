@@ -1,8 +1,8 @@
 .stand3d {
   position: absolute;
-  left: 50%;
+  left: 42%;
   right: 6vw;
-  bottom: 70px;
+  bottom: 50px;
   display: flex;
   justify-content: center;
   z-index: 1;
@@ -30,8 +30,8 @@
 
 @media (max-width: 1099px) {
   .stand3d {
-    left: 44%;
-    bottom: 60px;
+    left: 38%;
+    bottom: 44px;
   }
   .stand3d-canvas {
     width: min(46vw, 420px);
