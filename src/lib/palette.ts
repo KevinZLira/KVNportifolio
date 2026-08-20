@@ -36,6 +36,18 @@ const PALETTES: Palette[] = [
     roleColor: "#fb3d87",
     roleGlow: "rgba(251, 61, 135, 0.3)",
   },
+  {
+    primary: "#b0ebf9",
+    primaryDim: "#4a6369",
+    primaryGlow: "rgba(176, 235, 249, 0.35)",
+    accent: "#c60ac1",
+    accentDim: "#530451",
+    accentGlow: "rgba(198, 10, 193, 0.3)",
+    logoBody: "#b0ebf9",
+    logoAccent: "#c60ac1",
+    roleColor: "#c60ac1",
+    roleGlow: "rgba(198, 10, 193, 0.3)",
+  },
 ];
 
 const STORAGE_KEY = "kvn-palette-index";
