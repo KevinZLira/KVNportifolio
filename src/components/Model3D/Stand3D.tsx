@@ -37,18 +37,20 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
   return { size: size.multiplyScalar(scale), scale };
 }
 
-const MOBILE_QUERY = "(max-width: 720px)";
+// Desktop-only for now — skip mounting the WebGL scene below this width
+// rather than just hiding it with CSS, on both tablet and mobile.
+const COMPACT_QUERY = "(max-width: 1099px)";
 
 export default function Stand3D() {
   const containerRef = useRef<HTMLDivElement>(null);
   // Not planned for mobile at all — skip mounting the WebGL scene entirely
   // there rather than just hiding it with CSS.
-  const isMobile = useRef(
-    typeof window !== "undefined" && window.matchMedia(MOBILE_QUERY).matches,
+  const isCompact = useRef(
+    typeof window !== "undefined" && window.matchMedia(COMPACT_QUERY).matches,
   ).current;
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isCompact) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -274,7 +276,7 @@ export default function Stand3D() {
     };
   }, []);
 
-  if (isMobile) return null;
+  if (isCompact) return null;
 
   return (
     <div className="stand3d">

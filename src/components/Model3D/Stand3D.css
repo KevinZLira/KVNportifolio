@@ -2,7 +2,7 @@
   position: absolute;
   left: 34%;
   right: 4vw;
-  bottom: 150px;
+  bottom: 250px;
   display: flex;
   justify-content: center;
   z-index: 1;
@@ -35,15 +35,4 @@
   display: block;
   width: 100% !important;
   height: 100% !important;
-}
-
-@media (max-width: 1099px) {
-  .stand3d {
-    left: 30%;
-    bottom: 146px;
-  }
-  .stand3d-canvas {
-    width: min(48vw, 440px);
-    height: min(48vw, 440px);
-  }
 }
