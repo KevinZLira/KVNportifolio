@@ -32,8 +32,22 @@ const PALETTES: Palette[] = [
   },
 ];
 
-export function applyRandomPalette() {
-  const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+const STORAGE_KEY = "kvn-palette-index";
+
+function nextPaletteIndex(): number {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const prevIndex = stored === null ? -1 : Number(stored);
+    const index = (prevIndex + 1) % PALETTES.length;
+    window.localStorage.setItem(STORAGE_KEY, String(index));
+    return index;
+  } catch {
+    return Math.floor(Math.random() * PALETTES.length);
+  }
+}
+
+export function applyNextPalette() {
+  const palette = PALETTES[nextPaletteIndex()];
   const root = document.documentElement.style;
   root.setProperty("--primary", palette.primary);
   root.setProperty("--primary-dim", palette.primaryDim);
