@@ -37,10 +37,18 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
   return { size: size.multiplyScalar(scale), scale };
 }
 
+const MOBILE_QUERY = "(max-width: 720px)";
+
 export default function Stand3D() {
   const containerRef = useRef<HTMLDivElement>(null);
+  // Not planned for mobile at all — skip mounting the WebGL scene entirely
+  // there rather than just hiding it with CSS.
+  const isMobile = useRef(
+    typeof window !== "undefined" && window.matchMedia(MOBILE_QUERY).matches,
+  ).current;
 
   useEffect(() => {
+    if (isMobile) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -150,7 +158,7 @@ export default function Stand3D() {
       const [standObj, floppyObj] = await Promise.all([loadObj(STAND_URL), loadObj(FLOPPY_URL)]);
       if (disposed) return;
 
-      const standFit = fitAndCenter(standObj, 2.2);
+      const standFit = fitAndCenter(standObj, 3.3);
       applyMetal(standObj);
       standGroup.add(standObj);
       pedestalTopY = standFit.size.y / 2;
@@ -170,7 +178,7 @@ export default function Stand3D() {
       floppyGroup.add(floppyObj);
 
       const coneHeight = floppyBottomY - pedestalTopY;
-      const topRadius = Math.max(standingSize.x, standingSize.z) * 0.55;
+      const topRadius = Math.max(standingSize.x, standingSize.z) * 0.3;
       const coneGeo = new THREE.CylinderGeometry(topRadius, 0.04, coneHeight, 28, 1, true);
       const coneMat = new THREE.MeshBasicMaterial({
         color: PRIMARY,
@@ -265,6 +273,8 @@ export default function Stand3D() {
       }
     };
   }, []);
+
+  if (isMobile) return null;
 
   return (
     <div className="stand3d">
