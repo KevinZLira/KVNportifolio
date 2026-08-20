@@ -79,9 +79,9 @@
 
 .hero-role {
   font-size: clamp(1.1rem, 3.4vw, 2.6rem);
-  color: var(--accent);
+  color: var(--role-color);
   margin-top: 0.3em;
-  text-shadow: 0 0 20px var(--accent-glow);
+  text-shadow: 0 0 20px var(--role-glow);
 }
 
 .hero-sub {

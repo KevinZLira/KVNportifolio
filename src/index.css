@@ -24,6 +24,8 @@
 
   --logo-body: #eef2e8;
   --logo-accent: #80f425;
+  --role-color: #80f425;
+  --role-glow: rgba(128, 244, 37, 0.35);
 
   --warn: #ffd23f;
   --error: #ff4d4d;

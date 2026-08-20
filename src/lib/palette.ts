@@ -7,6 +7,8 @@ interface Palette {
   accentGlow: string;
   logoBody: string;
   logoAccent: string;
+  roleColor: string;
+  roleGlow: string;
 }
 
 const PALETTES: Palette[] = [
@@ -19,6 +21,8 @@ const PALETTES: Palette[] = [
     accentGlow: "rgba(255, 46, 196, 0.3)",
     logoBody: "#eef2e8",
     logoAccent: "#80f425",
+    roleColor: "#80f425",
+    roleGlow: "rgba(128, 244, 37, 0.35)",
   },
   {
     primary: "#f6ef03",
@@ -29,6 +33,8 @@ const PALETTES: Palette[] = [
     accentGlow: "rgba(251, 61, 135, 0.3)",
     logoBody: "#f6ef03",
     logoAccent: "#fb3d87",
+    roleColor: "#fb3d87",
+    roleGlow: "rgba(251, 61, 135, 0.3)",
   },
 ];
 
@@ -57,4 +63,6 @@ export function applyNextPalette() {
   root.setProperty("--accent-glow", palette.accentGlow);
   root.setProperty("--logo-body", palette.logoBody);
   root.setProperty("--logo-accent", palette.logoAccent);
+  root.setProperty("--role-color", palette.roleColor);
+  root.setProperty("--role-glow", palette.roleGlow);
 }
