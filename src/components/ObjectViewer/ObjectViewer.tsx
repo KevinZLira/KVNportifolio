@@ -39,12 +39,6 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
 // rather than just hiding it with CSS, on both tablet and mobile.
 const COMPACT_QUERY = "(max-width: 1099px)";
 
-const BOOT_LOG = [
-  "OBJECT DETECTED",
-  "LOADING ARCHIVE...",
-  "OBJECT_VIEWER INITIALIZED",
-];
-
 function pad3(n: number) {
   return String(Math.abs(Math.round(n)) % 1000).padStart(3, "0");
 }
@@ -65,33 +59,27 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
   ).current;
 
   const [phase, setPhase] = useState<"boot" | "idle">("boot");
-  const [readout, setReadout] = useState({ rotX: 0, rotY: 0, coordX: 52, coordY: 64, coordZ: 1 });
-  const liveRef = useRef({ rotX: 0, rotY: 0, posY: 0, startT: performance.now() });
+  const [readout, setReadout] = useState({ rotX: 0, rotY: 0 });
+  const liveRef = useRef({ rotX: 0, rotY: 0 });
 
   // Boot log plays once on mount, then the HUD settles into the live
   // metadata/readout state that persists for the rest of the visit.
   useEffect(() => {
     if (isCompact) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(() => setPhase("idle"), reduce ? 0 : 2500);
+    const timer = window.setTimeout(() => setPhase("idle"), reduce ? 0 : 1600);
     return () => window.clearTimeout(timer);
   }, [isCompact]);
 
-  // Low-frequency poll of the live rotation/position ref (written every
-  // frame inside the render loop below) so the HUD readout updates without
-  // forcing a React re-render on every animation frame.
+  // Low-frequency poll of the live rotation ref (written every frame inside
+  // the render loop below) so the HUD readout updates without forcing a
+  // React re-render on every animation frame.
   useEffect(() => {
     if (isCompact) return;
     const id = window.setInterval(() => {
-      const live = liveRef.current;
-      const rotXdeg = toDeg(live.rotX);
-      const rotYdeg = toDeg(live.rotY);
       setReadout({
-        rotX: rotXdeg,
-        rotY: rotYdeg,
-        coordX: 52 + Math.round(rotYdeg * 0.6),
-        coordY: 64 + Math.round(live.posY * 400),
-        coordZ: 1 + Math.round((performance.now() - live.startT) / 1000),
+        rotX: toDeg(liveRef.current.rotX),
+        rotY: toDeg(liveRef.current.rotY),
       });
     }, 180);
     return () => window.clearInterval(id);
@@ -288,7 +276,6 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
 
       liveRef.current.rotX = objectGroup.rotation.x;
       liveRef.current.rotY = objectGroup.rotation.y;
-      liveRef.current.posY = objectGroup.position.y;
 
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
@@ -316,85 +303,56 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
 
   if (isCompact) return null;
 
+  // Everything below lives inside .ov-stage — the exact box the canvas
+  // fills — so the frame, anchor and HUD text share one coordinate space
+  // with the object itself and can never drift apart from it.
   return (
-    <div className={`object-viewer is-${phase}`}>
-      <svg className="ov-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <circle cx="50" cy="56" r="34" />
-        <circle cx="50" cy="56" r="21" />
-        <line x1="0" y1="56" x2="100" y2="56" />
-        <line x1="50" y1="8" x2="50" y2="104" />
-      </svg>
+    <div className="object-viewer">
+      <div className={`ov-stage is-${phase}`}>
+        <div className="ov-field" aria-hidden="true" />
 
-      <div className="ov-anchor" aria-hidden="true">
-        <svg viewBox="0 0 120 120">
-          <path d="M 60 8 A 52 52 0 1 1 16 84" />
-          <line x1="60" y1="48" x2="60" y2="72" />
-          <line x1="48" y1="60" x2="72" y2="60" />
-        </svg>
-      </div>
+        <div ref={containerRef} className="ov-canvas" />
 
-      <div className="ov-frame" aria-hidden="true">
-        <span className="ov-corner ov-corner-tl" />
-        <span className="ov-corner ov-corner-tr" />
-        <span className="ov-corner ov-corner-bl" />
-        <span className="ov-stray ov-stray-a" />
-        <span className="ov-stray ov-stray-b" />
-      </div>
+        <div className="ov-anchor" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <path d="M 50 6 A 44 44 0 1 1 9.2 68" />
+            <line x1="50" y1="42" x2="50" y2="58" />
+            <line x1="42" y1="50" x2="58" y2="50" />
+          </svg>
+        </div>
 
-      <div className="ov-scan" aria-hidden="true" />
+        <span className="ov-corner ov-corner-tl" aria-hidden="true" />
+        <span className="ov-corner ov-corner-br" aria-hidden="true" />
 
-      <div className="ov-hud ov-hud-top t-mono">
-        <span className="ov-breadcrumb">
-          KVN_SYSTEM<span className="ov-breadcrumb-sep">›</span>OBJECT_VIEWER_01
-        </span>
-        {phase === "boot" ? (
-          <div className="ov-boot">
-            {BOOT_LOG.map((line, i) => (
-              <p key={line} style={{ animationDelay: `${i * 0.5}s` }}>
-                &gt; {line}
+        <div className="ov-hud ov-hud-top t-mono">
+          {phase === "boot" ? (
+            <div className="ov-boot">
+              <p>&gt; OBJECT DETECTED</p>
+              <p style={{ animationDelay: "0.45s" }}>
+                &gt; {object.id} · {object.name}
               </p>
-            ))}
-            <p style={{ animationDelay: "1.5s" }}>
-              &gt; {object.id}: {object.name}
-            </p>
-            <p style={{ animationDelay: "2s" }}>&gt; MANUAL INSPECTION ENABLED</p>
-          </div>
-        ) : (
-          <div className="ov-meta">
-            <span className="ov-meta-id">{object.id}</span>
-            <span className="ov-meta-name">{object.name}</span>
-            <span>TYPE: {object.category}</span>
-            <span>
-              STATUS: <i className="ov-dot" />
-              {object.status}
-            </span>
-            <span>ROTATION: {object.rotationMode}</span>
-          </div>
-        )}
-      </div>
-
-      <div className="ov-hud ov-hud-bottom t-mono">
-        <div className="ov-readout">
-          <span>ROT_X: {pad3(readout.rotX)}°</span>
-          <span>ROT_Y: {pad3(readout.rotY)}°</span>
-          <span>ROT_Z: 000°</span>
+              <p style={{ animationDelay: "0.9s" }}>&gt; MANUAL INSPECTION ENABLED</p>
+            </div>
+          ) : (
+            <div className="ov-meta">
+              <span className="ov-meta-label">OBJECT_VIEWER_01</span>
+              <span className="ov-meta-name">
+                {object.id} <i>/</i> {object.name}
+              </span>
+              <span className="ov-meta-sub">
+                {object.category} · {object.status}
+              </span>
+            </div>
+          )}
         </div>
-        <div className="ov-readout">
-          <span>X: {pad3(readout.coordX)}</span>
-          <span>Y: {pad3(readout.coordY)}</span>
-          <span>Z: {pad3(readout.coordZ)}</span>
+
+        <div className="ov-hud ov-hud-bottom t-mono">
+          <span className="ov-rot">
+            ROT_X {pad3(readout.rotX)}° · ROT_Y {pad3(readout.rotY)}°
+          </span>
+          <span className="ov-instruction">[ DRAG TO ROTATE ]</span>
         </div>
-        <div className="ov-instruction">[ CLICK + DRAG / INSPECT ]</div>
       </div>
-
-      <div className="ov-tracking ov-tracking-a t-mono" aria-hidden="true">
-        <span>{object.sectorLabel}</span>
-      </div>
-      <div className="ov-tracking ov-tracking-b t-mono" aria-hidden="true">
-        <span>{object.unitLabel}</span>
-      </div>
-
-      <div ref={containerRef} className="ov-canvas" />
     </div>
   );
 }

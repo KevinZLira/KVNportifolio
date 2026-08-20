@@ -3,11 +3,8 @@ export interface ViewerObject {
   name: string;
   category: string;
   status: string;
-  rotationMode: string;
   modelUrl: string;
   targetSize: number;
-  sectorLabel: string;
-  unitLabel: string;
 }
 
 // OBJECT_VIEWER's catalog — swap CURRENT_OBJECT (or pass a `object` prop to
@@ -18,9 +15,6 @@ export const CURRENT_OBJECT: ViewerObject = {
   name: "FLOPPY_DISK",
   category: "DATA STORAGE",
   status: "ARCHIVED",
-  rotationMode: "MANUAL",
   modelUrl: "/models/floppy.obj",
   targetSize: 2.3,
-  sectorLabel: "DATA_SECTOR",
-  unitLabel: "STORAGE_UNIT",
 };
