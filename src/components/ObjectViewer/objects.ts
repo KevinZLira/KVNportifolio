@@ -5,6 +5,10 @@ export interface ViewerObject {
   status: string;
   modelUrl: string;
   targetSize: number;
+  // Radians applied to the model on load, before it's handed to the
+  // continuous Y-axis spin — each object is authored in its own resting
+  // orientation, so this is how a given model gets stood up/faced forward.
+  standRotationX?: number;
 }
 
 // OBJECT_VIEWER's catalog — swap CURRENT_OBJECT (or pass a `object` prop to
@@ -12,9 +16,9 @@ export interface ViewerObject {
 // self-contained: model file + display metadata the HUD reads directly.
 export const CURRENT_OBJECT: ViewerObject = {
   id: "OBJECT_001",
-  name: "FLOPPY_DISK",
-  category: "DATA STORAGE",
+  name: "STARSHIP",
+  category: "SPACE VEHICLE",
   status: "ARCHIVED",
-  modelUrl: "/models/floppy.obj",
-  targetSize: 2.3,
+  modelUrl: "/models/nave.obj",
+  targetSize: 2.6,
 };

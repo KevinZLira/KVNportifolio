@@ -158,10 +158,10 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
 
       fitAndCenter(mesh, object.targetSize);
       applyHologram(mesh);
-      // stand the object upright on its edge (90° to how it was authored,
-      // lying flat) — its bounding box after fitAndCenter is centered on
-      // the object's local origin, so rotating in place keeps it centered
-      mesh.rotation.x = Math.PI / 2;
+      // each model has its own authored resting orientation — its bounding
+      // box after fitAndCenter is centered on the object's local origin, so
+      // rotating in place here keeps it centered
+      mesh.rotation.x = object.standRotationX ?? 0;
       objectGroup.add(mesh);
       // start at a 3/4 angle instead of face-on — face-on reads as an
       // oversized close-up (and is the only frame reduced-motion users see)
