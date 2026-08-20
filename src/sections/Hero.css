@@ -69,19 +69,19 @@
 }
 
 .hero-logo-white {
-  fill: var(--logo-body);
+  fill: var(--fg);
 }
 
 .hero-logo-accent {
-  fill: var(--logo-accent);
+  fill: var(--primary);
   filter: drop-shadow(0 0 16px var(--primary-glow));
 }
 
 .hero-role {
   font-size: clamp(1.1rem, 3.4vw, 2.6rem);
-  color: var(--role-color);
+  color: var(--primary);
   margin-top: 0.3em;
-  text-shadow: 0 0 20px var(--role-glow);
+  text-shadow: 0 0 20px var(--primary-glow);
 }
 
 .hero-sub {
