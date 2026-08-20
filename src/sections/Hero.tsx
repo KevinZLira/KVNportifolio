@@ -114,7 +114,7 @@ export default function Hero() {
             </h1>
           </div>
           <div className="hero-line-wrap">
-            <p className="hero-line hero-role t-display">VISUAL DESIGNER / VIDEO MAKER</p>
+            <p className="hero-line hero-role t-display">DESIGNER / VIDEO MAKER</p>
           </div>
         </div>
 
