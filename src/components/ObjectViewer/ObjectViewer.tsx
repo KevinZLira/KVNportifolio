@@ -340,62 +340,55 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
 
   if (isCompact) return null;
 
-  // The metadata block is anchored directly to .hero's right:6vw margin —
-  // the same edge the "X:0000 Y:0000" coordinate readout in .hero-hud uses
-  // — so the two line up exactly instead of drifting apart, which happens
-  // if it's nested inside .ov-stage (shifted +60px to sit near the object)
-  // or .object-viewer (its own right:4vw, a different margin entirely).
-  //
-  // Everything else lives inside .ov-stage — the exact box the canvas
-  // fills — so the frame and rotation readout share one coordinate space
+  // Both HUD blocks live inside .ov-stage, tucked into the top-right and
+  // bottom-left corners next to the reticle marks — the exact box the
+  // canvas fills — so the frame and HUD text share one coordinate space
   // with the object itself and can never drift apart from it.
   return (
-    <>
-      <div className="ov-hud ov-hud-top t-mono">
-        {phase === "boot" ? (
-          <div className="ov-boot">
-            <p>&gt; OBJECT DETECTED</p>
-            <p style={{ animationDelay: "0.45s" }}>
-              &gt; {object.id} · {object.name}
-            </p>
-            <p style={{ animationDelay: "0.9s" }}>&gt; MANUAL INSPECTION ENABLED</p>
-          </div>
-        ) : (
-          <div className="ov-meta">
-            <span className="ov-meta-label">/ OBJECT_VIEWER_01</span>
-            <span className="ov-meta-name">
-              {object.id} <i>/</i> {object.name}
-            </span>
-            <span className="ov-meta-sub">
-              <span>{object.category}</span>
-              <span className="ov-meta-status">
-                <i className="ov-dot" />
-                {object.status}
+    <div className="object-viewer">
+      <div className={`ov-stage is-${phase}`}>
+        <div className="ov-field" aria-hidden="true" />
+
+        <div ref={containerRef} className="ov-canvas" />
+
+        <span className="ov-corner ov-corner-tl" aria-hidden="true" />
+        <span className="ov-corner ov-corner-tr" aria-hidden="true" />
+        <span className="ov-corner ov-corner-bl" aria-hidden="true" />
+        <span className="ov-corner ov-corner-br" aria-hidden="true" />
+
+        <div className="ov-hud ov-hud-top t-mono">
+          {phase === "boot" ? (
+            <div className="ov-boot">
+              <p>&gt; OBJECT DETECTED</p>
+              <p style={{ animationDelay: "0.45s" }}>
+                &gt; {object.id} · {object.name}
+              </p>
+              <p style={{ animationDelay: "0.9s" }}>&gt; MANUAL INSPECTION ENABLED</p>
+            </div>
+          ) : (
+            <div className="ov-meta">
+              <span className="ov-meta-label">/ OBJECT_VIEWER_01</span>
+              <span className="ov-meta-name">
+                {object.id} <i>/</i> {object.name}
               </span>
-            </span>
-          </div>
-        )}
-      </div>
+              <span className="ov-meta-sub">
+                <span>{object.category}</span>
+                <span className="ov-meta-status">
+                  <i className="ov-dot" />
+                  {object.status}
+                </span>
+              </span>
+            </div>
+          )}
+        </div>
 
-      <div className="object-viewer">
-        <div className={`ov-stage is-${phase}`}>
-          <div className="ov-field" aria-hidden="true" />
-
-          <div ref={containerRef} className="ov-canvas" />
-
-          <span className="ov-corner ov-corner-tl" aria-hidden="true" />
-          <span className="ov-corner ov-corner-tr" aria-hidden="true" />
-          <span className="ov-corner ov-corner-bl" aria-hidden="true" />
-          <span className="ov-corner ov-corner-br" aria-hidden="true" />
-
-          <div className="ov-hud ov-hud-bottom t-mono">
-            <span className="ov-rot">
-              ROT_X {pad3(readout.rotX)}° · ROT_Y {pad3(readout.rotY)}°
-            </span>
-            <span className="ov-instruction">[ DRAG TO ROTATE ]</span>
-          </div>
+        <div className="ov-hud ov-hud-bottom t-mono">
+          <span className="ov-rot">
+            ROT_X {pad3(readout.rotX)}° · ROT_Y {pad3(readout.rotY)}°
+          </span>
+          <span className="ov-instruction">[ DRAG TO ROTATE ]</span>
         </div>
       </div>
-    </>
+    </div>
   );
 }

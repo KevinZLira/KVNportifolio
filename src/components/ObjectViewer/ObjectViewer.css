@@ -144,19 +144,18 @@
   z-index: 4;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  font-size: 11px;
+  gap: 4px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   color: var(--fg-dimmer);
   white-space: nowrap;
 }
 
-/* anchored straight to .hero's own right:6vw margin — the same edge
-   .hero-hud's "X:0000 Y:0000" readout uses — not to .ov-stage, so the two
-   line up exactly regardless of how the object itself is nudged. */
+/* tucked inside the stage, right up against the top-right / bottom-left
+   reticle marks, instead of floating outside the frame */
 .ov-hud-top {
-  bottom: calc(100px + 38vw + 6px);
-  right: 6vw;
+  top: 14px;
+  right: 14px;
   align-items: flex-end;
   text-align: right;
 }
@@ -171,8 +170,8 @@
 }
 
 .ov-hud-bottom {
-  bottom: -48px;
-  left: 0;
+  bottom: 14px;
+  left: 14px;
   align-items: flex-start;
   text-align: left;
 }
@@ -206,22 +205,22 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 5px;
   animation: ov-boot-in 0.4s ease-out;
 }
 
 .ov-meta-label {
-  font-size: 10px;
-  letter-spacing: 0.22em;
+  font-size: 9px;
+  letter-spacing: 0.2em;
   opacity: 0.8;
 }
 
 .ov-meta-name {
   color: var(--primary);
-  font-size: 19px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  text-shadow: 0 0 18px var(--primary-glow);
+  text-shadow: 0 0 14px var(--primary-glow);
 }
 
 .ov-meta-name i {
@@ -256,7 +255,7 @@
 }
 
 .ov-rot {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
@@ -264,8 +263,8 @@
 .ov-instruction {
   margin-top: 2px;
   color: var(--primary);
-  letter-spacing: 0.14em;
-  font-size: 10px;
-  padding: 4px 9px;
+  letter-spacing: 0.12em;
+  font-size: 9px;
+  padding: 3px 7px;
   border: 1px solid var(--primary-dim);
 }
