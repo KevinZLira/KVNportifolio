@@ -24,9 +24,12 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
   // so it survives any rotation applied to the object afterward — position
   // is applied *after* rotation in the local transform, so a position-based
   // offset computed for the unrotated object would land in the wrong place
-  // once the object is rotated.
+  // once the object is rotated. Applies to LineSegments too, not just
+  // Mesh — a sub-object OBJLoader couldn't triangulate falls back to a
+  // LineSegments (see applyHologram) and needs the same recentering or it
+  // stays at its original, now-mismatched local coordinates.
   object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+    if (child instanceof THREE.Mesh || child instanceof THREE.LineSegments) {
       child.geometry.translate(-center.x, -center.y, -center.z);
     }
   });
