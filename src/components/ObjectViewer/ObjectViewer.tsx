@@ -177,6 +177,10 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         });
         line.material = material;
         disposables.push({ material });
+        // nudge down — this sub-object's own authored origin doesn't
+        // line up with the rest of the model even after the shared
+        // bounding-box recenter above
+        line.geometry.translate(0, -0.26, 0);
       });
     }
 
