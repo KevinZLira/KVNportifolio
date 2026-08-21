@@ -44,6 +44,6 @@ export const OBJECTS: ViewerObject[] = [
     status: "ARCHIVED",
     modelUrl: "/models/pcscify1.obj",
     targetSize: 1.8,
-    edgeAngle: 160,
+    edgeAngle: 120,
   },
 ];
