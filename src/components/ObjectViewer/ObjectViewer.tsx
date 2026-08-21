@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { CURRENT_OBJECT, type ViewerObject } from "./objects";
+import { OBJECTS, type ViewerObject } from "./objects";
 import "./ObjectViewer.css";
 
 const PRIMARY = 0x80f425;
@@ -52,27 +52,33 @@ function toDeg(rad: number) {
 }
 
 interface ObjectViewerProps {
-  object?: ViewerObject;
+  objects?: ViewerObject[];
 }
 
-export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerProps) {
+export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isCompact = useRef(
     typeof window !== "undefined" && window.matchMedia(COMPACT_QUERY).matches,
   ).current;
 
+  const [index, setIndex] = useState(0);
+  const object = objects[index];
+  const goPrev = () => setIndex((i) => (i - 1 + objects.length) % objects.length);
+  const goNext = () => setIndex((i) => (i + 1) % objects.length);
+
   const [phase, setPhase] = useState<"boot" | "idle">("boot");
   const [readout, setReadout] = useState({ rotX: 0, rotY: 0 });
   const liveRef = useRef({ rotX: 0, rotY: 0 });
 
-  // Boot log plays once on mount, then the HUD settles into the live
-  // metadata/readout state that persists for the rest of the visit.
+  // Boot log plays on mount and again on every object switch, then the HUD
+  // settles into the live metadata/readout state for that object.
   useEffect(() => {
     if (isCompact) return;
+    setPhase("boot");
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(() => setPhase("idle"), reduce ? 0 : 1600);
     return () => window.clearTimeout(timer);
-  }, [isCompact]);
+  }, [isCompact, object]);
 
   // Low-frequency poll of the live rotation ref (written every frame inside
   // the render loop below) so the HUD readout updates without forcing a
@@ -355,6 +361,27 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         <span className="ov-corner ov-corner-tr" aria-hidden="true" />
         <span className="ov-corner ov-corner-bl" aria-hidden="true" />
         <span className="ov-corner ov-corner-br" aria-hidden="true" />
+
+        {objects.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="ov-nav ov-nav-prev t-mono"
+              onClick={goPrev}
+              aria-label="Previous object"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="ov-nav ov-nav-next t-mono"
+              onClick={goNext}
+              aria-label="Next object"
+            >
+              ›
+            </button>
+          </>
+        )}
 
         <div className="ov-hud ov-hud-top t-mono">
           {phase === "boot" ? (

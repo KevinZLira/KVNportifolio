@@ -11,14 +11,25 @@ export interface ViewerObject {
   standRotationX?: number;
 }
 
-// OBJECT_VIEWER's catalog — swap CURRENT_OBJECT (or pass a `object` prop to
-// <ObjectViewer />) to display a different archived artifact. Each entry is
-// self-contained: model file + display metadata the HUD reads directly.
-export const CURRENT_OBJECT: ViewerObject = {
-  id: "OBJECT_001",
-  name: "STARSHIP",
-  category: "SPACE VEHICLE",
-  status: "ARCHIVED",
-  modelUrl: "/models/nave.obj",
-  targetSize: 2.6,
-};
+// OBJECT_VIEWER's catalog — add an entry here (model file + metadata the
+// HUD reads directly) to make it browsable via the viewer's prev/next
+// arrows. Order here is display order.
+export const OBJECTS: ViewerObject[] = [
+  {
+    id: "OBJECT_001",
+    name: "STARSHIP",
+    category: "SPACE VEHICLE",
+    status: "ARCHIVED",
+    modelUrl: "/models/nave.obj",
+    targetSize: 2.6,
+  },
+  {
+    id: "OBJECT_002",
+    name: "FLOPPY_DISK",
+    category: "DATA STORAGE",
+    status: "ARCHIVED",
+    modelUrl: "/models/floppy.obj",
+    targetSize: 2.3,
+    standRotationX: Math.PI / 2,
+  },
+];
