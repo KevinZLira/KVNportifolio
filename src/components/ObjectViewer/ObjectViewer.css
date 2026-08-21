@@ -46,6 +46,84 @@
     drop-shadow(0 0 110px rgba(128, 244, 37, 0.4));
 }
 
+/* switching objects — glitch the outgoing one off, then the incoming one
+   in. Animated on the wrapper div (transform/opacity/filter) rather than
+   the canvas itself, so the canvas's own permanent glow filter above is
+   never overwritten mid-transition. */
+.ov-canvas.is-glitch-out {
+  animation: ov-glitch-out 0.22s steps(5, jump-end) forwards;
+}
+
+.ov-canvas.is-glitch-in {
+  animation: ov-glitch-in 0.32s steps(6, jump-end) forwards;
+}
+
+@keyframes ov-glitch-out {
+  0% {
+    opacity: 1;
+    filter: none;
+    transform: translateX(0) skewX(0deg);
+  }
+  20% {
+    opacity: 1;
+    filter: brightness(1.6) hue-rotate(25deg);
+    transform: translateX(-10px) skewX(-5deg);
+  }
+  40% {
+    opacity: 0.8;
+    filter: brightness(0.5) hue-rotate(-20deg);
+    transform: translateX(8px) skewX(4deg);
+  }
+  60% {
+    opacity: 0.5;
+    filter: brightness(2) contrast(1.8);
+    transform: translateX(-12px) skewX(-6deg);
+  }
+  80% {
+    opacity: 0.2;
+    filter: brightness(0.3);
+    transform: translateX(6px) skewX(3deg);
+  }
+  100% {
+    opacity: 0;
+    filter: brightness(0.2);
+    transform: translateX(0) skewX(0deg) scale(0.97);
+  }
+}
+
+@keyframes ov-glitch-in {
+  0% {
+    opacity: 0;
+    filter: brightness(0.2);
+    transform: translateX(0) skewX(0deg) scale(0.97);
+  }
+  15% {
+    opacity: 0.4;
+    filter: brightness(2.2) hue-rotate(-25deg);
+    transform: translateX(11px) skewX(6deg);
+  }
+  35% {
+    opacity: 0.7;
+    filter: brightness(0.5) hue-rotate(20deg);
+    transform: translateX(-9px) skewX(-4deg);
+  }
+  55% {
+    opacity: 0.9;
+    filter: brightness(1.8) contrast(1.6);
+    transform: translateX(6px) skewX(3deg);
+  }
+  75% {
+    opacity: 1;
+    filter: brightness(1.1);
+    transform: translateX(-2px) skewX(-1deg);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+    transform: translateX(0) skewX(0deg) scale(1);
+  }
+}
+
 /* incomplete frame — four reticle marks, in front of the object. Each is
    two short arms with a gap at the true corner, so it reads as a targeting
    mark rather than a fragment of a missing rectangle. */
@@ -162,6 +240,11 @@
 .ov-nav:hover {
   border-color: var(--primary);
   box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.ov-nav:disabled {
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .ov-nav-prev {

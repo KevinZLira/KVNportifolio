@@ -63,8 +63,29 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
 
   const [index, setIndex] = useState(0);
   const object = objects[index];
-  const goPrev = () => setIndex((i) => (i - 1 + objects.length) % objects.length);
-  const goNext = () => setIndex((i) => (i + 1) % objects.length);
+
+  // Glitch out, swap the object once it's fully off-screen, then glitch the
+  // new one in. Timings match the CSS animation durations below.
+  const [glitch, setGlitch] = useState<"out" | "in" | null>(null);
+  const glitchTimers = useRef<number[]>([]);
+  useEffect(() => {
+    return () => glitchTimers.current.forEach((t) => window.clearTimeout(t));
+  }, []);
+
+  function switchTo(next: (i: number) => number) {
+    if (glitch) return;
+    setGlitch("out");
+    const outTimer = window.setTimeout(() => {
+      setIndex(next);
+      setGlitch("in");
+      const inTimer = window.setTimeout(() => setGlitch(null), 340);
+      glitchTimers.current.push(inTimer);
+    }, 220);
+    glitchTimers.current.push(outTimer);
+  }
+
+  const goPrev = () => switchTo((i) => (i - 1 + objects.length) % objects.length);
+  const goNext = () => switchTo((i) => (i + 1) % objects.length);
 
   const [phase, setPhase] = useState<"boot" | "idle">("boot");
   const [readout, setReadout] = useState({ rotX: 0, rotY: 0 });
@@ -355,7 +376,10 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
       <div className={`ov-stage is-${phase}`}>
         <div className="ov-field" aria-hidden="true" />
 
-        <div ref={containerRef} className="ov-canvas" />
+        <div
+          ref={containerRef}
+          className={`ov-canvas${glitch ? ` is-glitch-${glitch}` : ""}`}
+        />
 
         <span className="ov-corner ov-corner-tl" aria-hidden="true" />
         <span className="ov-corner ov-corner-tr" aria-hidden="true" />
@@ -368,6 +392,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
               type="button"
               className="ov-nav ov-nav-prev t-mono"
               onClick={goPrev}
+              disabled={!!glitch}
               aria-label="Previous object"
             >
               ‹
@@ -376,6 +401,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
               type="button"
               className="ov-nav ov-nav-next t-mono"
               onClick={goNext}
+              disabled={!!glitch}
               aria-label="Next object"
             >
               ›
