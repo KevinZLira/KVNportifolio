@@ -184,6 +184,19 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
       });
 
       solids.forEach((child) => {
+        // the TERMINAL model's keycaps are their own sub-meshes (material
+        // "Teclas"/"Teclas._a_arelas") sitting slightly too high relative
+        // to the rest of the chassis — nudge just those down a touch.
+        // Skipped when that material is mixed into a group with something
+        // else (e.g. Teclas._a_arelas + disquete on the same mesh), since
+        // there's no way to move only part of a shared geometry.
+        const singleMaterialName = !Array.isArray(child.material)
+          ? (child.material as THREE.Material).name
+          : "";
+        if (singleMaterialName.startsWith("Teclas")) {
+          child.geometry.translate(0, -0.018, 0);
+        }
+
         const material = new THREE.MeshStandardMaterial({
           color: 0x0a2e08,
           emissive: PRIMARY,
