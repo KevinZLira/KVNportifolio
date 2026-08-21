@@ -125,13 +125,27 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
     const objectGroup = new THREE.Group();
     scene.add(objectGroup);
 
+    // One shared factory for every line/edge in the model — solids' edge
+    // overlay and any stray fallback lines alike — so they're guaranteed
+    // to be pixel-identical instead of independently-tuned materials that
+    // can drift apart. No additive blending: that mode's brightness stacks
+    // with how many lines happen to overlap on screen, which is exactly
+    // what made some sub-objects read as a different shade than others.
+    function makeLineMaterial() {
+      return new THREE.LineBasicMaterial({
+        color: PRIMARY,
+        transparent: true,
+        opacity: 1,
+      });
+    }
+
     function applyHologram(mesh: THREE.Group) {
       // Collect first, mutate after — some .obj exports contain a
       // non-triangulated n-gon sub-object that OBJLoader can't build into a
       // proper Mesh; it falls back to a bare LineSegments (default white)
-      // instead. Restyle those too so a bad sub-object reads as "thinner
-      // green wireframe" instead of a stray white patch, rather than
-      // silently leaving the loader's default material in place.
+      // instead. Restyle those too so a bad sub-object reads as matching
+      // green wireframe, rather than silently leaving the loader's
+      // default material in place.
       const solids: THREE.Mesh[] = [];
       const strayLines: THREE.LineSegments[] = [];
       mesh.traverse((child) => {
@@ -158,24 +172,14 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         disposables.push({ geometry: child.geometry, material });
 
         const wireGeo = new THREE.EdgesGeometry(child.geometry, 25);
-        const wireMat = new THREE.LineBasicMaterial({
-          color: PRIMARY,
-          transparent: true,
-          opacity: 1,
-          blending: THREE.AdditiveBlending,
-        });
+        const wireMat = makeLineMaterial();
         const wire = new THREE.LineSegments(wireGeo, wireMat);
         child.add(wire);
         disposables.push({ geometry: wireGeo, material: wireMat });
       });
 
       strayLines.forEach((line) => {
-        const material = new THREE.LineBasicMaterial({
-          color: PRIMARY,
-          transparent: true,
-          opacity: 1,
-          blending: THREE.AdditiveBlending,
-        });
+        const material = makeLineMaterial();
         line.material = material;
         disposables.push({ material });
         // nudge down — this sub-object's own authored origin doesn't
