@@ -160,15 +160,6 @@
   text-align: right;
 }
 
-.ov-hud-top::before {
-  content: "";
-  align-self: stretch;
-  height: 2px;
-  margin-bottom: 2px;
-  background: linear-gradient(to left, var(--primary) 0%, var(--primary) 40%, transparent 100%);
-  box-shadow: 0 0 8px var(--primary-glow);
-}
-
 .ov-hud-bottom {
   bottom: 14px;
   left: 14px;
