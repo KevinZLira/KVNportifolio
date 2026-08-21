@@ -49,4 +49,12 @@ export const OBJECTS: ViewerObject[] = [
     modelUrl: "/models/pcscify1.glb",
     targetSize: 2.59,
   },
+  {
+    id: "OBJECT_004",
+    name: "LUNO",
+    category: "VIDEO GAME",
+    status: "ARCHIVED",
+    modelUrl: "/models/luno.glb",
+    targetSize: 2.3,
+  },
 ];
