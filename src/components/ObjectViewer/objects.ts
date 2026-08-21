@@ -42,8 +42,7 @@ export const OBJECTS: ViewerObject[] = [
     name: "TERMINAL",
     category: "COMPUTING UNIT",
     status: "ARCHIVED",
-    modelUrl: "/models/pcscify1.obj",
+    modelUrl: "/models/pcscify1.glb",
     targetSize: 1.8,
-    edgeAngle: 120,
   },
 ];

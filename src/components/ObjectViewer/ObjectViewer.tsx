@@ -1,13 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OBJECTS, type ViewerObject } from "./objects";
 import "./ObjectViewer.css";
 
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
 
-function loadObj(url: string): Promise<THREE.Group> {
+// .glb/.gltf come in pre-triangulated by the exporter (Blender picks the
+// diagonal for each n-gon itself, and the format has no room for the
+// loader to improvise its own) — prefer it over .obj when a model has one,
+// since OBJLoader's own triangulation of n-gons is what produced the
+// stray internal wireframe lines on denser models.
+function loadModel(url: string): Promise<THREE.Group> {
+  if (url.endsWith(".glb") || url.endsWith(".gltf")) {
+    return new Promise((resolve, reject) => {
+      new GLTFLoader().load(url, (gltf) => resolve(gltf.scene), undefined, reject);
+    });
+  }
   return new Promise((resolve, reject) => {
     new OBJLoader().load(url, resolve, undefined, reject);
   });
@@ -217,7 +228,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
     }
 
     async function build() {
-      const mesh = await loadObj(object.modelUrl);
+      const mesh = await loadModel(object.modelUrl);
       if (disposed) return;
 
       fitAndCenter(mesh, object.targetSize);
