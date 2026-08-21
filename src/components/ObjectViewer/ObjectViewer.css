@@ -3,7 +3,7 @@
   left: 34%;
   right: 4vw;
   bottom: 100px;
-  height: 38vw;
+  height: calc(38vw - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,7 +17,7 @@
 .ov-stage {
   position: relative;
   width: 38vw;
-  height: 38vw;
+  height: calc(38vw - 100px);
   transform: translateX(60px);
 }
 
@@ -51,8 +51,8 @@
    mark rather than a fragment of a missing rectangle. */
 .ov-corner {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 64px;
+  height: 64px;
   z-index: 3;
   pointer-events: none;
 }
@@ -66,13 +66,13 @@
 }
 
 .ov-corner::before {
-  width: 22px;
+  width: 56px;
   height: 2px;
 }
 
 .ov-corner::after {
   width: 2px;
-  height: 22px;
+  height: 56px;
 }
 
 .ov-corner-tl,
