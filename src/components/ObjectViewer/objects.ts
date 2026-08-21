@@ -32,4 +32,12 @@ export const OBJECTS: ViewerObject[] = [
     targetSize: 2.3,
     standRotationX: Math.PI / 2,
   },
+  {
+    id: "OBJECT_003",
+    name: "TERMINAL",
+    category: "COMPUTING UNIT",
+    status: "ARCHIVED",
+    modelUrl: "/models/pcscify1.obj",
+    targetSize: 2.6,
+  },
 ];
