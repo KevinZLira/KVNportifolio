@@ -43,6 +43,6 @@ export const OBJECTS: ViewerObject[] = [
     category: "COMPUTING UNIT",
     status: "ARCHIVED",
     modelUrl: "/models/pcscify1.glb",
-    targetSize: 1.8,
+    targetSize: 2.16,
   },
 ];

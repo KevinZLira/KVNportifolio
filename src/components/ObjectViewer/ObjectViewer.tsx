@@ -39,9 +39,25 @@ function fitAndCenter(object: THREE.Group, targetSize: number) {
   // Mesh — a sub-object OBJLoader couldn't triangulate falls back to a
   // LineSegments (see applyHologram) and needs the same recentering or it
   // stays at its original, now-mismatched local coordinates.
+  //
+  // -center is a world-space offset (relative to `object`, which is still
+  // unparented and untransformed here, so its matrixWorld is identity).
+  // A plain .obj always loads as one mesh with an identity local transform,
+  // so writing that offset straight into its geometry is already correct.
+  // .glb/.gltf can have real per-node rotation/scale between `object` and
+  // a given mesh (e.g. an axis-conversion node Blender's exporter leaves
+  // in place), so the same offset has to be rotated/scaled into that
+  // mesh's own local space first, or the bake lands in the wrong place.
+  const invRotScale = new THREE.Matrix4();
   object.traverse((child) => {
     if (child instanceof THREE.Mesh || child instanceof THREE.LineSegments) {
-      child.geometry.translate(-center.x, -center.y, -center.z);
+      const pos = new THREE.Vector3();
+      const quat = new THREE.Quaternion();
+      const scl = new THREE.Vector3();
+      child.matrixWorld.decompose(pos, quat, scl);
+      invRotScale.compose(new THREE.Vector3(), quat, scl).invert();
+      const localOffset = center.clone().negate().applyMatrix4(invRotScale);
+      child.geometry.translate(localOffset.x, localOffset.y, localOffset.z);
     }
   });
   object.scale.setScalar(scale);
