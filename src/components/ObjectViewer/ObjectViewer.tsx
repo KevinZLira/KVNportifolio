@@ -123,8 +123,23 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
     scene.add(objectGroup);
 
     function applyHologram(mesh: THREE.Group) {
+      // Collect first, mutate after — some .obj exports contain a
+      // non-triangulated n-gon sub-object that OBJLoader can't build into a
+      // proper Mesh; it falls back to a bare LineSegments (default white)
+      // instead. Restyle those too so a bad sub-object reads as "thinner
+      // green wireframe" instead of a stray white patch, rather than
+      // silently leaving the loader's default material in place.
+      const solids: THREE.Mesh[] = [];
+      const strayLines: THREE.LineSegments[] = [];
       mesh.traverse((child) => {
-        if (!(child instanceof THREE.Mesh)) return;
+        if (child instanceof THREE.Mesh) {
+          solids.push(child);
+        } else if (child instanceof THREE.LineSegments && child.parent === mesh) {
+          strayLines.push(child);
+        }
+      });
+
+      solids.forEach((child) => {
         const material = new THREE.MeshStandardMaterial({
           color: 0x0a2e08,
           emissive: PRIMARY,
@@ -149,6 +164,16 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         const wire = new THREE.LineSegments(wireGeo, wireMat);
         child.add(wire);
         disposables.push({ geometry: wireGeo, material: wireMat });
+      });
+
+      strayLines.forEach((line) => {
+        const material = new THREE.LineBasicMaterial({
+          color: PRIMARY,
+          transparent: true,
+          opacity: 0.6,
+        });
+        line.material = material;
+        disposables.push({ material });
       });
     }
 
