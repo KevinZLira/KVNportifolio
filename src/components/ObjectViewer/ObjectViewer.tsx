@@ -173,7 +173,8 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         const material = new THREE.LineBasicMaterial({
           color: PRIMARY,
           transparent: true,
-          opacity: 0.6,
+          opacity: 1,
+          blending: THREE.AdditiveBlending,
         });
         line.material = material;
         disposables.push({ material });
