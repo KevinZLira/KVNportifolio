@@ -194,7 +194,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
           ? (child.material as THREE.Material).name
           : "";
         if (singleMaterialName.startsWith("Teclas")) {
-          child.geometry.translate(0, -0.018, 0);
+          child.geometry.translate(0, -0.09, 0);
         }
 
         const material = new THREE.MeshStandardMaterial({
