@@ -198,7 +198,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
         child.material = material;
         disposables.push({ geometry: child.geometry, material });
 
-        const wireGeo = new THREE.EdgesGeometry(child.geometry, 65);
+        const wireGeo = new THREE.EdgesGeometry(child.geometry, object.edgeAngle ?? 65);
         const wireMat = makeLineMaterial();
         const wire = new THREE.LineSegments(wireGeo, wireMat);
         child.add(wire);
