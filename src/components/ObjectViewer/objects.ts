@@ -14,6 +14,10 @@ export interface ViewerObject {
   // Defaults to 65 when omitted; denser models can raise this to cut
   // internal line clutter without affecting the rest of the catalog.
   edgeAngle?: number;
+  // Names of mesh nodes to drop on load — for exports that carry leftover
+  // scene geometry (e.g. a level floor) alongside the actual subject, which
+  // would otherwise dominate the auto-fit bounding box.
+  excludeMeshNames?: string[];
 }
 
 // OBJECT_VIEWER's catalog — add an entry here (model file + metadata the

@@ -247,6 +247,19 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
       const mesh = await loadModel(object.modelUrl);
       if (disposed) return;
 
+      // Some exports carry leftover scene geometry (a level/reference floor)
+      // alongside the actual subject — left in, it dominates the bounding
+      // box that fitAndCenter/scale are computed from and the real subject
+      // gets normalized down to nearly nothing. Drop those named parts
+      // before any of that math runs.
+      if (object.excludeMeshNames?.length) {
+        const toRemove: THREE.Object3D[] = [];
+        mesh.traverse((c) => {
+          if (object.excludeMeshNames!.includes(c.name)) toRemove.push(c);
+        });
+        toRemove.forEach((c) => c.removeFromParent());
+      }
+
       fitAndCenter(mesh, object.targetSize);
       applyHologram(mesh);
       // each model has its own authored resting orientation — its bounding
