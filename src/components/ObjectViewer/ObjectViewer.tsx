@@ -180,7 +180,7 @@ export default function ObjectViewer({ object = CURRENT_OBJECT }: ObjectViewerPr
         // nudge down — this sub-object's own authored origin doesn't
         // line up with the rest of the model even after the shared
         // bounding-box recenter above
-        line.geometry.translate(0, -0.21, 0);
+        line.geometry.translate(0, -0.18, 0);
       });
     }
 
