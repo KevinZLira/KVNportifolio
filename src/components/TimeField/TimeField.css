@@ -1,0 +1,213 @@
+/* Same footprint as OBJECT_VIEWER's stage, so swapping the hero experience
+   via config/heroExperience.ts never shifts the rest of the layout. */
+.time-field {
+  position: absolute;
+  left: 34%;
+  right: 4vw;
+  bottom: 100px;
+  height: calc(38vw - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.tf-stage {
+  position: relative;
+  width: 38vw;
+  height: calc(38vw - 100px);
+  transform: translateX(60px);
+}
+
+.tf-field {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 70%, rgba(128, 244, 37, 0.08), transparent 62%);
+  pointer-events: none;
+}
+
+.tf-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.tf-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  filter:
+    drop-shadow(0 0 6px rgba(128, 244, 37, 0.55))
+    drop-shadow(0 0 16px rgba(128, 244, 37, 0.38))
+    drop-shadow(0 0 32px rgba(128, 244, 37, 0.24));
+}
+
+/* incomplete frame — same targeting-reticle motif as OBJECT_VIEWER, kept
+   independent here so this experience never depends on that component. */
+.tf-corner {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.tf-corner::before,
+.tf-corner::after {
+  content: "";
+  position: absolute;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.tf-corner::before {
+  width: 56px;
+  height: 2px;
+}
+
+.tf-corner::after {
+  width: 2px;
+  height: 56px;
+}
+
+.tf-corner-tl,
+.tf-corner-br {
+  opacity: 0.95;
+}
+
+.tf-corner-tr,
+.tf-corner-bl {
+  opacity: 0.5;
+}
+
+.tf-corner-tl {
+  top: 0;
+  left: 0;
+}
+.tf-corner-tl::before {
+  top: 0;
+  left: 8px;
+}
+.tf-corner-tl::after {
+  top: 8px;
+  left: 0;
+}
+
+.tf-corner-tr {
+  top: 0;
+  right: 0;
+}
+.tf-corner-tr::before {
+  top: 0;
+  right: 8px;
+}
+.tf-corner-tr::after {
+  top: 8px;
+  right: 0;
+}
+
+.tf-corner-bl {
+  bottom: 0;
+  left: 0;
+}
+.tf-corner-bl::before {
+  bottom: 0;
+  left: 8px;
+}
+.tf-corner-bl::after {
+  bottom: 8px;
+  left: 0;
+}
+
+.tf-corner-br {
+  bottom: 0;
+  right: 0;
+}
+.tf-corner-br::before {
+  bottom: 0;
+  right: 8px;
+}
+.tf-corner-br::after {
+  bottom: 8px;
+  right: 0;
+}
+
+/* ---- HUD text, anchored to the stage's own edges ---- */
+
+.tf-hud {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dimmer);
+  white-space: nowrap;
+}
+
+.tf-hud-top {
+  top: 14px;
+  right: 14px;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.tf-hud-bottom {
+  bottom: 14px;
+  left: 14px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.tf-hud-label {
+  color: var(--primary);
+  font-weight: 700;
+  text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.tf-hud-count {
+  color: var(--fg-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.tf-message {
+  margin-top: 2px;
+  color: var(--primary);
+  letter-spacing: 0.1em;
+  font-size: 9px;
+  padding: 3px 7px;
+  border: 1px solid var(--primary-dim);
+}
+
+@media (max-width: 1099px) {
+  .time-field {
+    position: static;
+    width: 100%;
+    height: 280px;
+    margin-top: 2.4em;
+  }
+
+  .tf-stage {
+    width: 100%;
+    height: 280px;
+    transform: none;
+  }
+
+  .tf-corner {
+    width: 40px;
+    height: 40px;
+  }
+  .tf-corner::before {
+    width: 32px;
+  }
+  .tf-corner::after {
+    height: 32px;
+  }
+
+  .tf-hud-top,
+  .tf-hud-bottom {
+    font-size: 9px;
+  }
+}

@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import ObjectViewer from "../components/ObjectViewer/ObjectViewer";
+import TimeField from "../components/TimeField/TimeField";
+import { OBJECT_VIEWER_ENABLED, TIME_EXPERIENCE_ENABLED } from "../config/heroExperience";
 import "./Hero.css";
 
 export default function Hero() {
@@ -134,7 +136,8 @@ export default function Hero() {
 
       <div className="hero-grid" aria-hidden="true" />
 
-      <ObjectViewer />
+      {OBJECT_VIEWER_ENABLED && <ObjectViewer />}
+      {TIME_EXPERIENCE_ENABLED && <TimeField />}
     </section>
   );
 }
