@@ -1,21 +1,22 @@
-/* Same footprint as OBJECT_VIEWER's stage, so swapping the hero experience
-   via config/heroExperience.ts never shifts the rest of the layout. */
+/* Same horizontal footprint as OBJECT_VIEWER's stage (swapping the hero
+   experience via config/heroExperience.ts never shifts side-to-side
+   layout), but stretched from the very top of the page down to the same
+   bottom anchor — the grains fall the length of the page and pass behind
+   the fixed header (SystemBar, z-index 500) rather than starting inside a
+   boxed-in area partway down. */
 .time-field {
   position: absolute;
   left: 34%;
   right: 4vw;
+  top: 0;
   bottom: 100px;
-  height: calc(38vw - 100px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1;
 }
 
 .tf-stage {
   position: relative;
   width: 38vw;
-  height: calc(38vw - 100px);
+  height: 100%;
   transform: translateX(60px);
 }
 
@@ -71,45 +72,10 @@
   height: 56px;
 }
 
-.tf-corner-tl,
-.tf-corner-br {
-  opacity: 0.95;
-}
-
-.tf-corner-tr,
-.tf-corner-bl {
-  opacity: 0.5;
-}
-
-.tf-corner-tl {
-  top: 0;
-  left: 0;
-}
-.tf-corner-tl::before {
-  top: 0;
-  left: 8px;
-}
-.tf-corner-tl::after {
-  top: 8px;
-  left: 0;
-}
-
-.tf-corner-tr {
-  top: 0;
-  right: 0;
-}
-.tf-corner-tr::before {
-  top: 0;
-  right: 8px;
-}
-.tf-corner-tr::after {
-  top: 8px;
-  right: 0;
-}
-
 .tf-corner-bl {
   bottom: 0;
   left: 0;
+  opacity: 0.5;
 }
 .tf-corner-bl::before {
   bottom: 0;
@@ -123,6 +89,7 @@
 .tf-corner-br {
   bottom: 0;
   right: 0;
+  opacity: 0.95;
 }
 .tf-corner-br::before {
   bottom: 0;
@@ -145,13 +112,6 @@
   letter-spacing: 0.08em;
   color: var(--fg-dimmer);
   white-space: nowrap;
-}
-
-.tf-hud-top {
-  top: 14px;
-  right: 14px;
-  align-items: flex-end;
-  text-align: right;
 }
 
 .tf-hud-bottom {
@@ -206,7 +166,6 @@
     height: 32px;
   }
 
-  .tf-hud-top,
   .tf-hud-bottom {
     font-size: 9px;
   }

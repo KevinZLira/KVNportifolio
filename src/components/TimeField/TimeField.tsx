@@ -510,18 +510,13 @@ export default function TimeField() {
           <canvas ref={canvasRef} className="tf-canvas" />
         </div>
 
-        <span className="tf-corner tf-corner-tl" aria-hidden="true" />
-        <span className="tf-corner tf-corner-tr" aria-hidden="true" />
         <span className="tf-corner tf-corner-bl" aria-hidden="true" />
         <span className="tf-corner tf-corner-br" aria-hidden="true" />
 
-        <div className="tf-hud tf-hud-top t-mono">
+        <div className="tf-hud tf-hud-bottom t-mono">
           <span className="tf-hud-label">/ TIME_FIELD</span>
           <span>STATUS: {STATUS[hud.phase]}</span>
           <span>CYCLE: {pad(hud.cycle, 2)}</span>
-        </div>
-
-        <div className="tf-hud tf-hud-bottom t-mono">
           <span className="tf-hud-count">PARTICLES: {pad(hud.count, 4)}</span>
           <span className="tf-message">[ {hud.message} ]</span>
         </div>
