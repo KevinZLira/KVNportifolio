@@ -3,7 +3,8 @@ import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import ObjectViewer from "../components/ObjectViewer/ObjectViewer";
 import TimeField from "../components/TimeField/TimeField";
-import { OBJECT_VIEWER_ENABLED, TIME_EXPERIENCE_ENABLED } from "../config/heroExperience";
+import CreativeSystem from "../components/CreativeSystem/CreativeSystem";
+import { HERO_MODE } from "../config/heroExperience";
 import "./Hero.css";
 
 export default function Hero() {
@@ -136,8 +137,9 @@ export default function Hero() {
 
       <div className="hero-grid" aria-hidden="true" />
 
-      {OBJECT_VIEWER_ENABLED && <ObjectViewer />}
-      {TIME_EXPERIENCE_ENABLED && <TimeField />}
+      {HERO_MODE === "object_viewer" && <ObjectViewer />}
+      {HERO_MODE === "time_field" && <TimeField />}
+      {HERO_MODE === "creative_system" && <CreativeSystem />}
     </section>
   );
 }

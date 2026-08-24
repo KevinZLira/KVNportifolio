@@ -1,0 +1,344 @@
+/* Two full-bleed layers instead of one boxed-in element: .cs-layer-back
+   sits behind the hero text (negative z-index, same trick .hero-grid
+   already relies on) and .cs-layer-front sits above it (positive z-index,
+   same idea OBJECT_VIEWER/TIME_FIELD already used) — so fragments can pass
+   behind the KVN wordmark on one side and float in front of empty space on
+   the other, without the composition ever depending on a single stacking
+   context we'd have to fight. */
+.creative-system {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cs-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cs-layer-back {
+  z-index: -1;
+}
+
+.cs-layer-front {
+  z-index: 2;
+}
+
+.cs-ambient {
+  opacity: 0;
+}
+
+/* ---- project preview fragments ---- */
+
+.cs-fragment {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  pointer-events: auto;
+  cursor: none;
+  transition:
+    transform 0.35s var(--ease-system),
+    filter 0.35s var(--ease-system);
+}
+
+@media (hover: none) {
+  .cs-fragment {
+    cursor: pointer;
+  }
+}
+
+.cs-fragment.is-hover {
+  transform: translateY(-5px) scale(1.035);
+  filter: brightness(1.18);
+}
+
+.cs-fragment-media {
+  position: relative;
+  height: 118px;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+}
+
+/* MediaPreview's bottom corners (frame count + timecode) are sized for the
+   larger cards it was built for (WorkDatabase/ProjectPage) — at fragment
+   scale they collide into an unreadable jumble. This component's own foot
+   row already carries a status readout, so drop MediaPreview's bottom
+   corners here rather than touching MediaPreview itself. */
+.cs-fragment-media .media-corner--bl,
+.cs-fragment-media .media-corner--br {
+  display: none;
+}
+
+.cs-fragment-particles {
+  position: absolute;
+  inset: -8px;
+  z-index: 3;
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--primary) 1px, transparent 1.4px);
+  background-size: 9px 9px;
+  opacity: 0;
+  animation: cs-dust 1.1s ease-out forwards;
+}
+
+@keyframes cs-dust {
+  0% {
+    opacity: 0.85;
+    transform: scale(1.35);
+    filter: blur(1px);
+  }
+  55% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.cs-fragment-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dim);
+}
+
+.cs-fragment-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--fg-dimmer);
+  gap: 10px;
+}
+
+.cs-fragment-status {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-fragment-bar {
+  display: block;
+  width: 42px;
+  height: 3px;
+  flex-shrink: 0;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.cs-fragment-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  animation: cs-bar-fill 6s linear infinite;
+}
+
+@keyframes cs-bar-fill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.cs-fragment-a {
+  top: 9%;
+  right: 4%;
+  width: 232px;
+}
+
+.cs-fragment-b {
+  top: 47%;
+  right: 15%;
+  width: 182px;
+}
+
+.cs-fragment-c {
+  bottom: 17%;
+  right: 26%;
+  width: 162px;
+}
+
+/* ---- ambient / atmosphere ---- */
+
+.cs-line {
+  position: absolute;
+  top: 20%;
+  left: 8%;
+  width: 46%;
+  height: 40%;
+  fill: none;
+  stroke: var(--primary-dim);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.cs-ghost-tag {
+  position: absolute;
+  top: 40%;
+  left: 37%;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+  opacity: 0.35;
+}
+
+.cs-file-tag {
+  position: absolute;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  text-shadow: 0 0 8px var(--primary-glow);
+  opacity: 0;
+  animation: cs-tag-drift linear infinite;
+}
+
+@keyframes cs-tag-drift {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  8%,
+  22% {
+    opacity: 0.75;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.cs-binary {
+  position: absolute;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dimmer);
+  opacity: 0;
+  animation: cs-blip 12s ease-in-out infinite;
+}
+
+@keyframes cs-blip {
+  0%,
+  92%,
+  100% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 0.55;
+  }
+}
+
+.cs-timeline {
+  position: absolute;
+  bottom: 8%;
+  left: 6%;
+  width: 26%;
+  min-width: 160px;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cs-timeline-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.cs-timeline-track {
+  position: relative;
+  height: 2px;
+  background: var(--line);
+}
+
+.cs-timeline-tick {
+  position: absolute;
+  top: -2px;
+  width: 1px;
+  height: 6px;
+  background: var(--line-strong);
+}
+
+.cs-timeline-playhead {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 8px;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary-glow);
+  animation: cs-playhead 9s linear infinite;
+}
+
+@keyframes cs-playhead {
+  0% {
+    left: 0%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.cs-render {
+  position: absolute;
+  top: 30%;
+  right: 42%;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--fg-dimmer);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- boot line ---- */
+
+.cs-boot {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--primary);
+  opacity: 0.8;
+  transition: opacity 0.5s var(--ease-system);
+}
+
+.cs-boot.is-done {
+  opacity: 0;
+}
+
+@media (max-width: 1099px) {
+  .cs-fragment-c,
+  .cs-render,
+  .cs-ghost-tag {
+    display: none;
+  }
+
+  .cs-fragment-a {
+    top: 11%;
+    right: 4%;
+    width: min(58vw, 220px);
+  }
+
+  .cs-fragment-b {
+    top: auto;
+    bottom: 6%;
+    right: 6%;
+    width: min(48vw, 180px);
+  }
+
+  .cs-timeline {
+    left: 4%;
+    bottom: 4%;
+  }
+
+  .cs-file-tag:nth-of-type(n + 3) {
+    display: none;
+  }
+}
