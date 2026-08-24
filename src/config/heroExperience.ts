@@ -3,4 +3,4 @@
 // of them. Each mode is its own self-contained component; only one renders.
 export type HeroMode = "object_viewer" | "time_field" | "creative_system";
 
-export const HERO_MODE: HeroMode = "creative_system";
+export const HERO_MODE: HeroMode = "object_viewer";
