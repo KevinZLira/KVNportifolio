@@ -48,30 +48,9 @@
   pointer-events: auto;
 }
 
-.ah-logo {
-  margin: 0;
-  line-height: 0;
-}
-
-.ah-logo-mark {
-  display: block;
-  height: clamp(2.2rem, 6.5vw, 4.4rem);
-  width: auto;
-  aspect-ratio: 1900 / 700;
-}
-
-.ah-logo-white {
-  fill: var(--fg);
-}
-
-.ah-logo-accent {
-  fill: var(--primary);
-  filter: drop-shadow(0 0 14px var(--primary-glow));
-}
-
 .ah-stage {
-  width: clamp(240px, 30vw, 420px);
-  height: clamp(240px, 30vw, 420px);
+  width: clamp(320px, 42vw, 560px);
+  height: clamp(320px, 42vw, 560px);
 }
 
 .ah-role {

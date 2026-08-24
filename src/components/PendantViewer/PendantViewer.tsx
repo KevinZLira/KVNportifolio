@@ -12,14 +12,41 @@ import "./PendantViewer.css";
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
 const MODEL_URL = "/models/pendant.glb";
-const TARGET_SIZE = 1.7;
+// The whole model (medallion + chain) is used for the scale calculation —
+// this is a straight 4x over the original 1.7, i.e. the "+300%" the medallion
+// itself should end up at once centering is decoupled from it below. The
+// chain is long relative to the medallion, so at this size it runs well past
+// the visible frame — which is the point (see focusPredicate below).
+const TARGET_SIZE = 6.8;
 
-function fitAndCenter(object: THREE.Group, targetSize: number) {
+// Recentering on the whole object (chain included) would put the medallion
+// off-center, since the chain drags the combined bounding box upward.
+// `focusPredicate`, when given, centers on just the meshes it matches
+// instead — here, the medallion plates — while `targetSize` still scales
+// against the *whole* object, so the chain's real length still determines
+// how far it extends (off-screen) from that centered medallion.
+function fitAndCenter(
+  object: THREE.Group,
+  targetSize: number,
+  focusPredicate?: (mesh: THREE.Mesh) => boolean,
+) {
   const box = new THREE.Box3().setFromObject(object);
-  const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
   const scale = targetSize / maxDim;
+
+  let center = box.getCenter(new THREE.Vector3());
+  if (focusPredicate) {
+    const focusBox = new THREE.Box3();
+    let any = false;
+    object.traverse((child) => {
+      if (child instanceof THREE.Mesh && focusPredicate(child)) {
+        focusBox.expandByObject(child);
+        any = true;
+      }
+    });
+    if (any) center = focusBox.getCenter(new THREE.Vector3());
+  }
 
   // Same fix as OBJECT_VIEWER's catalog needed for its .glb entries: a
   // node between this root and a given mesh can carry its own
@@ -79,10 +106,12 @@ export default function PendantViewer() {
     scene.add(rim2);
 
     const pivot = new THREE.Group();
-    // Set once, synchronously, before the async model load below — pivot's
-    // rotation doubles as the user's drag target, so assigning it again
-    // once the (awaited) load resolves would silently wipe out a drag that
-    // happened while the model was still in flight.
+    // Fixed 3/4 presentation angle on Y — never touched again after this,
+    // since the interactive/idle rotation below is Z-only. Set once,
+    // synchronously, before the async model load below: pivot.rotation.z
+    // doubles as the user's drag target, so assigning it again once the
+    // (awaited) load resolves would silently wipe out a drag that happened
+    // while the model was still in flight.
     pivot.rotation.y = 0.5;
     scene.add(pivot);
     let hoverTargets: THREE.Mesh[] = [];
@@ -94,7 +123,7 @@ export default function PendantViewer() {
       });
       if (disposed) return;
 
-      fitAndCenter(gltf, TARGET_SIZE);
+      fitAndCenter(gltf, TARGET_SIZE, (m) => m.name.startsWith("Plane"));
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -151,10 +180,8 @@ export default function PendantViewer() {
     let isDragging = false;
     let activePointerId: number | null = null;
     let lastPointerX = 0;
-    let lastPointerY = 0;
     let lastMoveT = performance.now();
-    let velocityX = 0;
-    let velocityY = 0;
+    let velocityZ = 0;
     let lastInteractionT = performance.now();
     let isHovering = false;
     const raycaster = new THREE.Raycaster();
@@ -167,10 +194,8 @@ export default function PendantViewer() {
       isDragging = true;
       activePointerId = e.pointerId;
       lastPointerX = e.clientX;
-      lastPointerY = e.clientY;
       lastMoveT = performance.now();
-      velocityX = 0;
-      velocityY = 0;
+      velocityZ = 0;
       container?.setPointerCapture(e.pointerId);
       if (container) container.style.cursor = "grabbing";
     }
@@ -194,19 +219,16 @@ export default function PendantViewer() {
       const now = performance.now();
       const dt = Math.max((now - lastMoveT) / 1000, 1 / 120);
       const dx = e.clientX - lastPointerX;
-      const dy = e.clientY - lastPointerY;
       lastPointerX = e.clientX;
-      lastPointerY = e.clientY;
       lastMoveT = now;
       lastInteractionT = now;
 
-      const rotDeltaY = dx * DRAG_SENSITIVITY;
-      const rotDeltaX = dy * DRAG_SENSITIVITY;
-      pivot.rotation.y += rotDeltaY;
-      pivot.rotation.x += rotDeltaX;
-
-      velocityY = rotDeltaY / dt;
-      velocityX = rotDeltaX / dt;
+      // Z-axis only (roll, in the camera's own plane) — horizontal drag
+      // spins it like a wheel; vertical movement doesn't map to a rotation
+      // that exists here, so it's ignored rather than forced onto Z.
+      const rotDelta = dx * DRAG_SENSITIVITY;
+      pivot.rotation.z += rotDelta;
+      velocityZ = rotDelta / dt;
 
       if (!hasInteractedRef.current) {
         hasInteractedRef.current = true;
@@ -221,8 +243,7 @@ export default function PendantViewer() {
       lastInteractionT = performance.now();
       if (container) container.style.cursor = "grab";
       if (reduce) {
-        velocityX = 0;
-        velocityY = 0;
+        velocityZ = 0;
       }
     }
 
@@ -238,19 +259,16 @@ export default function PendantViewer() {
       const delta = (t - lastT) / 1000;
       lastT = t;
 
-      const coasting = Math.abs(velocityX) > INERTIA_EPSILON || Math.abs(velocityY) > INERTIA_EPSILON;
+      const coasting = Math.abs(velocityZ) > INERTIA_EPSILON;
 
       if (isDragging) {
         // applied directly in onPointerMove
       } else if (!reduce && coasting) {
-        pivot.rotation.y += velocityY * delta;
-        pivot.rotation.x += velocityX * delta;
-        const decay = Math.exp(-INERTIA_DECAY * delta);
-        velocityX *= decay;
-        velocityY *= decay;
+        pivot.rotation.z += velocityZ * delta;
+        velocityZ *= Math.exp(-INERTIA_DECAY * delta);
       } else if (!reduce && t - lastInteractionT > IDLE_AFTER_MS) {
         elapsed += delta;
-        pivot.rotation.y += delta * IDLE_SPIN_SPEED;
+        pivot.rotation.z += delta * IDLE_SPIN_SPEED;
         pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
       }
 

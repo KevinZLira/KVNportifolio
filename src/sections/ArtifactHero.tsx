@@ -23,12 +23,7 @@ export default function ArtifactHero() {
     const ctx = gsap.context(() => {
       gsap
         .timeline({ delay: reduce ? 0 : 0.15 })
-        .from(".ah-logo", { opacity: 0, y: 12, duration: reduce ? 0 : 0.7, ease: "power2.out" })
-        .from(
-          ".ah-stage",
-          { opacity: 0, scale: reduce ? 1 : 0.94, duration: reduce ? 0 : 0.9, ease: "power3.out" },
-          reduce ? 0 : "-=0.3",
-        )
+        .from(".ah-stage", { opacity: 0, scale: reduce ? 1 : 0.94, duration: reduce ? 0 : 0.9, ease: "power3.out" })
         .from(
           ".ah-role, .ah-sub",
           { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, stagger: reduce ? 0 : 0.1, ease: "power2.out" },
@@ -72,23 +67,6 @@ export default function ArtifactHero() {
       </div>
 
       <div className="ah-body">
-        <h1 className="ah-logo" aria-label="KVN">
-          <svg className="ah-logo-mark" viewBox="10 190 1900 700" aria-hidden="true" focusable="false">
-            <polygon
-              className="ah-logo-white"
-              points="522.88 574.78 681.94 574.78 1052.72 204 787.8 204 469.95 521.85 443.49 495.38 442.96 495.38 734.34 204 501.84 204 501.86 203.98 186.26 203.98 327.85 345.57 29.22 644.21 29.22 760.3 178.04 760.3 310.9 627.71 443.49 760.3 553.64 870.45 702.65 870.73 702.65 754.54 677.84 729.73 522.88 574.78"
-            />
-            <polygon
-              className="ah-logo-white"
-              points="1580.86 204 1078.84 706.02 974.62 601.81 1311.23 265.2 1250.32 204.3 1106.95 204.3 709.57 601.67 868.49 760.6 1133.41 760.6 1610.33 283.66 1663.26 283.66 1186.62 760.3 1451.54 760.3 1891.74 320.09 1891.74 204 1580.86 204"
-            />
-            <path
-              className="ah-logo-accent"
-              d="M1075.23,655.55l451.93-451.79h-109.61l-396.89,397.23,54.56,54.56ZM1424.14,219.71h64.65l-413.56,413.28-32.08-32,380.99-381.27Z"
-            />
-          </svg>
-        </h1>
-
         <div className="ah-stage">
           <PendantViewer />
         </div>

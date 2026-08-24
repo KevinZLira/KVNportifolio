@@ -97,29 +97,17 @@ export default function DataVeil() {
     const ro = new ResizeObserver(resize);
     ro.observe(root);
 
-    // ---- pointer tracking, smoothed ----
+    // ---- pointer tracking — no trail: reveal only exists exactly where
+    // the pointer currently is, not where it recently was ----
     let targetX = w / 2;
     let targetY = h / 2;
-    let trailX = targetX;
-    let trailY = targetY;
     let active = false;
-    let lastActiveT = 0;
-    let hasPositioned = false;
 
     function setTarget(clientX: number, clientY: number) {
       const rect = root!.getBoundingClientRect();
       targetX = clientX - rect.left;
       targetY = clientY - rect.top;
-      // Without this, the very first pointermove eases the trail in from
-      // the canvas-center default, sweeping a visible streak across the
-      // page before it catches up to where the cursor actually is.
-      if (!hasPositioned) {
-        trailX = targetX;
-        trailY = targetY;
-        hasPositioned = true;
-      }
       active = true;
-      lastActiveT = performance.now();
     }
     function onPointerMove(e: PointerEvent) {
       setTarget(e.clientX, e.clientY);
@@ -156,18 +144,16 @@ export default function DataVeil() {
     }
 
     function healAndReveal(now: number) {
-      // slowly re-solidify everywhere...
+      // Fully re-solidify every frame — no persistence, no fade-out, no
+      // trail. The reveal exists only for the frame(s) where the pointer
+      // is actually there; move it on and the hole is gone immediately.
       maskCtx!.globalCompositeOperation = "source-over";
-      maskCtx!.fillStyle = "rgba(13, 14, 12, 0.06)";
+      maskCtx!.fillStyle = "#0d0e0c";
       maskCtx!.fillRect(0, 0, w, h);
 
-      const sinceActive = now - lastActiveT;
-      if (!active || sinceActive > 900) return;
+      if (!active) return;
 
-      trailX += (targetX - trailX) * 0.16;
-      trailY += (targetY - trailY) * 0.16;
-
-      // ...then punch an organic (non-circular) hole at the trailed cursor
+      // ...then punch an organic (non-circular) hole at the live pointer
       maskCtx!.globalCompositeOperation = "destination-out";
       const wobble = now * 0.002;
       const lobes = 4;
@@ -175,8 +161,8 @@ export default function DataVeil() {
         const angle = (i / lobes) * Math.PI * 2 + wobble;
         const jitter = Math.sin(wobble * 1.7 + i * 2.1) * 0.35 + 0.65;
         const r = BRUSH_RADIUS * jitter;
-        const ox = trailX + Math.cos(angle) * BRUSH_RADIUS * 0.32;
-        const oy = trailY + Math.sin(angle) * BRUSH_RADIUS * 0.32;
+        const ox = targetX + Math.cos(angle) * BRUSH_RADIUS * 0.32;
+        const oy = targetY + Math.sin(angle) * BRUSH_RADIUS * 0.32;
         const grad = maskCtx!.createRadialGradient(ox, oy, 0, ox, oy, r);
         grad.addColorStop(0, "rgba(0,0,0,0.85)");
         grad.addColorStop(0.7, "rgba(0,0,0,0.4)");
