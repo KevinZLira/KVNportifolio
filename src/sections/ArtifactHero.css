@@ -1,0 +1,140 @@
+.artifact-hero {
+  position: relative;
+  z-index: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 6vw;
+}
+
+.ah-hud {
+  position: relative;
+  z-index: 1;
+  padding-top: 88px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+}
+
+.ah-hud-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.ah-coords {
+  font-variant-numeric: tabular-nums;
+}
+
+.ah-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.4vw, 24px);
+  pointer-events: none;
+}
+
+.ah-body > * {
+  pointer-events: auto;
+}
+
+.ah-logo {
+  margin: 0;
+  line-height: 0;
+}
+
+.ah-logo-mark {
+  display: block;
+  height: clamp(2.2rem, 6.5vw, 4.4rem);
+  width: auto;
+  aspect-ratio: 1900 / 700;
+}
+
+.ah-logo-white {
+  fill: var(--fg);
+}
+
+.ah-logo-accent {
+  fill: var(--primary);
+  filter: drop-shadow(0 0 14px var(--primary-glow));
+}
+
+.ah-stage {
+  width: clamp(240px, 30vw, 420px);
+  height: clamp(240px, 30vw, 420px);
+}
+
+.ah-role {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.6vw, 1.9rem);
+  color: var(--fg);
+  letter-spacing: 0.04em;
+}
+
+.ah-sub {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--fg-dim);
+}
+
+.ah-meta {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.ah-tag {
+  color: var(--fg-dimmer);
+}
+
+.ah-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg-dim);
+}
+
+.ah-scroll-arrow {
+  display: inline-block;
+  animation: ah-bob 1.6s ease-in-out infinite;
+}
+
+@keyframes ah-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@media (max-width: 720px) {
+  .artifact-hero {
+    padding: 0 6vw;
+  }
+  .ah-hud {
+    padding-top: 76px;
+  }
+  .ah-stage {
+    width: min(72vw, 300px);
+    height: min(72vw, 300px);
+  }
+}

@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../sections/Hero";
+import ArtifactHero from "../sections/ArtifactHero";
 import WorkDatabase from "../sections/WorkDatabase";
 import About from "../sections/About";
 import Contact from "../sections/Contact";
+import { HERO_MODE } from "../config/heroExperience";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,7 +90,7 @@ export default function Home() {
 
   return (
     <>
-      <Hero />
+      {HERO_MODE === "artifact" ? <ArtifactHero /> : <Hero />}
       <WorkDatabase />
       <About />
       <Contact />
