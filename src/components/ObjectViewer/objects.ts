@@ -9,6 +9,10 @@ export interface ViewerObject {
   // continuous Y-axis spin — each object is authored in its own resting
   // orientation, so this is how a given model gets stood up/faced forward.
   standRotationX?: number;
+  // Same idea, around Z instead — rolls the model in the camera's own
+  // plane, e.g. to turn a model authored portrait-tall into landscape
+  // without foreshortening it the way an X rotation would.
+  standRotationZ?: number;
   // Degrees passed to EdgesGeometry for the wireframe overlay — higher
   // keeps fewer, sharper edges (only angles above the threshold render).
   // Defaults to 65 when omitted; denser models can raise this to cut
@@ -56,5 +60,6 @@ export const OBJECTS: ViewerObject[] = [
     status: "ARCHIVED",
     modelUrl: "/models/luno.glb",
     targetSize: 2.3,
+    standRotationZ: Math.PI / 2,
   },
 ];

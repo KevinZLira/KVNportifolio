@@ -266,6 +266,7 @@ export default function ObjectViewer({ objects = OBJECTS }: ObjectViewerProps) {
       // box after fitAndCenter is centered on the object's local origin, so
       // rotating in place here keeps it centered
       mesh.rotation.x = object.standRotationX ?? 0;
+      mesh.rotation.z = object.standRotationZ ?? 0;
       objectGroup.add(mesh);
       // start at a 3/4 angle instead of face-on — face-on reads as an
       // oversized close-up (and is the only frame reduced-motion users see)
