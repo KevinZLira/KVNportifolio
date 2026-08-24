@@ -13,9 +13,11 @@
   display: block;
   width: 100% !important;
   height: 100% !important;
-  filter:
-    drop-shadow(0 0 10px rgba(128, 244, 37, 0.28))
-    drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6));
+  /* Small blur radii on purpose — drop-shadow is clipped to the canvas's
+     own rectangle (unlike a real box-shadow, it can't bleed past the
+     element's bounds), so now that the medallion fills most of the frame,
+     a wide blur here reads as a visible tinted box rather than a glow. */
+  filter: drop-shadow(0 0 4px rgba(128, 244, 37, 0.3)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
 .pendant-hint {

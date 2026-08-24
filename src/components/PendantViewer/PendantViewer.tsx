@@ -107,8 +107,8 @@ export default function PendantViewer() {
 
     const pivot = new THREE.Group();
     // Fixed 3/4 presentation angle on Y — never touched again after this,
-    // since the interactive/idle rotation below is Z-only. Set once,
-    // synchronously, before the async model load below: pivot.rotation.z
+    // since the interactive/idle rotation below is X-only. Set once,
+    // synchronously, before the async model load below: pivot.rotation.x
     // doubles as the user's drag target, so assigning it again once the
     // (awaited) load resolves would silently wipe out a drag that happened
     // while the model was still in flight.
@@ -122,6 +122,16 @@ export default function PendantViewer() {
         new GLTFLoader().load(MODEL_URL, (g) => resolve(g.scene), undefined, reject);
       });
       if (disposed) return;
+
+      // Plane002 is a solid filler layer sitting right behind Plane001 (the
+      // actual detailed emblem, with its correct negative-space gaps between
+      // strokes) — with both rendered, Plane002 shows through those gaps and
+      // reads as a single solid block/plate rather than an open "K" mark.
+      const toRemove: THREE.Object3D[] = [];
+      gltf.traverse((c) => {
+        if (c.name === "Plane002") toRemove.push(c);
+      });
+      toRemove.forEach((c) => c.removeFromParent());
 
       fitAndCenter(gltf, TARGET_SIZE, (m) => m.name.startsWith("Plane"));
 
@@ -179,9 +189,9 @@ export default function PendantViewer() {
 
     let isDragging = false;
     let activePointerId: number | null = null;
-    let lastPointerX = 0;
+    let lastPointerY = 0;
     let lastMoveT = performance.now();
-    let velocityZ = 0;
+    let velocityX = 0;
     let lastInteractionT = performance.now();
     let isHovering = false;
     const raycaster = new THREE.Raycaster();
@@ -193,9 +203,9 @@ export default function PendantViewer() {
     function onPointerDown(e: PointerEvent) {
       isDragging = true;
       activePointerId = e.pointerId;
-      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
       lastMoveT = performance.now();
-      velocityZ = 0;
+      velocityX = 0;
       container?.setPointerCapture(e.pointerId);
       if (container) container.style.cursor = "grabbing";
     }
@@ -218,17 +228,17 @@ export default function PendantViewer() {
       if (e.pointerId !== activePointerId) return;
       const now = performance.now();
       const dt = Math.max((now - lastMoveT) / 1000, 1 / 120);
-      const dx = e.clientX - lastPointerX;
-      lastPointerX = e.clientX;
+      const dy = e.clientY - lastPointerY;
+      lastPointerY = e.clientY;
       lastMoveT = now;
       lastInteractionT = now;
 
-      // Z-axis only (roll, in the camera's own plane) — horizontal drag
-      // spins it like a wheel; vertical movement doesn't map to a rotation
-      // that exists here, so it's ignored rather than forced onto Z.
-      const rotDelta = dx * DRAG_SENSITIVITY;
-      pivot.rotation.z += rotDelta;
-      velocityZ = rotDelta / dt;
+      // X-axis only (tip forward/back, like nodding) — vertical drag tilts
+      // it; horizontal movement doesn't map to a rotation that exists
+      // here, so it's ignored rather than forced onto X.
+      const rotDelta = dy * DRAG_SENSITIVITY;
+      pivot.rotation.x += rotDelta;
+      velocityX = rotDelta / dt;
 
       if (!hasInteractedRef.current) {
         hasInteractedRef.current = true;
@@ -243,7 +253,7 @@ export default function PendantViewer() {
       lastInteractionT = performance.now();
       if (container) container.style.cursor = "grab";
       if (reduce) {
-        velocityZ = 0;
+        velocityX = 0;
       }
     }
 
@@ -259,16 +269,16 @@ export default function PendantViewer() {
       const delta = (t - lastT) / 1000;
       lastT = t;
 
-      const coasting = Math.abs(velocityZ) > INERTIA_EPSILON;
+      const coasting = Math.abs(velocityX) > INERTIA_EPSILON;
 
       if (isDragging) {
         // applied directly in onPointerMove
       } else if (!reduce && coasting) {
-        pivot.rotation.z += velocityZ * delta;
-        velocityZ *= Math.exp(-INERTIA_DECAY * delta);
+        pivot.rotation.x += velocityX * delta;
+        velocityX *= Math.exp(-INERTIA_DECAY * delta);
       } else if (!reduce && t - lastInteractionT > IDLE_AFTER_MS) {
         elapsed += delta;
-        pivot.rotation.z += delta * IDLE_SPIN_SPEED;
+        pivot.rotation.x += delta * IDLE_SPIN_SPEED;
         pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
       }
 
