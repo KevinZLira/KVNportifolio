@@ -106,12 +106,11 @@ export default function PendantViewer() {
     scene.add(rim2);
 
     const pivot = new THREE.Group();
-    // Fixed 3/4 presentation angle on Y — never touched again after this,
-    // since the interactive/idle rotation below is X-only. Set once,
-    // synchronously, before the async model load below: pivot.rotation.x
-    // doubles as the user's drag target, so assigning it again once the
-    // (awaited) load resolves would silently wipe out a drag that happened
-    // while the model was still in flight.
+    // Starting yaw, on the same axis (Y) the interactive/idle rotation
+    // below uses. Set once, synchronously, before the async model load
+    // below: pivot.rotation.y doubles as the user's drag target, so
+    // assigning it again once the (awaited) load resolves would silently
+    // wipe out a drag that happened while the model was still in flight.
     pivot.rotation.y = 0.5;
     scene.add(pivot);
     let hoverTargets: THREE.Mesh[] = [];
@@ -189,9 +188,9 @@ export default function PendantViewer() {
 
     let isDragging = false;
     let activePointerId: number | null = null;
-    let lastPointerY = 0;
+    let lastPointerX = 0;
     let lastMoveT = performance.now();
-    let velocityX = 0;
+    let velocityY = 0;
     let lastInteractionT = performance.now();
     let isHovering = false;
     const raycaster = new THREE.Raycaster();
@@ -203,9 +202,9 @@ export default function PendantViewer() {
     function onPointerDown(e: PointerEvent) {
       isDragging = true;
       activePointerId = e.pointerId;
-      lastPointerY = e.clientY;
+      lastPointerX = e.clientX;
       lastMoveT = performance.now();
-      velocityX = 0;
+      velocityY = 0;
       container?.setPointerCapture(e.pointerId);
       if (container) container.style.cursor = "grabbing";
     }
@@ -228,17 +227,17 @@ export default function PendantViewer() {
       if (e.pointerId !== activePointerId) return;
       const now = performance.now();
       const dt = Math.max((now - lastMoveT) / 1000, 1 / 120);
-      const dy = e.clientY - lastPointerY;
-      lastPointerY = e.clientY;
+      const dx = e.clientX - lastPointerX;
+      lastPointerX = e.clientX;
       lastMoveT = now;
       lastInteractionT = now;
 
-      // X-axis only (tip forward/back, like nodding) — vertical drag tilts
-      // it; horizontal movement doesn't map to a rotation that exists
-      // here, so it's ignored rather than forced onto X.
-      const rotDelta = dy * DRAG_SENSITIVITY;
-      pivot.rotation.x += rotDelta;
-      velocityX = rotDelta / dt;
+      // Y-axis only (spin/yaw) — horizontal drag turns it; vertical
+      // movement doesn't map to a rotation that exists here, so it's
+      // ignored rather than forced onto Y.
+      const rotDelta = dx * DRAG_SENSITIVITY;
+      pivot.rotation.y += rotDelta;
+      velocityY = rotDelta / dt;
 
       if (!hasInteractedRef.current) {
         hasInteractedRef.current = true;
@@ -253,7 +252,7 @@ export default function PendantViewer() {
       lastInteractionT = performance.now();
       if (container) container.style.cursor = "grab";
       if (reduce) {
-        velocityX = 0;
+        velocityY = 0;
       }
     }
 
@@ -269,16 +268,16 @@ export default function PendantViewer() {
       const delta = (t - lastT) / 1000;
       lastT = t;
 
-      const coasting = Math.abs(velocityX) > INERTIA_EPSILON;
+      const coasting = Math.abs(velocityY) > INERTIA_EPSILON;
 
       if (isDragging) {
         // applied directly in onPointerMove
       } else if (!reduce && coasting) {
-        pivot.rotation.x += velocityX * delta;
-        velocityX *= Math.exp(-INERTIA_DECAY * delta);
+        pivot.rotation.y += velocityY * delta;
+        velocityY *= Math.exp(-INERTIA_DECAY * delta);
       } else if (!reduce && t - lastInteractionT > IDLE_AFTER_MS) {
         elapsed += delta;
-        pivot.rotation.x += delta * IDLE_SPIN_SPEED;
+        pivot.rotation.y += delta * IDLE_SPIN_SPEED;
         pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
       }
 
