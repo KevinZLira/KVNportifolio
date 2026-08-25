@@ -12,29 +12,32 @@ import "./PendantViewer.css";
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
 const MODEL_URL = "/models/pendant.glb";
-// The whole model (medallion + chain) is used for the scale calculation —
-// this is a straight 4x over the original 1.7, i.e. the "+300%" the medallion
-// itself should end up at once centering is decoupled from it below. The
-// chain is long relative to the medallion, so at this size it runs well past
-// the visible frame — which is the point (see focusPredicate below).
-const TARGET_SIZE = 6.8;
+// The medallion's own max dimension (its width — it's wider than tall) maps
+// to this many world units. Scaling against the *medallion's* box, not the
+// whole chain+medallion object, is the point: the chain is long relative to
+// the medallion, so calibrating off the combined box's height (which the
+// chain dominates) sized the medallion by the wrong axis entirely — it fit
+// vertically but its actual constraint, width, ran straight past the frame.
+// At camera fov=38 and z=5.2 with a square viewport, visible width/height at
+// the medallion's depth is ~3.58 world units; 3.3 keeps a small margin
+// inside that so the medallion reads as large without touching the edges.
+const TARGET_SIZE = 3.3;
 
-// Recentering on the whole object (chain included) would put the medallion
-// off-center, since the chain drags the combined bounding box upward.
-// `focusPredicate`, when given, centers on just the meshes it matches
-// instead — here, the medallion plates — while `targetSize` still scales
-// against the *whole* object, so the chain's real length still determines
-// how far it extends (off-screen) from that centered medallion.
+// Both the scale and the recenter are computed from just the meshes
+// `focusPredicate` matches (the medallion plates) rather than the whole
+// object — recentering on the whole object would put the medallion
+// off-center since the chain drags the combined bounding box upward, and
+// scaling against it sizes the medallion by the wrong axis (see above). The
+// chain's own real length is what determines how far it then extends past
+// the frame from that centered, correctly-scaled medallion.
 function fitAndCenter(
   object: THREE.Group,
   targetSize: number,
   focusPredicate?: (mesh: THREE.Mesh) => boolean,
 ) {
   const box = new THREE.Box3().setFromObject(object);
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const scale = targetSize / maxDim;
 
+  let sizeBox = box;
   let center = box.getCenter(new THREE.Vector3());
   if (focusPredicate) {
     const focusBox = new THREE.Box3();
@@ -45,8 +48,15 @@ function fitAndCenter(
         any = true;
       }
     });
-    if (any) center = focusBox.getCenter(new THREE.Vector3());
+    if (any) {
+      sizeBox = focusBox;
+      center = focusBox.getCenter(new THREE.Vector3());
+    }
   }
+
+  const size = sizeBox.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const scale = targetSize / maxDim;
 
   // Same fix as OBJECT_VIEWER's catalog needed for its .glb entries: a
   // node between this root and a given mesh can carry its own
