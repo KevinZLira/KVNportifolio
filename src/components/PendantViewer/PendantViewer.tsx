@@ -151,7 +151,7 @@ export default function PendantViewer() {
       // then converted into each link's own local space before writing it
       // into the geometry, so it lifts "up" on screen regardless of how
       // that link's node happens to be rotated.
-      const CHAIN_LIFT = 0.22;
+      const CHAIN_LIFT = 0.42;
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh && child.name.startsWith("Torus")) {
           const pos = new THREE.Vector3();
