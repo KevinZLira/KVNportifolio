@@ -12,29 +12,32 @@ import "./PendantViewer.css";
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
 const MODEL_URL = "/models/pendant.glb";
-// The medallion's own max dimension (its width — it's wider than tall) maps
-// to this many world units. Scaling against the *medallion's* box, not the
-// whole chain+medallion object, is the point: the chain is long relative to
-// the medallion, so calibrating off the combined box's height (which the
-// chain dominates) sized the medallion by the wrong axis entirely — it fit
-// vertically but its actual constraint, width, ran straight past the frame.
-// At camera fov=38 and z=5.2 with a square viewport, visible width/height at
-// the medallion's depth is ~3.58 world units; 3.3 keeps a small margin
-// inside that so the medallion reads as large without touching the edges.
-const TARGET_SIZE = 3.3;
+// How much of the visible frame the medallion's own width should fill. The
+// stage is no longer a fixed square (it's now tall enough for the chain to
+// run up behind the fixed header), and its aspect ratio changes across
+// breakpoints — so the target size can't be a single constant tuned for one
+// aspect, it has to be recomputed from the camera's actual frustum width
+// whenever that aspect changes (see computeTargetSize/resize below).
+const FRAME_MARGIN = 0.92;
+// Base vertical offset (world units) applied to the whole pivot — see the
+// comment where it's assigned, next to `pivot.position.y`, for why.
+const PIVOT_Y_OFFSET = 0.95;
 
-// Both the scale and the recenter are computed from just the meshes
-// `focusPredicate` matches (the medallion plates) rather than the whole
-// object — recentering on the whole object would put the medallion
-// off-center since the chain drags the combined bounding box upward, and
-// scaling against it sizes the medallion by the wrong axis (see above). The
-// chain's own real length is what determines how far it then extends past
-// the frame from that centered, correctly-scaled medallion.
-function fitAndCenter(
-  object: THREE.Group,
-  targetSize: number,
-  focusPredicate?: (mesh: THREE.Mesh) => boolean,
-) {
+function computeTargetSize(camera: THREE.PerspectiveCamera) {
+  const vFov = (camera.fov * Math.PI) / 180;
+  const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
+  const frustumWidth = frustumHeight * camera.aspect;
+  return FRAME_MARGIN * frustumWidth;
+}
+
+// Centers the object on just the meshes `focusPredicate` matches (the
+// medallion plates) rather than the whole object — recentering on the whole
+// object would put the medallion off-center since the chain drags the
+// combined bounding box upward. Returns the focus box's own max dimension
+// (its width — the medallion is wider than tall) so the caller can turn
+// that into a scale factor against the current camera frustum, and redo it
+// whenever the frustum's aspect changes.
+function centerAndMeasure(object: THREE.Group, focusPredicate?: (mesh: THREE.Mesh) => boolean) {
   const box = new THREE.Box3().setFromObject(object);
 
   let sizeBox = box;
@@ -56,7 +59,6 @@ function fitAndCenter(
 
   const size = sizeBox.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const scale = targetSize / maxDim;
 
   // Same fix as OBJECT_VIEWER's catalog needed for its .glb entries: a
   // node between this root and a given mesh can carry its own
@@ -76,7 +78,8 @@ function fitAndCenter(
       child.geometry.translate(localOffset.x, localOffset.y, localOffset.z);
     }
   });
-  object.scale.setScalar(scale);
+
+  return maxDim;
 }
 
 export default function PendantViewer() {
@@ -122,9 +125,20 @@ export default function PendantViewer() {
     // assigning it again once the (awaited) load resolves would silently
     // wipe out a drag that happened while the model was still in flight.
     pivot.rotation.y = 0.5;
+    // Shifts the whole medallion+chain group up within the frustum so the
+    // chain's own length runs past the top of the (fixed-height) frustum
+    // instead of stopping short with a gap of empty canvas above it. The
+    // stage's CSS box starts at the very top of the section (behind the
+    // fixed site header), so whatever gets clipped here is exactly what
+    // ends up hidden behind that header, reading as "runs behind it"
+    // rather than "floats, disconnected, below it". The frustum's own
+    // vertical extent depends only on fov/distance, not aspect, so one
+    // offset works the same way across every breakpoint.
+    pivot.position.y = PIVOT_Y_OFFSET;
     scene.add(pivot);
     let hoverTargets: THREE.Mesh[] = [];
     const highlightMats: THREE.MeshStandardMaterial[] = [];
+    let focusMaxDim = 0;
 
     async function build() {
       const gltf = await new Promise<THREE.Group>((resolve, reject) => {
@@ -142,7 +156,8 @@ export default function PendantViewer() {
       });
       toRemove.forEach((c) => c.removeFromParent());
 
-      fitAndCenter(gltf, TARGET_SIZE, (m) => m.name.startsWith("Plane"));
+      focusMaxDim = centerAndMeasure(gltf, (m) => m.name.startsWith("Plane"));
+      gltf.scale.setScalar(computeTargetSize(camera) / focusMaxDim);
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -184,6 +199,14 @@ export default function PendantViewer() {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      // The stage's aspect ratio changes across breakpoints (and on
+      // window resize), so the medallion's scale has to be recomputed
+      // against the new frustum width — otherwise a resize into a
+      // narrower aspect than it was fit for clips it again.
+      const model = pivot.children[0] as THREE.Group | undefined;
+      if (model && focusMaxDim > 0) {
+        model.scale.setScalar(computeTargetSize(camera) / focusMaxDim);
+      }
     }
     resize();
     const ro = new ResizeObserver(resize);
@@ -288,7 +311,7 @@ export default function PendantViewer() {
       } else if (!reduce && t - lastInteractionT > IDLE_AFTER_MS) {
         elapsed += delta;
         pivot.rotation.y += delta * IDLE_SPIN_SPEED;
-        pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
+        pivot.position.y = PIVOT_Y_OFFSET + Math.sin(elapsed * 0.7) * 0.045;
       }
 
       const targetEmissive = isHovering || isDragging ? 0.16 : 0.05;
