@@ -39,8 +39,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: clamp(12px, 2.4vw, 24px);
+  padding-bottom: clamp(28px, 6vh, 64px);
   pointer-events: none;
 }
 
@@ -48,9 +49,25 @@
   pointer-events: auto;
 }
 
+/* Positioned independently of .ah-body's flow, and taller than the section
+   itself, so the top of the chain runs up past the top of the page and is
+   cropped there — by the page, not by the 3D camera, which still renders
+   the whole object with room to spare (see PendantViewer). The header sits
+   above this in stacking order, so whatever reaches that high reads as
+   "runs behind it," not as a stray edge floating in empty space. */
 .ah-stage {
-  width: clamp(320px, 42vw, 560px);
-  height: clamp(320px, 42vw, 560px);
+  position: absolute;
+  z-index: 1;
+  top: -22vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(480px, 56vw, 820px);
+  height: clamp(620px, 92vh, 1080px);
+  pointer-events: none;
+}
+
+.ah-stage > * {
+  pointer-events: auto;
 }
 
 .ah-role {
@@ -113,7 +130,11 @@
     padding-top: 76px;
   }
   .ah-stage {
-    width: min(72vw, 300px);
-    height: min(72vw, 300px);
+    top: -14vh;
+    width: min(88vw, 420px);
+    height: min(78vh, 620px);
+  }
+  .ah-body {
+    padding-bottom: clamp(24px, 8vh, 48px);
   }
 }

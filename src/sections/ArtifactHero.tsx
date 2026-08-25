@@ -56,6 +56,10 @@ export default function ArtifactHero() {
     <section ref={sectionRef} id="hero" className="artifact-hero">
       <DataVeil />
 
+      <div className="ah-stage">
+        <PendantViewer />
+      </div>
+
       <div className="ah-hud t-mono">
         <span>/SYSTEM/HOME</span>
         <div className="ah-hud-right">
@@ -67,10 +71,6 @@ export default function ArtifactHero() {
       </div>
 
       <div className="ah-body">
-        <div className="ah-stage">
-          <PendantViewer />
-        </div>
-
         <p className="ah-role t-display">VISUAL CONTRACTOR</p>
         <p className="ah-sub t-mono">AVAILABLE FOR SELECTED WORK.</p>
       </div>

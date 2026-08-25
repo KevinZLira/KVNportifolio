@@ -12,51 +12,24 @@ import "./PendantViewer.css";
 const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
 const MODEL_URL = "/models/pendant.glb";
-// The medallion's own max dimension (its width — it's wider than tall) maps
-// to this many world units. Scaling against the *medallion's* box, not the
-// whole chain+medallion object, is the point: the chain is long relative to
-// the medallion, so calibrating off the combined box's height (which the
-// chain dominates) sized the medallion by the wrong axis entirely — it fit
-// vertically but its actual constraint, width, ran straight past the frame.
-// At camera fov=38 and z=5.2 with a square viewport, visible width/height at
-// the medallion's depth is ~3.58 world units; 3.3 keeps a small margin
-// inside that so the medallion reads as large without touching the edges.
-const TARGET_SIZE = 3.3;
+// Fraction of the camera's vertical frustum the whole object (medallion +
+// full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
+// fill. Sizing against the *whole* object's own height — not just the
+// medallion's width — and leaving a generous margin is the point: anything
+// tighter than this, tuned for one specific viewport, breaks again the
+// moment the canvas's aspect or size changes (this is the third pass at
+// this exact bug). The camera sits well back (see camera.position.z below)
+// specifically so this margin has real room to work with.
+const FRAME_MARGIN = 0.78;
 
-// Both the scale and the recenter are computed from just the meshes
-// `focusPredicate` matches (the medallion plates) rather than the whole
-// object — recentering on the whole object would put the medallion
-// off-center since the chain drags the combined bounding box upward, and
-// scaling against it sizes the medallion by the wrong axis (see above). The
-// chain's own real length is what determines how far it then extends past
-// the frame from that centered, correctly-scaled medallion.
-function fitAndCenter(
-  object: THREE.Group,
-  targetSize: number,
-  focusPredicate?: (mesh: THREE.Mesh) => boolean,
-) {
+// Centers the object on its own whole bounding box and returns its max
+// dimension (the combined medallion+chain height) so the caller can turn
+// that into a scale factor against the camera's current frustum.
+function centerAndMeasure(object: THREE.Group) {
   const box = new THREE.Box3().setFromObject(object);
-
-  let sizeBox = box;
-  let center = box.getCenter(new THREE.Vector3());
-  if (focusPredicate) {
-    const focusBox = new THREE.Box3();
-    let any = false;
-    object.traverse((child) => {
-      if (child instanceof THREE.Mesh && focusPredicate(child)) {
-        focusBox.expandByObject(child);
-        any = true;
-      }
-    });
-    if (any) {
-      sizeBox = focusBox;
-      center = focusBox.getCenter(new THREE.Vector3());
-    }
-  }
-
-  const size = sizeBox.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const scale = targetSize / maxDim;
 
   // Same fix as OBJECT_VIEWER's catalog needed for its .glb entries: a
   // node between this root and a given mesh can carry its own
@@ -76,7 +49,18 @@ function fitAndCenter(
       child.geometry.translate(localOffset.x, localOffset.y, localOffset.z);
     }
   });
-  object.scale.setScalar(scale);
+
+  return maxDim;
+}
+
+function computeTargetSize(camera: THREE.PerspectiveCamera) {
+  const vFov = (camera.fov * Math.PI) / 180;
+  const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
+  const frustumWidth = frustumHeight * camera.aspect;
+  // The combined box is height-dominated (the chain), so the height
+  // constraint binds first — but at a narrow aspect the width could bind
+  // instead, so this stays honest and takes whichever is tighter.
+  return FRAME_MARGIN * Math.min(frustumHeight, frustumWidth);
 }
 
 export default function PendantViewer() {
@@ -95,7 +79,10 @@ export default function PendantViewer() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 0.15, 5.2);
+    // Sitting further back than the medallion alone would need gives the
+    // frustum room to comfortably fit the *whole* object (medallion + full
+    // chain) at a still-generous size — see FRAME_MARGIN/computeTargetSize.
+    camera.position.set(0, 0.15, 8);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -125,6 +112,7 @@ export default function PendantViewer() {
     scene.add(pivot);
     let hoverTargets: THREE.Mesh[] = [];
     const highlightMats: THREE.MeshStandardMaterial[] = [];
+    let wholeMaxDim = 0;
 
     async function build() {
       const gltf = await new Promise<THREE.Group>((resolve, reject) => {
@@ -146,27 +134,35 @@ export default function PendantViewer() {
       });
       toRemove.forEach((c) => c.removeFromParent());
 
-      fitAndCenter(gltf, TARGET_SIZE, (m) => m.name.startsWith("Plane"));
+      wholeMaxDim = centerAndMeasure(gltf);
 
       // The chain's lowest link sits low enough in the source model that it
-      // pokes into the medallion's top edge instead of resting above it —
-      // lift every chain link a hair clear of it. Same rotated-node fix as
-      // fitAndCenter: the offset is expressed in world space (straight up)
-      // then converted into each link's own local space before writing it
-      // into the geometry, so it lifts "up" on screen regardless of how
-      // that link's node happens to be rotated.
-      const CHAIN_LIFT = 0.42;
+      // pokes into the medallion's top edge instead of resting above it.
+      // Moving the *chain* up to fix that (an earlier version of this)
+      // pushed its top end past the camera frustum, clipping it against the
+      // canvas edge instead. Dropping the *medallion* down instead opens the
+      // same gap without moving the chain at all — and now that the whole
+      // object (medallion + chain + this gap) is what gets fit to the
+      // frustum below, that gap is accounted for rather than sneaking past
+      // it. Same rotated-node conversion centerAndMeasure uses: the offset
+      // is world-space straight down, converted into each mesh's own local
+      // space so it still reads as "down" on screen regardless of that
+      // mesh's rotation.
+      const MEDALLION_DROP = 0.42;
       gltf.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.name.startsWith("Torus")) {
+        if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
           const pos = new THREE.Vector3();
           const quat = new THREE.Quaternion();
           const scl = new THREE.Vector3();
           child.matrixWorld.decompose(pos, quat, scl);
           const invRotScale = new THREE.Matrix4().compose(new THREE.Vector3(), quat, scl).invert();
-          const localLift = new THREE.Vector3(0, CHAIN_LIFT, 0).applyMatrix4(invRotScale);
-          child.geometry.translate(localLift.x, localLift.y, localLift.z);
+          const localDrop = new THREE.Vector3(0, -MEDALLION_DROP, 0).applyMatrix4(invRotScale);
+          child.geometry.translate(localDrop.x, localDrop.y, localDrop.z);
         }
       });
+      wholeMaxDim += MEDALLION_DROP;
+
+      gltf.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -208,6 +204,14 @@ export default function PendantViewer() {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      // The stage's aspect ratio isn't fixed (it varies across
+      // breakpoints, and on window resize), so the model's scale has to be
+      // recomputed against the new frustum — otherwise a resize into a
+      // narrower aspect than it was fit for could clip it again.
+      const model = pivot.children[0] as THREE.Group | undefined;
+      if (model && wholeMaxDim > 0) {
+        model.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
+      }
     }
     resize();
     const ro = new ResizeObserver(resize);
