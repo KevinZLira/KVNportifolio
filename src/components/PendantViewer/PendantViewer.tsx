@@ -144,6 +144,26 @@ export default function PendantViewer() {
 
       fitAndCenter(gltf, TARGET_SIZE, (m) => m.name.startsWith("Plane"));
 
+      // The chain's lowest link sits low enough in the source model that it
+      // pokes into the medallion's top edge instead of resting above it —
+      // lift every chain link a hair clear of it. Same rotated-node fix as
+      // fitAndCenter: the offset is expressed in world space (straight up)
+      // then converted into each link's own local space before writing it
+      // into the geometry, so it lifts "up" on screen regardless of how
+      // that link's node happens to be rotated.
+      const CHAIN_LIFT = 0.22;
+      gltf.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.name.startsWith("Torus")) {
+          const pos = new THREE.Vector3();
+          const quat = new THREE.Quaternion();
+          const scl = new THREE.Vector3();
+          child.matrixWorld.decompose(pos, quat, scl);
+          const invRotScale = new THREE.Matrix4().compose(new THREE.Vector3(), quat, scl).invert();
+          const localLift = new THREE.Vector3(0, CHAIN_LIFT, 0).applyMatrix4(invRotScale);
+          child.geometry.translate(localLift.x, localLift.y, localLift.z);
+        }
+      });
+
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           const material = new THREE.MeshStandardMaterial({
