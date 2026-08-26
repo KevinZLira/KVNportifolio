@@ -24,7 +24,7 @@ const MODEL_URL = "/models/pendant.glb";
 // moment the canvas's aspect or size changes (this is the third pass at
 // this exact bug). The camera sits well back (see camera.position.z below)
 // specifically so this margin has real room to work with.
-const FRAME_MARGIN = 0.78;
+const FRAME_MARGIN = 1.01;
 
 // Centers the object on its own whole bounding box and returns its max
 // dimension (the combined medallion+chain height) so the caller can turn
@@ -223,7 +223,7 @@ export default function PendantViewer() {
     const DRAG_SENSITIVITY = 0.011;
     const INERTIA_DECAY = 2.2;
     const INERTIA_EPSILON = 0.04;
-    const IDLE_SPIN_SPEED = 0.055;
+    const IDLE_SPIN_SPEED = 0.11;
     const IDLE_AFTER_MS = 2200;
 
     let isDragging = false;

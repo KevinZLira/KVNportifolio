@@ -62,7 +62,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: clamp(480px, 56vw, 820px);
-  height: clamp(620px, 92vh, 1080px);
+  height: clamp(700px, 100vh, 1160px);
   pointer-events: none;
 }
 
