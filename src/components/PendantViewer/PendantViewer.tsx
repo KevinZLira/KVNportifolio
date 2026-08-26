@@ -120,20 +120,6 @@ export default function PendantViewer() {
       });
       if (disposed || !container) return;
 
-      // Plane002 is a solid filler layer sitting right behind Plane001 (the
-      // actual detailed emblem, with its correct negative-space gaps between
-      // strokes) — with both rendered, Plane002 shows through those gaps and
-      // reads as a single solid block/plate rather than an open "K" mark.
-      // Plane004 is a small accent stripe that, isolated, sits floating in
-      // the middle of that same negative space, not touching any stroke —
-      // rendered alongside the rest, it reads as a broken/disconnected
-      // fragment rather than a deliberate detail, so it comes out too.
-      const toRemove: THREE.Object3D[] = [];
-      gltf.traverse((c) => {
-        if (c.name === "Plane002" || c.name === "Plane004") toRemove.push(c);
-      });
-      toRemove.forEach((c) => c.removeFromParent());
-
       wholeMaxDim = centerAndMeasure(gltf);
 
       // The chain's lowest link sits low enough in the source model that it
