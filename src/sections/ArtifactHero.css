@@ -49,40 +49,25 @@
   pointer-events: auto;
 }
 
-/* Positioned independently of .ah-body's flow, and taller than the section
-   itself, so the top of the chain runs up past the top of the page and is
-   cropped there — by the page, not by the 3D camera, which still renders
-   the whole object with room to spare (see PendantViewer). The header sits
-   above this in stacking order, so whatever reaches that high reads as
-   "runs behind it," not as a stray edge floating in empty space.
-   `top` is a single vh value rather than a vh+px mix on purpose: a fixed
-   px term doesn't scale with the viewport, so it lands in a different
-   relative spot on a shorter/taller screen than the one it was tuned on
-   (e.g. a laptop's shorter browser window vs. a desktop monitor) — that
-   mismatch is what let this clip again on a different machine even though
-   nothing about the intended position or size changed. -32vh reproduces
-   the exact pixel offset this was tuned at (900px-tall viewport) while
-   scaling proportionally at any other height. */
+/* Exactly the size of the hero section itself — not an independently
+   tuned vh/vw box. Every earlier version of this (fixed px offsets, a
+   vh-based offset tuned against one viewport) drifted out of sync on a
+   screen shaped differently than the one it was tuned on. Matching the
+   parent 1:1 makes that whole class of bug impossible: the camera's
+   aspect always *is* the hero's own aspect, on any screen, and the stage
+   starts at the same y=0 the fixed header does, so the chain's crop
+   point is always correctly behind it (see PendantViewer for how the
+   pendant itself is fit and centered within whatever frustum that
+   produces). */
 .ah-stage {
   position: absolute;
   z-index: 1;
-  top: -32vh;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(480px, 56vw, 820px);
-  height: clamp(700px, 100vh, 1160px);
+  inset: 0;
   pointer-events: none;
 }
 
 .ah-stage > * {
   pointer-events: auto;
-}
-
-.ah-role {
-  margin: 0;
-  font-size: clamp(1.2rem, 2.6vw, 1.9rem);
-  color: var(--fg);
-  letter-spacing: 0.04em;
 }
 
 .ah-sub {
@@ -136,11 +121,6 @@
   }
   .ah-hud {
     padding-top: 76px;
-  }
-  .ah-stage {
-    top: -24.66vh;
-    width: min(88vw, 420px);
-    height: min(78vh, 620px);
   }
   .ah-body {
     padding-bottom: clamp(24px, 8vh, 48px);

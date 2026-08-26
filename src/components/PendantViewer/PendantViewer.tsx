@@ -24,7 +24,7 @@ const MODEL_URL = "/models/pendant.glb";
 // moment the canvas's aspect or size changes (this is the third pass at
 // this exact bug). The camera sits well back (see camera.position.z below)
 // specifically so this margin has real room to work with.
-const FRAME_MARGIN = 1.01;
+const FRAME_MARGIN = 0.55;
 
 // Centers the object on its own whole bounding box and returns its max
 // dimension (the combined medallion+chain height) so the caller can turn

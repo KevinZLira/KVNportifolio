@@ -25,8 +25,8 @@ export default function ArtifactHero() {
         .timeline({ delay: reduce ? 0 : 0.15 })
         .from(".ah-stage", { opacity: 0, scale: reduce ? 1 : 0.94, duration: reduce ? 0 : 0.9, ease: "power3.out" })
         .from(
-          ".ah-role, .ah-sub",
-          { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, stagger: reduce ? 0 : 0.1, ease: "power2.out" },
+          ".ah-sub",
+          { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, ease: "power2.out" },
           reduce ? 0 : "-=0.4",
         )
         .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.2");
@@ -71,7 +71,6 @@ export default function ArtifactHero() {
       </div>
 
       <div className="ah-body">
-        <p className="ah-role t-display">VISUAL CONTRACTOR</p>
         <p className="ah-sub t-mono">AVAILABLE FOR SELECTED WORK.</p>
       </div>
 
