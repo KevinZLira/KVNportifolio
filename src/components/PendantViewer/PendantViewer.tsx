@@ -86,7 +86,9 @@ export default function PendantViewer() {
     // Sitting further back than the medallion alone would need gives the
     // frustum room to comfortably fit the *whole* object (medallion + full
     // chain) at a still-generous size — see FRAME_MARGIN/computeTargetSize.
-    camera.position.set(0, 0.15, 8);
+    // Negative Y sits the camera below the object's center so it looks up
+    // at it slightly, rather than down.
+    camera.position.set(0, -0.15, 8);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
