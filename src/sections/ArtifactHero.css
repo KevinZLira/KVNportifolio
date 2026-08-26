@@ -58,7 +58,7 @@
 .ah-stage {
   position: absolute;
   z-index: 1;
-  top: calc(-22vh - 40px);
+  top: calc(-22vh - 90px);
   left: 50%;
   transform: translateX(-50%);
   width: clamp(480px, 56vw, 820px);
@@ -130,7 +130,7 @@
     padding-top: 76px;
   }
   .ah-stage {
-    top: calc(-14vh - 40px);
+    top: calc(-14vh - 90px);
     width: min(88vw, 420px);
     height: min(78vh, 620px);
   }
