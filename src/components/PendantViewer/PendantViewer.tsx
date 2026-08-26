@@ -157,7 +157,7 @@ export default function PendantViewer() {
       const vFov = (camera.fov * Math.PI) / 180;
       const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
       const worldUnitsPerPixel = frustumHeight / container.clientHeight;
-      const MEDALLION_RAISE_PX = 50;
+      const MEDALLION_RAISE_PX = 30;
       const medallionRaise = (MEDALLION_RAISE_PX * worldUnitsPerPixel) / objectScale;
 
       const MEDALLION_DROP = BASE_GAP - medallionRaise;
