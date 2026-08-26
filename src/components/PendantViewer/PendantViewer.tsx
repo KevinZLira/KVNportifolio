@@ -24,7 +24,7 @@ const MODEL_URL = "/models/pendant.glb";
 // moment the canvas's aspect or size changes (this is the third pass at
 // this exact bug). The camera sits well back (see camera.position.z below)
 // specifically so this margin has real room to work with.
-const FRAME_MARGIN = 0.55;
+const FRAME_MARGIN = 0.825;
 
 // Centers the object on its own whole bounding box and returns its max
 // dimension (the combined medallion+chain height) so the caller can turn
@@ -119,6 +119,7 @@ export default function PendantViewer() {
     let hoverTargets: THREE.Mesh[] = [];
     const highlightMats: THREE.MeshStandardMaterial[] = [];
     let wholeMaxDim = 0;
+    let pivotBaseY = 0;
 
     async function build() {
       const gltf = await new Promise<THREE.Group>((resolve, reject) => {
@@ -151,6 +152,15 @@ export default function PendantViewer() {
       const worldUnitsPerPixel = frustumHeight / container.clientHeight;
       const MEDALLION_RAISE_PX = 30;
       const medallionRaise = (MEDALLION_RAISE_PX * worldUnitsPerPixel) / objectScale;
+
+      // Raises the whole assembly (medallion + chain together) on screen —
+      // same worldUnitsPerPixel conversion as MEDALLION_RAISE_PX, but
+      // applied directly to the pivot's own position rather than baked
+      // into mesh geometry, since the pivot sits in scene/world space
+      // already (not subject to the model's own object-scale below).
+      const STAGE_RAISE_PX = 100;
+      pivotBaseY = STAGE_RAISE_PX * worldUnitsPerPixel;
+      pivot.position.y = pivotBaseY;
 
       const MEDALLION_DROP = BASE_GAP - medallionRaise;
       gltf.traverse((child) => {
@@ -320,7 +330,7 @@ export default function PendantViewer() {
       } else if (!reduce && t - lastInteractionT > IDLE_AFTER_MS) {
         elapsed += delta;
         pivot.rotation.y += delta * IDLE_SPIN_SPEED;
-        pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
+        pivot.position.y = pivotBaseY + Math.sin(elapsed * 0.7) * 0.045;
       }
 
       const targetEmissive = isHovering || isDragging ? 0.28 : 0.12;
