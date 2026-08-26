@@ -13,11 +13,14 @@
   display: block;
   width: 100% !important;
   height: 100% !important;
-  /* Small blur radii on purpose — drop-shadow is clipped to the canvas's
-     own rectangle (unlike a real box-shadow, it can't bleed past the
-     element's bounds), so now that the medallion fills most of the frame,
-     a wide blur here reads as a visible tinted box rather than a glow. */
-  filter: drop-shadow(0 0 4px rgba(128, 244, 37, 0.3)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  /* drop-shadow is clipped to the canvas's own rectangle (unlike a real
+     box-shadow, it can't bleed past the element's bounds) — a wide blur
+     used to read as a visible tinted box back when the medallion filled
+     most of a small, tightly-fit canvas. The stage is much bigger than
+     the medallion now, with plenty of empty transparent canvas around it,
+     so a wider glow has room to actually fall off before hitting an edge. */
+  filter: drop-shadow(0 0 10px rgba(174, 249, 122, 0.45)) drop-shadow(0 0 30px rgba(174, 249, 122, 0.25))
+    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
 .pendant-hint {

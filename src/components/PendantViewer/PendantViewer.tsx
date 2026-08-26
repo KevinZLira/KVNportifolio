@@ -9,8 +9,12 @@ import "./PendantViewer.css";
 // organization," so this gets its own small, independent Three.js scene
 // with a solid metal material instead of a green wireframe ghost.
 
-const PRIMARY = 0x80f425;
 const ACCENT = 0xff2ec4;
+// A lighter tint of the site's brand green (#80f425), used only for the
+// pendant's own glow (emissive fill + edge lines + its rim light) — the
+// brand color stays as-is everywhere else on the site; this is the
+// pendant itself reading brighter/more lit-up, on request.
+const GLOW = 0xaef97a;
 const MODEL_URL = "/models/pendant.glb";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
@@ -95,7 +99,7 @@ export default function PendantViewer() {
     const key = new THREE.DirectionalLight(0xffffff, 1.4);
     key.position.set(2.2, 3, 2.5);
     scene.add(key);
-    const rim1 = new THREE.PointLight(PRIMARY, 5, 9);
+    const rim1 = new THREE.PointLight(GLOW, 5, 9);
     rim1.position.set(-2, 0.6, -1.8);
     scene.add(rim1);
     const rim2 = new THREE.PointLight(ACCENT, 3.5, 9);
@@ -168,8 +172,8 @@ export default function PendantViewer() {
             color: 0x2a2c28,
             metalness: 0.82,
             roughness: 0.32,
-            emissive: PRIMARY,
-            emissiveIntensity: 0.05,
+            emissive: GLOW,
+            emissiveIntensity: 0.12,
           });
           child.material = material;
           highlightMats.push(material);
@@ -177,9 +181,9 @@ export default function PendantViewer() {
 
           const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
           const edgeMat = new THREE.LineBasicMaterial({
-            color: PRIMARY,
+            color: GLOW,
             transparent: true,
-            opacity: 0.35,
+            opacity: 0.55,
           });
           const edges = new THREE.LineSegments(edgeGeo, edgeMat);
           child.add(edges);
@@ -317,7 +321,7 @@ export default function PendantViewer() {
         pivot.position.y = Math.sin(elapsed * 0.7) * 0.045;
       }
 
-      const targetEmissive = isHovering || isDragging ? 0.16 : 0.05;
+      const targetEmissive = isHovering || isDragging ? 0.28 : 0.12;
       for (const m of highlightMats) {
         m.emissiveIntensity += (targetEmissive - m.emissiveIntensity) * 0.1;
       }
