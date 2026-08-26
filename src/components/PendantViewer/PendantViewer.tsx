@@ -118,7 +118,7 @@ export default function PendantViewer() {
       const gltf = await new Promise<THREE.Group>((resolve, reject) => {
         new GLTFLoader().load(MODEL_URL, (g) => resolve(g.scene), undefined, reject);
       });
-      if (disposed) return;
+      if (disposed || !container) return;
 
       // Plane002 is a solid filler layer sitting right behind Plane001 (the
       // actual detailed emblem, with its correct negative-space gaps between
@@ -147,8 +147,20 @@ export default function PendantViewer() {
       // it. Same rotated-node conversion centerAndMeasure uses: the offset
       // is world-space straight down, converted into each mesh's own local
       // space so it still reads as "down" on screen regardless of that
-      // mesh's rotation.
-      const MEDALLION_DROP = 0.42;
+      // mesh's rotation. BASE_GAP is offset by a raise requested in screen
+      // pixels (moves the medallion only, not the chain) — converted to
+      // this mesh's raw (pre object-scale) units via the frustum's
+      // world-units-per-pixel at the object's depth, undoing the object
+      // scale that gets applied afterward so the offset survives it.
+      const BASE_GAP = 0.42;
+      const objectScale = computeTargetSize(camera) / (wholeMaxDim + BASE_GAP);
+      const vFov = (camera.fov * Math.PI) / 180;
+      const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
+      const worldUnitsPerPixel = frustumHeight / container.clientHeight;
+      const MEDALLION_RAISE_PX = 100;
+      const medallionRaise = (MEDALLION_RAISE_PX * worldUnitsPerPixel) / objectScale;
+
+      const MEDALLION_DROP = BASE_GAP - medallionRaise;
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
           const pos = new THREE.Vector3();
