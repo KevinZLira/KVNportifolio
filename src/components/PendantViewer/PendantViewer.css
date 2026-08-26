@@ -19,7 +19,7 @@
      most of a small, tightly-fit canvas. The stage is much bigger than
      the medallion now, with plenty of empty transparent canvas around it,
      so a wider glow has room to actually fall off before hitting an edge. */
-  filter: drop-shadow(0 0 10px rgba(174, 249, 122, 0.45)) drop-shadow(0 0 30px rgba(174, 249, 122, 0.25))
+  filter: drop-shadow(0 0 10px rgba(140, 255, 20, 0.5)) drop-shadow(0 0 30px rgba(140, 255, 20, 0.3))
     drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 

@@ -10,11 +10,11 @@ import "./PendantViewer.css";
 // with a solid metal material instead of a green wireframe ghost.
 
 const ACCENT = 0xff2ec4;
-// A lighter tint of the site's brand green (#80f425), used only for the
-// pendant's own glow (emissive fill + edge lines + its rim light) — the
-// brand color stays as-is everywhere else on the site; this is the
-// pendant itself reading brighter/more lit-up, on request.
-const GLOW = 0xaef97a;
+// A punchier, fully-saturated neon green (not a lighter/pastel tint of
+// the site's brand green — that read as washed out), used only for the
+// pendant's own glow (emissive fill + edge lines + its rim light). The
+// brand color (#80f425) stays as-is everywhere else on the site.
+const GLOW = 0x8cff14;
 const MODEL_URL = "/models/pendant.glb";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
