@@ -54,11 +54,19 @@
    cropped there — by the page, not by the 3D camera, which still renders
    the whole object with room to spare (see PendantViewer). The header sits
    above this in stacking order, so whatever reaches that high reads as
-   "runs behind it," not as a stray edge floating in empty space. */
+   "runs behind it," not as a stray edge floating in empty space.
+   `top` is a single vh value rather than a vh+px mix on purpose: a fixed
+   px term doesn't scale with the viewport, so it lands in a different
+   relative spot on a shorter/taller screen than the one it was tuned on
+   (e.g. a laptop's shorter browser window vs. a desktop monitor) — that
+   mismatch is what let this clip again on a different machine even though
+   nothing about the intended position or size changed. -32vh reproduces
+   the exact pixel offset this was tuned at (900px-tall viewport) while
+   scaling proportionally at any other height. */
 .ah-stage {
   position: absolute;
   z-index: 1;
-  top: calc(-22vh - 90px);
+  top: -32vh;
   left: 50%;
   transform: translateX(-50%);
   width: clamp(480px, 56vw, 820px);
@@ -130,7 +138,7 @@
     padding-top: 76px;
   }
   .ah-stage {
-    top: calc(-14vh - 90px);
+    top: -24.66vh;
     width: min(88vw, 420px);
     height: min(78vh, 620px);
   }
