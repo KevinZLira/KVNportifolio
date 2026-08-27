@@ -158,7 +158,7 @@ export default function PendantViewer() {
       // applied directly to the pivot's own position rather than baked
       // into mesh geometry, since the pivot sits in scene/world space
       // already (not subject to the model's own object-scale below).
-      const STAGE_RAISE_PX = 200;
+      const STAGE_RAISE_PX = 250;
       pivotBaseY = STAGE_RAISE_PX * worldUnitsPerPixel;
       pivot.position.y = pivotBaseY;
 
