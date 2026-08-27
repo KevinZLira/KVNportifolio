@@ -1,26 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import "./PendantViewer.css";
 
 // PENDANT_VIEWER — a single artifact, not a catalog. Deliberately not built
 // on top of ObjectViewer: that component's hologram-wireframe material and
 // multi-object nav are wrong for "this is a real object belonging to the
-// organization," so this gets its own small, independent Three.js scene.
-// Loads the actual authored materials (pendant.mtl) rather than a uniform
-// material we invented — the medallion is genuinely chrome/metal (Material
-// .001/.003) and only the accent stripe + chain (Material.004) are the
-// bright green emissive.
+// organization," so this gets its own small, independent Three.js scene
+// with a solid metal material instead of a green wireframe ghost.
 
 const ACCENT = 0xff2ec4;
-const MODEL_PATH = "/models/";
-const MODEL_OBJ = "pendant.obj";
-const MODEL_MTL = "pendant.mtl";
-// Used only for the two point lights that give the chrome parts a bit of
-// colored rim light — the pendant's own green glow now comes from
-// Material.004's own (very strong) Ke, loaded from the .mtl.
-const RIM_GLOW = 0x8cff14;
+// A punchier, fully-saturated neon green (not a lighter/pastel tint of
+// the site's brand green — that read as washed out), used only for the
+// pendant's own glow (emissive fill + edge lines + its rim light). The
+// brand color (#80f425) stays as-is everywhere else on the site.
+const GLOW = 0x8cff14;
+const MODEL_URL = "/models/pendant.glb";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
 // fill. Sizing against the *whole* object's own height — not just the
@@ -106,7 +101,7 @@ export default function PendantViewer() {
     const key = new THREE.DirectionalLight(0xffffff, 1.4);
     key.position.set(2.2, 3, 2.5);
     scene.add(key);
-    const rim1 = new THREE.PointLight(RIM_GLOW, 5, 9);
+    const rim1 = new THREE.PointLight(GLOW, 5, 9);
     rim1.position.set(-2, 0.6, -1.8);
     scene.add(rim1);
     const rim2 = new THREE.PointLight(ACCENT, 3.5, 9);
@@ -122,34 +117,17 @@ export default function PendantViewer() {
     pivot.rotation.y = 0.5;
     scene.add(pivot);
     let hoverTargets: THREE.Mesh[] = [];
-    // Emissive materials pulse slightly on hover/drag. A material can be
-    // shared by several meshes (every chain link uses the same Material
-    // .004), so this is de-duplicated by material identity, each entry
-    // keeping the .mtl's own emissive color as the pulse's resting point.
-    const highlightMats: { material: THREE.MeshPhongMaterial; base: THREE.Color }[] = [];
+    const highlightMats: THREE.MeshStandardMaterial[] = [];
     let wholeMaxDim = 0;
     let pivotBaseY = 0;
 
     async function build() {
-      const materials = await new Promise<MTLLoader.MaterialCreator>((resolve, reject) => {
-        new MTLLoader().setPath(MODEL_PATH).load(MODEL_MTL, resolve, undefined, reject);
-      });
-      materials.preload();
-      const obj = await new Promise<THREE.Group>((resolve, reject) => {
-        new OBJLoader().setMaterials(materials).setPath(MODEL_PATH).load(MODEL_OBJ, resolve, undefined, reject);
+      const gltf = await new Promise<THREE.Group>((resolve, reject) => {
+        new GLTFLoader().load(MODEL_URL, (g) => resolve(g.scene), undefined, reject);
       });
       if (disposed || !container) return;
 
-      // Blender's raw .obj export keeps its native Z-up axes (unlike the
-      // .glb export, which converts to Y-up automatically) — face-on here
-      // means rotating -90° about X, same as that Y-up conversion would
-      // have done. matrixWorld won't reflect this until it's recomputed,
-      // and centerAndMeasure below reads matrixWorld to do its own
-      // rotated-node correction, so that has to happen first.
-      obj.rotation.y = Math.PI / 2;
-      obj.updateMatrixWorld(true);
-
-      wholeMaxDim = centerAndMeasure(obj);
+      wholeMaxDim = centerAndMeasure(gltf);
 
       // The chain's lowest link sits low enough in the source model that it
       // pokes into the medallion's top edge instead of resting above it.
@@ -185,7 +163,7 @@ export default function PendantViewer() {
       pivot.position.y = pivotBaseY;
 
       const MEDALLION_DROP = BASE_GAP - medallionRaise;
-      obj.traverse((child) => {
+      gltf.traverse((child) => {
         if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
           const pos = new THREE.Vector3();
           const quat = new THREE.Quaternion();
@@ -198,50 +176,35 @@ export default function PendantViewer() {
       });
       wholeMaxDim += MEDALLION_DROP;
 
-      obj.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
+      gltf.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
 
-      // Material.003 (the backing plate, "Plane.002") is a plain white in
-      // the .mtl — OBJ/MTL has no real transmission/glass model to author
-      // that with, so it's swapped for an actual physical glass material
-      // instead of the flat white the format alone can express.
-      const glass = new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        metalness: 0,
-        roughness: 0.06,
-        transmission: 1,
-        thickness: 0.35,
-        ior: 1.45,
-        clearcoat: 1,
-        clearcoatRoughness: 0.08,
-        transparent: true,
-      });
-      disposables.push({ material: glass });
-
-      const seenMats = new Set<THREE.Material>();
-      obj.traverse((child) => {
+      gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          disposables.push({ geometry: child.geometry });
+          const material = new THREE.MeshStandardMaterial({
+            color: 0x2a2c28,
+            metalness: 0.82,
+            roughness: 0.32,
+            emissive: GLOW,
+            emissiveIntensity: 0.12,
+          });
+          child.material = material;
+          highlightMats.push(material);
+          disposables.push({ geometry: child.geometry, material });
+
+          const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
+          const edgeMat = new THREE.LineBasicMaterial({
+            color: GLOW,
+            transparent: true,
+            opacity: 0.55,
+          });
+          const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+          child.add(edges);
+          disposables.push({ geometry: edgeGeo, material: edgeMat });
           hoverTargets.push(child);
-
-          if (child.name === "Plane.002") {
-            child.material = glass;
-            return;
-          }
-
-          const material = child.material;
-          if (
-            material instanceof THREE.MeshPhongMaterial &&
-            !seenMats.has(material) &&
-            material.emissive.getHex() !== 0
-          ) {
-            seenMats.add(material);
-            disposables.push({ material });
-            highlightMats.push({ material, base: material.emissive.clone() });
-          }
         }
       });
 
-      pivot.add(obj);
+      pivot.add(gltf);
       setLoaded(true);
     }
 
@@ -370,11 +333,9 @@ export default function PendantViewer() {
         pivot.position.y = pivotBaseY + Math.sin(elapsed * 0.7) * 0.045;
       }
 
-      const emissiveMul = isHovering || isDragging ? 1.5 : 1;
-      for (const { material, base } of highlightMats) {
-        material.emissive.r += (base.r * emissiveMul - material.emissive.r) * 0.1;
-        material.emissive.g += (base.g * emissiveMul - material.emissive.g) * 0.1;
-        material.emissive.b += (base.b * emissiveMul - material.emissive.b) * 0.1;
+      const targetEmissive = isHovering || isDragging ? 0.28 : 0.12;
+      for (const m of highlightMats) {
+        m.emissiveIntensity += (targetEmissive - m.emissiveIntensity) * 0.1;
       }
       const targetScale = isHovering && !isDragging ? 1.02 : 1;
       pivot.scale.x += (targetScale - pivot.scale.x) * 0.12;
