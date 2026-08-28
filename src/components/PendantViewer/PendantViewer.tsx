@@ -23,12 +23,12 @@ const GLOW = 0x8cff14;
 // intensity instead of reading as more green.
 const DETAIL_GLOW = 0x33ff22;
 const MODEL_URL = "/models/pendant.glb";
-// A real studio HDRI, downsized from the original 4K/25MB source to
-// 1024x512 (~1.5MB) — the environment only ever gets *reflected*, and
+// A real HDRI, downsized from the original 10000x5000/~29MB EXR source to
+// 1024x512 (~930KB) — the environment only ever gets *reflected*, and
 // PMREMGenerator blurs it heavily for every roughness above near-zero, so
 // the extra resolution the source shipped with wasn't buying anything
 // visible, just page weight.
-const ENV_URL = "/hdri/ferndale-studio-1k.hdr";
+const ENV_URL = "/hdri/blenderup-hdri-22-1k.hdr";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
 // fill. Sizing against the *whole* object's own height — not just the
