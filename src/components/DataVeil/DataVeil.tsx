@@ -121,7 +121,7 @@ export default function DataVeil() {
     let clock = 0;
     let colMeta: ColumnMeta[] = [];
     let streams: Stream[] = [];
-    const MAX_STREAMS = 200 * LAYERS.length;
+    const MAX_STREAMS = 400 * LAYERS.length;
 
     function spawnStream(col: ColumnMeta, initial: boolean): Stream {
       const length = 5 + Math.random() * 9;
@@ -146,7 +146,7 @@ export default function DataVeil() {
           const roll = Math.random();
           // a persistent per-column trait: some columns stay dense (frequent
           // overlapping streams), most sit medium, a few stay sparse/spaced out
-          const [lo, hi] = roll < 0.25 ? [0.9, 1.8] : roll < 0.7 ? [2.0, 3.4] : [3.6, 6.2];
+          const [lo, hi] = roll < 0.25 ? [0.45, 0.9] : roll < 0.7 ? [1.0, 1.7] : [1.8, 3.1];
           colMeta.push({
             x: i * CELL + CELL / 2 + layer.offset,
             layer: layerIdx,
