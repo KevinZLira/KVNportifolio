@@ -73,6 +73,52 @@ function isMedallionMesh(mesh: THREE.Mesh) {
   return !mesh.name.startsWith("Torus");
 }
 
+// Per-mesh material by name: the chain reads as actual chrome (mirror-flat,
+// near-zero roughness) rather than the medallion's brushed/etched metal;
+// "Detalhe" is a dedicated accent piece meant to read as a light source
+// (black base, nothing but its own emissive contributes) rather than a lit
+// surface; "KVN" is lightly frosted white glass (translucent, but the
+// roughness keeps it from being clear-glass sharp); everything else keeps
+// the medallion's default brushed metal + subtle emissive.
+function buildMeshMaterial(name: string): THREE.MeshStandardMaterial {
+  if (name.startsWith("Torus")) {
+    return new THREE.MeshStandardMaterial({
+      color: 0xd9dcdd,
+      metalness: 1,
+      roughness: 0.035,
+      envMapIntensity: 1.2,
+    });
+  }
+  if (name === "Detalhe") {
+    return new THREE.MeshStandardMaterial({
+      color: 0x000000,
+      emissive: DETAIL_GLOW,
+      emissiveIntensity: 1.8,
+      metalness: 0.2,
+      roughness: 0.4,
+    });
+  }
+  if (name === "KVN") {
+    return new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      transmission: 0.92,
+      roughness: 0.32,
+      thickness: 0.5,
+      ior: 1.45,
+      clearcoat: 0.3,
+      clearcoatRoughness: 0.25,
+      envMapIntensity: 1,
+    });
+  }
+  return new THREE.MeshStandardMaterial({
+    color: 0x2a2c28,
+    metalness: 0.82,
+    roughness: 0.32,
+    emissive: GLOW,
+    emissiveIntensity: 0.12,
+  });
+}
+
 function computeTargetSize(camera: THREE.PerspectiveCamera) {
   const vFov = (camera.fov * Math.PI) / 180;
   const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
@@ -231,43 +277,15 @@ export default function PendantViewer() {
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           const isChain = child.name.startsWith("Torus");
-          // "Detalhe" is a dedicated accent piece, not structural metal —
-          // it's meant to read as a light source, not a lit surface, so its
-          // base color is black (nothing but emissive contributes) and that
-          // emissive is pushed well past the medallion's subtle 0.12, fixed
-          // rather than tied into the hover pulse below so it stays a
-          // constant intense glow regardless of interaction state.
           const isDetail = child.name === "Detalhe";
-          const material = isChain
-            ? // The chain reads as actual chrome (mirror-flat, near-zero
-              // roughness) rather than the medallion's brushed/etched metal —
-              // no emissive on it, so the environment reflection isn't
-              // washed out, and it sits outside the hover/idle emissive
-              // pulse below so hovering doesn't fight the chrome look with
-              // a glow.
-              new THREE.MeshStandardMaterial({
-                color: 0xd9dcdd,
-                metalness: 1,
-                roughness: 0.035,
-                envMapIntensity: 1.2,
-              })
-            : isDetail
-              ? new THREE.MeshStandardMaterial({
-                  color: 0x000000,
-                  emissive: DETAIL_GLOW,
-                  emissiveIntensity: 1.8,
-                  metalness: 0.2,
-                  roughness: 0.4,
-                })
-              : new THREE.MeshStandardMaterial({
-                  color: 0x2a2c28,
-                  metalness: 0.82,
-                  roughness: 0.32,
-                  emissive: GLOW,
-                  emissiveIntensity: 0.12,
-                });
+          const isKvnGlass = child.name === "KVN";
+          const material = buildMeshMaterial(child.name);
           child.material = material;
-          if (!isChain && !isDetail) highlightMats.push(material);
+          // Only the medallion's default metal participates in the
+          // hover/idle emissive pulse below — the chain (chrome), Detalhe
+          // (fixed intense glow), and KVN (glass, no emissive at all) all
+          // stay exactly as authored regardless of interaction state.
+          if (!isChain && !isDetail && !isKvnGlass) highlightMats.push(material);
           disposables.push({ geometry: child.geometry, material });
 
           const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
