@@ -3,9 +3,14 @@
 // of them. Each mode is its own self-contained component; only one renders.
 //
 // "object_viewer" / "time_field" / "creative_system" are sub-modes of
-// Hero.tsx itself (it picks which fills its right-side slot). "artifact" is
-// a different animal — a full alternative hero section (see App.tsx/Home.tsx)
-// with its own layout and copy, rendered instead of Hero.tsx entirely.
-export type HeroMode = "object_viewer" | "time_field" | "creative_system" | "artifact";
+// Hero.tsx itself (it picks which fills its right-side slot). "artifact" and
+// "minimal" are different animals — full alternative hero sections (see
+// Home.tsx) with their own layout and copy, rendered instead of Hero.tsx
+// entirely. "minimal" is the editorial/typography-led revision of
+// "artifact": logo, one line of copy, specialties, one CTA, a couple of
+// small texture details — no 3D object, no HUD. Nothing from any other mode
+// is deleted by switching this value; every mode's code stays in the repo
+// so this stays a one-line, fully reversible A/B toggle.
+export type HeroMode = "object_viewer" | "time_field" | "creative_system" | "artifact" | "minimal";
 
-export const HERO_MODE: HeroMode = "artifact";
+export const HERO_MODE: HeroMode = "minimal";

@@ -1,0 +1,175 @@
+/* MINIMAL_HERO — editorial composition. Background is the plain site
+   surface (var(--bg-000), same as body) rather than a dedicated video/veil
+   layer — there isn't one wired up yet; when there is, it drops in behind
+   .mh-content without touching this file's layout. */
+.minimal-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 96px 6vw 64px;
+}
+
+.mh-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 3vw, 30px);
+  max-width: 640px;
+  text-align: center;
+}
+
+.mh-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--fg-dimmer);
+}
+
+.mh-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary-glow);
+  animation: mh-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes mh-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.mh-logo {
+  display: flex;
+  will-change: transform, filter;
+}
+
+.mh-logo img {
+  height: clamp(56px, 9vw, 112px);
+  width: auto;
+  /* transform/filter here are the JS proximity effect above; keep the
+     transition short so it reads as responsive, not laggy */
+  transition:
+    transform 0.4s ease-out,
+    filter 0.4s ease-out;
+}
+
+.mh-message {
+  margin: 0;
+  font-size: clamp(16px, 2.3vw, 25px);
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+
+.mh-specialties {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--fg-dim);
+}
+
+.mh-specialty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.25s ease;
+}
+
+.mh-specialty:hover {
+  color: var(--fg);
+}
+
+.mh-specialty-sep {
+  color: var(--fg-dimmer);
+}
+
+.mh-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dim);
+  text-decoration: none;
+  cursor: none;
+}
+
+@media (max-width: 860px), (hover: none) {
+  .mh-cta {
+    cursor: pointer;
+  }
+}
+
+.mh-cta-bracket {
+  color: var(--fg-dimmer);
+  transition: color 0.25s ease;
+}
+
+.mh-cta-label {
+  transition: color 0.25s ease;
+}
+
+.mh-cta-arrow {
+  display: inline-block;
+  transition:
+    transform 0.25s var(--ease-system),
+    color 0.25s ease;
+}
+
+.mh-cta:hover .mh-cta-bracket,
+.mh-cta:hover .mh-cta-label {
+  color: var(--fg);
+}
+
+.mh-cta:hover .mh-cta-arrow {
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+.mh-detail {
+  position: absolute;
+  z-index: 1;
+  bottom: 28px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.mh-detail-left {
+  left: 6vw;
+}
+
+.mh-detail-right {
+  right: 6vw;
+}
+
+@media (max-width: 640px) {
+  .minimal-hero {
+    padding: 84px 8vw 56px;
+  }
+
+  .mh-detail {
+    font-size: 8px;
+  }
+}

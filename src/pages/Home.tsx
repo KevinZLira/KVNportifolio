@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../sections/Hero";
 import ArtifactHero from "../sections/ArtifactHero";
+import MinimalHero from "../sections/MinimalHero";
 import WorkDatabase from "../sections/WorkDatabase";
 import About from "../sections/About";
 import Contact from "../sections/Contact";
@@ -90,7 +91,13 @@ export default function Home() {
 
   return (
     <>
-      {HERO_MODE === "artifact" ? <ArtifactHero /> : <Hero />}
+      {HERO_MODE === "artifact" ? (
+        <ArtifactHero />
+      ) : HERO_MODE === "minimal" ? (
+        <MinimalHero />
+      ) : (
+        <Hero />
+      )}
       <WorkDatabase />
       <About />
       <Contact />
