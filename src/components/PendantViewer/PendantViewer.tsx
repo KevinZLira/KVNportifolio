@@ -120,6 +120,7 @@ export default function PendantViewer() {
     const highlightMats: THREE.MeshStandardMaterial[] = [];
     let wholeMaxDim = 0;
     let pivotBaseY = 0;
+    let medallionCenterY = 0;
 
     async function build() {
       const gltf = await new Promise<THREE.Group>((resolve, reject) => {
@@ -153,15 +154,6 @@ export default function PendantViewer() {
       const MEDALLION_RAISE_PX = 30;
       const medallionRaise = (MEDALLION_RAISE_PX * worldUnitsPerPixel) / objectScale;
 
-      // Raises the whole assembly (medallion + chain together) on screen —
-      // same worldUnitsPerPixel conversion as MEDALLION_RAISE_PX, but
-      // applied directly to the pivot's own position rather than baked
-      // into mesh geometry, since the pivot sits in scene/world space
-      // already (not subject to the model's own object-scale below).
-      const STAGE_RAISE_PX = 450;
-      pivotBaseY = STAGE_RAISE_PX * worldUnitsPerPixel;
-      pivot.position.y = pivotBaseY;
-
       const MEDALLION_DROP = BASE_GAP - medallionRaise;
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
@@ -176,7 +168,38 @@ export default function PendantViewer() {
       });
       wholeMaxDim += MEDALLION_DROP;
 
-      gltf.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
+      // Centering centerAndMeasure() did on the *whole* box (chain + medallion)
+      // leaves the medallion itself sitting below the vertical middle, since
+      // the chain occupies the upper portion of that box. What we actually
+      // want on screen is the medallion centered with the chain free to run
+      // off the top — so measure just the medallion ("Plane"-prefixed
+      // meshes) post-drop, in the model's still-unscaled local space, and
+      // raise the whole pivot by exactly its own center offset once that's
+      // converted through the same finalScale used to fit the model to the
+      // frustum. Deriving the raise from the model's own proportions this
+      // way (instead of a fixed pixel amount) is what makes it land the
+      // medallion dead-center on any screen size — a fixed pixel raise is a
+      // wildly different fraction of a short mobile viewport than a tall
+      // desktop one, which is what sent the pendant off-screen on mobile
+      // while it still looked fine on desktop.
+      const medallionBox = new THREE.Box3();
+      let hasMedallion = false;
+      gltf.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
+          const box = new THREE.Box3().setFromObject(child);
+          if (hasMedallion) medallionBox.union(box);
+          else {
+            medallionBox.copy(box);
+            hasMedallion = true;
+          }
+        }
+      });
+      medallionCenterY = hasMedallion ? medallionBox.getCenter(new THREE.Vector3()).y : 0;
+
+      const finalScale = computeTargetSize(camera) / wholeMaxDim;
+      gltf.scale.setScalar(finalScale);
+      pivotBaseY = -medallionCenterY * finalScale;
+      pivot.position.y = pivotBaseY;
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -221,10 +244,17 @@ export default function PendantViewer() {
       // The stage's aspect ratio isn't fixed (it varies across
       // breakpoints, and on window resize), so the model's scale has to be
       // recomputed against the new frustum — otherwise a resize into a
-      // narrower aspect than it was fit for could clip it again.
+      // narrower aspect than it was fit for could clip it again. The
+      // medallion-centering raise is derived from that same scale (see
+      // build()), so it has to be recomputed alongside it — otherwise a
+      // resize would leave the raise matched to the *old* scale and the
+      // medallion would drift off-center.
       const model = pivot.children[0] as THREE.Group | undefined;
       if (model && wholeMaxDim > 0) {
-        model.scale.setScalar(computeTargetSize(camera) / wholeMaxDim);
+        const newScale = computeTargetSize(camera) / wholeMaxDim;
+        model.scale.setScalar(newScale);
+        pivotBaseY = -medallionCenterY * newScale;
+        pivot.position.y = pivotBaseY;
       }
     }
     resize();
