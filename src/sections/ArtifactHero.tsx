@@ -13,6 +13,18 @@ import "./ArtifactHero.css";
 // noticeably janky on real hardware at the requested density. Component
 // is still in src/components/DataVeil, kept for when a video background
 // replaces it.
+//
+// ah-identity and ah-capabilities are the two corner blocks that balance
+// the composition diagonally against the central object; both are
+// position:absolute on desktop (zero effect on the existing hud/body/meta
+// flex flow) and drop into normal flow on mobile via CSS, in the DOM order
+// they're already written in below.
+
+const CAPABILITIES = [
+  { id: "01", label: "VISUAL IDENTITY" },
+  { id: "02", label: "MOTION DESIGN" },
+  { id: "03", label: "VIDEO PRODUCTION" },
+];
 
 export default function ArtifactHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
@@ -32,7 +44,8 @@ export default function ArtifactHero() {
           { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, ease: "power2.out" },
           reduce ? 0 : "-=0.4",
         )
-        .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.2");
+        .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.2")
+        .from(".ah-corner", { opacity: 0, duration: reduce ? 0 : 0.6, ease: "power2.out" }, reduce ? 0 : "-=0.3");
     }, section);
 
     if (reduce || window.matchMedia("(hover: none)").matches) {
@@ -71,8 +84,34 @@ export default function ArtifactHero() {
         </div>
       </div>
 
+      <div className="ah-identity ah-corner">
+        <img src="/logo-kvn.svg" alt="KVN" className="ah-identity-logo" />
+        <span className="ah-corner-tag t-mono">// IDENTITY</span>
+        <h3 className="ah-corner-title t-mono">INDEPENDENT CREATIVE OPERATOR</h3>
+        <p className="ah-identity-copy t-mono">
+          VISUAL IDENTITY, MOTION DESIGN AND VIDEO PRODUCTION FOR WORK THAT DEMANDS MORE THAN A STANDARD SOLUTION.
+        </p>
+      </div>
+
       <div className="ah-body">
         <p className="ah-sub t-mono">AVAILABLE FOR SELECTED WORK.</p>
+      </div>
+
+      <div className="ah-capabilities ah-corner">
+        <span className="ah-corner-tag t-mono">// CAPABILITIES</span>
+        <h3 className="ah-corner-title t-mono">OPERATIONAL CAPABILITIES</h3>
+        <ul className="ah-cap-list t-mono">
+          {CAPABILITIES.map((cap) => (
+            <li key={cap.id}>
+              <span className="ah-cap-index">{cap.id}</span>
+              {cap.label}
+            </li>
+          ))}
+        </ul>
+        <span className="ah-status t-mono">
+          <span className="ah-status-dot" aria-hidden="true" />
+          ALL SYSTEMS OPERATIONAL
+        </span>
       </div>
 
       <div className="ah-meta t-mono">

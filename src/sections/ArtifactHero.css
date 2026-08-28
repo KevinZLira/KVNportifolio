@@ -77,6 +77,120 @@
   color: var(--fg-dim);
 }
 
+/* Diagonal-balance corner blocks — identity (top-left) and capabilities
+   (bottom-right). Absolute on desktop so they sit entirely outside the
+   hud/body/meta flex flow (zero effect on the existing composition);
+   dropped into normal flow on mobile via the media query below, in the
+   DOM order they're written in JSX (hud, identity, body, capabilities,
+   meta), so they stack sensibly without extra reordering rules. */
+.ah-identity,
+.ah-capabilities {
+  position: absolute;
+  z-index: 1;
+  width: min(240px, 26vw);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ah-identity {
+  top: 168px;
+  left: 6vw;
+}
+
+.ah-capabilities {
+  bottom: 92px;
+  right: 6vw;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.ah-identity-logo {
+  align-self: flex-start;
+  flex-shrink: 0;
+  height: 22px;
+  width: auto;
+  opacity: 0.92;
+}
+
+.ah-corner-tag {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--primary-dim);
+}
+
+.ah-corner-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+}
+
+.ah-identity-copy {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  color: var(--fg-dim);
+}
+
+.ah-cap-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+.ah-cap-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ah-capabilities .ah-cap-list li {
+  flex-direction: row-reverse;
+}
+
+.ah-cap-index {
+  font-size: 9px;
+  color: var(--fg-dimmer);
+  font-variant-numeric: tabular-nums;
+}
+
+.ah-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.ah-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary-glow);
+  animation: ah-pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes ah-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
 .ah-meta {
   position: relative;
   z-index: 1;
@@ -112,6 +226,36 @@
   }
   50% {
     transform: translateY(4px);
+  }
+}
+
+/* Below this width the corner blocks would start crowding the centered
+   object, so they leave position:absolute and drop into the section's own
+   flex-column flow instead — stacked, full-width, no overlap possible. */
+@media (max-width: 860px) {
+  .ah-identity,
+  .ah-capabilities {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .ah-capabilities {
+    align-items: flex-start;
+    text-align: left;
+    padding-bottom: 18px;
+  }
+
+  .ah-capabilities .ah-cap-list li {
+    flex-direction: row;
+  }
+
+  .ah-identity {
+    padding-top: 18px;
   }
 }
 
