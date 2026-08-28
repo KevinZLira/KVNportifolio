@@ -1,15 +1,18 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
-import DataVeil from "../components/DataVeil/DataVeil";
 import PendantViewer from "../components/PendantViewer/PendantViewer";
 import "./ArtifactHero.css";
 
 // ARTIFACT_HERO — a full alternative to Hero.tsx, not a slot-fill inside it
 // (see src/config/heroExperience.ts). One object, centered, treated as a
 // physical thing that belongs to KVN rather than a decorative 3D render;
-// the rest of the page is mostly empty on purpose, with a second layer
-// hidden under the background that the cursor uncovers.
+// the rest of the page is mostly empty on purpose.
+//
+// DataVeil (the Matrix-rain background) is unplugged for now — it was
+// noticeably janky on real hardware at the requested density. Component
+// is still in src/components/DataVeil, kept for when a video background
+// replaces it.
 
 export default function ArtifactHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
@@ -54,8 +57,6 @@ export default function ArtifactHero() {
 
   return (
     <section ref={sectionRef} id="hero" className="artifact-hero">
-      <DataVeil />
-
       <div className="ah-stage">
         <PendantViewer />
       </div>
