@@ -16,6 +16,12 @@ const ACCENT = 0xff2ec4;
 // pendant's own glow (emissive fill + edge lines + its rim light). The
 // brand color (#80f425) stays as-is everywhere else on the site.
 const GLOW = 0x8cff14;
+// Purer/lower-red than GLOW on purpose: this drives an emissiveIntensity
+// well above 1 on the "Detalhe" mesh (see build() below), and without HDR
+// tone mapping/bloom in this renderer, a channel above 1 just clips — so
+// GLOW's non-trivial red component would clip toward white/yellow at that
+// intensity instead of reading as more green.
+const DETAIL_GLOW = 0x33ff22;
 const MODEL_URL = "/models/pendant.glb";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
@@ -225,27 +231,43 @@ export default function PendantViewer() {
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           const isChain = child.name.startsWith("Torus");
-          // The chain reads as actual chrome (mirror-flat, near-zero
-          // roughness) rather than the medallion's brushed/etched metal —
-          // no emissive on it, so the environment reflection isn't washed
-          // out, and it sits outside the hover/idle emissive pulse below so
-          // hovering doesn't fight the chrome look with a glow.
+          // "Detalhe" is a dedicated accent piece, not structural metal —
+          // it's meant to read as a light source, not a lit surface, so its
+          // base color is black (nothing but emissive contributes) and that
+          // emissive is pushed well past the medallion's subtle 0.12, fixed
+          // rather than tied into the hover pulse below so it stays a
+          // constant intense glow regardless of interaction state.
+          const isDetail = child.name === "Detalhe";
           const material = isChain
-            ? new THREE.MeshStandardMaterial({
+            ? // The chain reads as actual chrome (mirror-flat, near-zero
+              // roughness) rather than the medallion's brushed/etched metal —
+              // no emissive on it, so the environment reflection isn't
+              // washed out, and it sits outside the hover/idle emissive
+              // pulse below so hovering doesn't fight the chrome look with
+              // a glow.
+              new THREE.MeshStandardMaterial({
                 color: 0xd9dcdd,
                 metalness: 1,
                 roughness: 0.035,
                 envMapIntensity: 1.2,
               })
-            : new THREE.MeshStandardMaterial({
-                color: 0x2a2c28,
-                metalness: 0.82,
-                roughness: 0.32,
-                emissive: GLOW,
-                emissiveIntensity: 0.12,
-              });
+            : isDetail
+              ? new THREE.MeshStandardMaterial({
+                  color: 0x000000,
+                  emissive: DETAIL_GLOW,
+                  emissiveIntensity: 1.8,
+                  metalness: 0.2,
+                  roughness: 0.4,
+                })
+              : new THREE.MeshStandardMaterial({
+                  color: 0x2a2c28,
+                  metalness: 0.82,
+                  roughness: 0.32,
+                  emissive: GLOW,
+                  emissiveIntensity: 0.12,
+                });
           child.material = material;
-          if (!isChain) highlightMats.push(material);
+          if (!isChain && !isDetail) highlightMats.push(material);
           disposables.push({ geometry: child.geometry, material });
 
           const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
