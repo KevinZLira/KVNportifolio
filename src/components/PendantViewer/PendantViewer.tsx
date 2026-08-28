@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import "./PendantViewer.css";
 
 // PENDANT_VIEWER — a single artifact, not a catalog. Deliberately not built
@@ -23,6 +23,12 @@ const GLOW = 0x8cff14;
 // intensity instead of reading as more green.
 const DETAIL_GLOW = 0x33ff22;
 const MODEL_URL = "/models/pendant.glb";
+// A real studio HDRI, downsized from the original 4K/25MB source to
+// 1024x512 (~1.5MB) — the environment only ever gets *reflected*, and
+// PMREMGenerator blurs it heavily for every roughness above near-zero, so
+// the extra resolution the source shipped with wasn't buying anything
+// visible, just page weight.
+const ENV_URL = "/hdri/ferndale-studio-1k.hdr";
 // Fraction of the camera's vertical frustum the whole object (medallion +
 // full chain, plus the gap MEDALLION_DROP opens between them) is allowed to
 // fill. Sizing against the *whole* object's own height — not just the
@@ -167,16 +173,6 @@ export default function PendantViewer() {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // A near-zero-roughness metal has nothing to reflect but point-light
-    // pinpricks without this — chrome reads as chrome because it mirrors its
-    // surroundings, not because of direct specular highlights alone. A
-    // procedural room (no HDRI asset to ship) gives every metallic material
-    // in the scene something plausible to reflect.
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
-    scene.environment = envRT.texture;
-    pmremGenerator.dispose();
-
     const ambient = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambient);
     const key = new THREE.DirectionalLight(0xffffff, 1.4);
@@ -202,12 +198,30 @@ export default function PendantViewer() {
     let wholeMaxDim = 0;
     let pivotBaseY = 0;
     let medallionCenterY = 0;
+    let envRT: THREE.WebGLRenderTarget | undefined;
 
     async function build() {
-      const gltf = await new Promise<THREE.Group>((resolve, reject) => {
-        new GLTFLoader().load(MODEL_URL, (g) => resolve(g.scene), undefined, reject);
-      });
+      // Loaded together: the model isn't shown (setLoaded(true) below)
+      // until both resolve, so the chrome/glass materials never render
+      // for even a frame without something to reflect.
+      const [gltf, hdrTexture] = await Promise.all([
+        new Promise<THREE.Group>((resolve, reject) => {
+          new GLTFLoader().load(MODEL_URL, (g) => resolve(g.scene), undefined, reject);
+        }),
+        new Promise<THREE.DataTexture>((resolve, reject) => {
+          new RGBELoader().load(ENV_URL, resolve, undefined, reject);
+        }),
+      ]);
       if (disposed || !container) return;
+
+      // A near-zero-roughness metal has nothing to reflect but point-light
+      // pinpricks without this — chrome reads as chrome because it mirrors
+      // its surroundings, not because of direct specular highlights alone.
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      envRT = pmremGenerator.fromEquirectangular(hdrTexture);
+      scene.environment = envRT.texture;
+      hdrTexture.dispose();
+      pmremGenerator.dispose();
 
       wholeMaxDim = centerAndMeasure(gltf);
 
@@ -314,7 +328,7 @@ export default function PendantViewer() {
       setLoaded(true);
     }
 
-    build().catch((err) => console.error("Failed to load pendant model", err));
+    build().catch((err) => console.error("Failed to load pendant model or environment", err));
 
     function resize() {
       if (!container) return;
@@ -471,7 +485,7 @@ export default function PendantViewer() {
         d.geometry?.dispose();
         d.material?.dispose();
       });
-      envRT.dispose();
+      envRT?.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
