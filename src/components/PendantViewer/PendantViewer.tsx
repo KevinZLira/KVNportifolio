@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import "./PendantViewer.css";
 
 // PENDANT_VIEWER — a single artifact, not a catalog. Deliberately not built
@@ -104,6 +105,16 @@ export default function PendantViewer() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
+
+    // A near-zero-roughness metal has nothing to reflect but point-light
+    // pinpricks without this — chrome reads as chrome because it mirrors its
+    // surroundings, not because of direct specular highlights alone. A
+    // procedural room (no HDRI asset to ship) gives every metallic material
+    // in the scene something plausible to reflect.
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = envRT.texture;
+    pmremGenerator.dispose();
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambient);
@@ -213,15 +224,28 @@ export default function PendantViewer() {
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          const material = new THREE.MeshStandardMaterial({
-            color: 0x2a2c28,
-            metalness: 0.82,
-            roughness: 0.32,
-            emissive: GLOW,
-            emissiveIntensity: 0.12,
-          });
+          const isChain = child.name.startsWith("Torus");
+          // The chain reads as actual chrome (mirror-flat, near-zero
+          // roughness) rather than the medallion's brushed/etched metal —
+          // no emissive on it, so the environment reflection isn't washed
+          // out, and it sits outside the hover/idle emissive pulse below so
+          // hovering doesn't fight the chrome look with a glow.
+          const material = isChain
+            ? new THREE.MeshStandardMaterial({
+                color: 0xd9dcdd,
+                metalness: 1,
+                roughness: 0.035,
+                envMapIntensity: 1.2,
+              })
+            : new THREE.MeshStandardMaterial({
+                color: 0x2a2c28,
+                metalness: 0.82,
+                roughness: 0.32,
+                emissive: GLOW,
+                emissiveIntensity: 0.12,
+              });
           child.material = material;
-          highlightMats.push(material);
+          if (!isChain) highlightMats.push(material);
           disposables.push({ geometry: child.geometry, material });
 
           const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
@@ -398,6 +422,7 @@ export default function PendantViewer() {
         d.geometry?.dispose();
         d.material?.dispose();
       });
+      envRT.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
