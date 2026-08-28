@@ -57,6 +57,15 @@ function centerAndMeasure(object: THREE.Group) {
   return maxDim;
 }
 
+// The 13 chain-link meshes are always named "Torus"/"Torus.00N" (Blender's
+// default for that primitive) regardless of how the medallion meshes
+// themselves get renamed — so "not a Torus" is a more durable way to pick
+// out the medallion than matching its own name, which has already changed
+// once (Plane.* -> Detalhe/Envolta do KVN/KVN) as the model was iterated on.
+function isMedallionMesh(mesh: THREE.Mesh) {
+  return !mesh.name.startsWith("Torus");
+}
+
 function computeTargetSize(camera: THREE.PerspectiveCamera) {
   const vFov = (camera.fov * Math.PI) / 180;
   const frustumHeight = 2 * Math.tan(vFov / 2) * camera.position.z;
@@ -156,7 +165,7 @@ export default function PendantViewer() {
 
       const MEDALLION_DROP = BASE_GAP - medallionRaise;
       gltf.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
+        if (child instanceof THREE.Mesh && isMedallionMesh(child)) {
           const pos = new THREE.Vector3();
           const quat = new THREE.Quaternion();
           const scl = new THREE.Vector3();
@@ -172,8 +181,9 @@ export default function PendantViewer() {
       // leaves the medallion itself sitting below the vertical middle, since
       // the chain occupies the upper portion of that box. What we actually
       // want on screen is the medallion centered with the chain free to run
-      // off the top — so measure just the medallion ("Plane"-prefixed
-      // meshes) post-drop, in the model's still-unscaled local space, and
+      // off the top — so measure just the medallion (every mesh that isn't
+      // a "Torus" chain link) post-drop, in the model's still-unscaled
+      // local space, and
       // raise the whole pivot by exactly its own center offset once that's
       // converted through the same finalScale used to fit the model to the
       // frustum. Deriving the raise from the model's own proportions this
@@ -185,7 +195,7 @@ export default function PendantViewer() {
       const medallionBox = new THREE.Box3();
       let hasMedallion = false;
       gltf.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.name.startsWith("Plane")) {
+        if (child instanceof THREE.Mesh && isMedallionMesh(child)) {
           const box = new THREE.Box3().setFromObject(child);
           if (hasMedallion) medallionBox.union(box);
           else {
