@@ -2,40 +2,84 @@ import { useEffect, useRef } from "react";
 import "./DataVeil.css";
 
 // DATA_VEIL — a background that looks like a plain dark surface until the
-// cursor passes over it. Underneath, a sparse field of data fragments
-// (coordinates, hex-ish codes, stray 0/1) is always drifting downward; a
-// second canvas stacked on top stays opaque everywhere except a soft,
-// slightly irregular hole punched out around the pointer, which heals
-// itself shut a moment after the pointer moves on. Two canvases, not one,
-// so the data layer never has to know anything about the cursor.
+// cursor passes over it. Underneath, a full field of Matrix-style code rain
+// is always falling; a second canvas stacked on top stays opaque everywhere
+// except a soft, slightly irregular hole punched out around the pointer,
+// which heals itself shut a moment after the pointer moves on. Two canvases,
+// not one, so the rain layer never has to know anything about the cursor.
 
-const TOKEN_POOL = [
-  "0",
-  "1",
-  "01",
-  "10",
-  "0110",
-  "ID_2291",
-  "ID_0847",
-  "X:0472",
-  "Y:1183",
-  "7F2A91",
-  "B0C3D4",
-  "SIG_04",
-  "SIG_11",
-  "0x3E",
-  "0x9A",
-  "KVN-001",
-  "//sync",
-  "ACK",
-];
+const CHAR_POOL = "01010101" + "0123456789" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "$%#@&*+=<>/\\?!";
+const UNIQUE_CHARS = Array.from(new Set(CHAR_POOL.split("")));
 
-interface Token {
+function randomChar() {
+  return CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)];
+}
+
+const CELL = 17; // px per character row/column
+const BASE_SPEED = 120; // px/sec at speedScale = 1
+const BUCKET_COUNT = 8; // discrete brightness steps along a stream's trail
+
+// fillText is expensive per call, and re-setting fillStyle for every single
+// character (each one a different point along its trail's fade) makes it
+// worse. Both go away by pre-rendering every (char, brightness-bucket) pair
+// once into a tiny offscreen canvas, then blitting those sprites with
+// drawImage — a cheap bitmap copy — for every character on every frame.
+function buildSprites(): Map<string, HTMLCanvasElement> {
+  const cache = new Map<string, HTMLCanvasElement>();
+  for (let b = 0; b < BUCKET_COUNT; b++) {
+    const color = mixColor(b / (BUCKET_COUNT - 1));
+    for (const ch of UNIQUE_CHARS) {
+      const off = document.createElement("canvas");
+      off.width = CELL;
+      off.height = CELL;
+      const octx = off.getContext("2d")!;
+      octx.font = `${CELL - 2}px var(--font-mono, monospace)`;
+      octx.textAlign = "center";
+      octx.textBaseline = "middle";
+      octx.fillStyle = color;
+      octx.fillText(ch, CELL / 2, CELL / 2);
+      cache.set(`${ch}|${b}`, off);
+    }
+  }
+  return cache;
+}
+
+interface ColumnMeta {
   x: number;
-  y: number;
+  speedScale: number;
+  spawnInterval: number;
+  nextSpawn: number;
+}
+
+interface Stream {
+  x: number;
+  headY: number;
   speed: number;
-  text: string;
-  opacity: number;
+  length: number;
+  chars: string[];
+}
+
+function mixColor(t: number): string {
+  // t: 0 at the falling head (brightest) -> 1 at the trailing end (darkest).
+  // Only the very top of the fade sits near the bright site-accent green;
+  // most of the trail lives in dim/medium green so the effect reads as
+  // "sophisticated dark code," not a neon wash.
+  const HEAD = [198, 255, 214, 0.95];
+  const MID = [64, 190, 104, 0.5];
+  const TAIL = [16, 58, 30, 0.14];
+  let a = HEAD;
+  let b = MID;
+  let localT = t / 0.18;
+  if (t >= 0.18) {
+    a = MID;
+    b = TAIL;
+    localT = (t - 0.18) / 0.82;
+  }
+  const r = a[0] + (b[0] - a[0]) * localT;
+  const g = a[1] + (b[1] - a[1]) * localT;
+  const bch = a[2] + (b[2] - a[2]) * localT;
+  const al = a[3] + (b[3] - a[3]) * localT;
+  return `rgba(${r | 0}, ${g | 0}, ${bch | 0}, ${al.toFixed(3)})`;
 }
 
 export default function DataVeil() {
@@ -54,22 +98,46 @@ export default function DataVeil() {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isCoarse = window.matchMedia("(hover: none)").matches;
+    const intervalScale = isCoarse ? 1.6 : 1;
 
+    const sprites = buildSprites();
     let dpr = Math.min(window.devicePixelRatio, 2);
     let w = 0;
     let h = 0;
-    let tokens: Token[] = [];
+    let clock = 0;
+    let colMeta: ColumnMeta[] = [];
+    let streams: Stream[] = [];
+    const MAX_STREAMS = 200;
 
-    function makeTokens() {
-      const density = isCoarse ? 0.00009 : 0.00014;
-      const count = Math.max(12, Math.round(w * h * density));
-      tokens = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        speed: 8 + Math.random() * 22,
-        text: TOKEN_POOL[Math.floor(Math.random() * TOKEN_POOL.length)],
-        opacity: 0.25 + Math.random() * 0.35,
-      }));
+    function spawnStream(col: ColumnMeta, initial: boolean): Stream {
+      const length = 5 + Math.random() * 9;
+      const headY = initial
+        ? Math.random() * (h + length * CELL) - length * CELL
+        : -length * CELL - Math.random() * h * 0.6;
+      return {
+        x: col.x,
+        headY,
+        speed: BASE_SPEED * col.speedScale * (0.85 + Math.random() * 0.3),
+        length,
+        chars: Array.from({ length: Math.ceil(length) }, randomChar),
+      };
+    }
+
+    function makeColumns() {
+      const count = Math.ceil(w / CELL) + 1;
+      colMeta = Array.from({ length: count }, (_, i) => {
+        const roll = Math.random();
+        // a persistent per-column trait: some columns stay dense (frequent
+        // overlapping streams), most sit medium, a few stay sparse/spaced out
+        const [lo, hi] = roll < 0.25 ? [0.9, 1.8] : roll < 0.7 ? [2.0, 3.4] : [3.6, 6.2];
+        return {
+          x: i * CELL + CELL / 2,
+          speedScale: 0.5 + Math.random(),
+          spawnInterval: (lo + Math.random() * (hi - lo)) * intervalScale,
+          nextSpawn: reduce ? Infinity : 0,
+        };
+      });
+      streams = colMeta.map((col) => spawnStream(col, true));
     }
 
     function resize() {
@@ -86,7 +154,7 @@ export default function DataVeil() {
       }
       dataCtx!.setTransform(dpr, 0, 0, dpr, 0, 0);
       maskCtx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      makeTokens();
+      makeColumns();
       // start the mask fully opaque
       maskCtx!.globalCompositeOperation = "source-over";
       maskCtx!.fillStyle = "#0d0e0c";
@@ -116,30 +184,53 @@ export default function DataVeil() {
       active = false;
     }
 
-    root.addEventListener("pointermove", onPointerMove);
-    root.addEventListener("pointerleave", onPointerLeave);
-    root.addEventListener("pointercancel", onPointerLeave);
+    // The pendant's stage sits on top of this layer and covers the whole
+    // section (it needs to, for 3D hover/drag hit-testing), so it — not
+    // this div — is what the pointer actually hits. Listening on the
+    // parent instead relies on normal event bubbling: the pointer event
+    // still fires on whatever's on top, then bubbles up past this sibling
+    // to their shared ancestor, which we can hear from.
+    const listenTarget = root.parentElement ?? root;
+    listenTarget.addEventListener("pointermove", onPointerMove);
+    listenTarget.addEventListener("pointerleave", onPointerLeave);
+    listenTarget.addEventListener("pointercancel", onPointerLeave);
 
     let raf = 0;
     let lastT = performance.now();
     const BRUSH_RADIUS = 46; // ~ the "20px diameter" ask read as too small once tried live; this is the size that actually reads as a reveal, not a pinprick
 
     function drawData(dt: number) {
+      if (!reduce) {
+        clock += dt;
+        for (const col of colMeta) {
+          if (clock >= col.nextSpawn && streams.length < MAX_STREAMS) {
+            streams.push(spawnStream(col, false));
+            col.nextSpawn = clock + col.spawnInterval * (0.7 + Math.random() * 0.6);
+          }
+        }
+        for (const s of streams) {
+          s.headY += s.speed * dt;
+          if (Math.random() < 0.02) {
+            const idx = Math.floor(Math.random() * s.chars.length);
+            s.chars[idx] = randomChar();
+          }
+        }
+        streams = streams.filter((s) => s.headY - (s.length - 1) * CELL <= h + CELL);
+      }
+
       dataCtx!.clearRect(0, 0, w, h);
       dataCtx!.fillStyle = "#0d0e0c";
       dataCtx!.fillRect(0, 0, w, h);
-      dataCtx!.font = "10px var(--font-mono, monospace)";
-      dataCtx!.textBaseline = "middle";
-      for (const t of tokens) {
-        if (!reduce) {
-          t.y += t.speed * dt;
-          if (t.y > h + 10) {
-            t.y = -10;
-            t.x = Math.random() * w;
-          }
+      const half = CELL / 2;
+      for (const s of streams) {
+        const denom = s.length - 1 || 1;
+        for (let j = 0; j < s.chars.length; j++) {
+          const y = s.headY - j * CELL;
+          if (y < -CELL || y > h + CELL) continue;
+          const bucket = Math.min(BUCKET_COUNT - 1, Math.floor((j / denom) * BUCKET_COUNT));
+          const sprite = sprites.get(`${s.chars[j]}|${bucket}`);
+          if (sprite) dataCtx!.drawImage(sprite, s.x - half, y - half);
         }
-        dataCtx!.fillStyle = `rgba(128, 244, 37, ${t.opacity})`;
-        dataCtx!.fillText(t.text, t.x, t.y);
       }
     }
 
@@ -186,9 +277,9 @@ export default function DataVeil() {
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      root.removeEventListener("pointermove", onPointerMove);
-      root.removeEventListener("pointerleave", onPointerLeave);
-      root.removeEventListener("pointercancel", onPointerLeave);
+      listenTarget.removeEventListener("pointermove", onPointerMove);
+      listenTarget.removeEventListener("pointerleave", onPointerLeave);
+      listenTarget.removeEventListener("pointercancel", onPointerLeave);
     };
   }, []);
 
