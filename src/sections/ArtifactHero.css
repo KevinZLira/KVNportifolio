@@ -9,46 +9,6 @@
   padding: 0 6vw;
 }
 
-.ah-hud {
-  position: relative;
-  z-index: 1;
-  padding-top: 88px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--fg-dimmer);
-}
-
-.ah-hud-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-
-.ah-coords {
-  font-variant-numeric: tabular-nums;
-}
-
-.ah-body {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: clamp(12px, 2.4vw, 24px);
-  padding-bottom: clamp(28px, 6vh, 64px);
-  pointer-events: none;
-}
-
-.ah-body > * {
-  pointer-events: auto;
-}
-
 /* Exactly the size of the hero section itself — not an independently
    tuned vh/vw box. Every earlier version of this (fixed px offsets, a
    vh-based offset tuned against one viewport) drifted out of sync on a
@@ -70,111 +30,145 @@
   pointer-events: auto;
 }
 
-/* Diagonal-balance corner blocks — identity (top-left) and capabilities
-   (bottom-right). Absolute on desktop so they sit entirely outside the
-   hud/body/meta flex flow (zero effect on the existing composition);
-   dropped into normal flow on mobile via the media query below, in the
-   DOM order they're written in JSX (hud, identity, body, capabilities,
-   meta), so they stack sensibly without extra reordering rules. */
-.ah-identity,
-.ah-capabilities {
+/* The peripheral frame — four independent corner clusters plus two broken
+   side tick-stacks. Deliberately NOT a closed rectangle: every line has a
+   fixed, short length and fades out toward the center rather than
+   reaching it, so the frame reads as a system marking out the edges of
+   the screen rather than a drawn border around it. Every element here is
+   position:absolute against the section itself, so none of this touches
+   ah-stage's layout or sizing. */
+.ah-frame {
   position: absolute;
+  inset: 0;
   z-index: 1;
-  width: min(240px, 26vw);
+  pointer-events: none;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.ah-frame-corner {
+  position: absolute;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-width: 220px;
 }
 
-.ah-identity {
-  top: 168px;
+.ah-frame-tl,
+.ah-frame-tr {
+  top: 96px;
+}
+
+.ah-frame-bl,
+.ah-frame-br {
+  bottom: 40px;
+}
+
+.ah-frame-tl,
+.ah-frame-bl {
   left: 6vw;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.ah-capabilities {
-  bottom: 92px;
+.ah-frame-tr,
+.ah-frame-br {
   right: 6vw;
   align-items: flex-end;
   text-align: right;
 }
 
-.ah-identity-logo {
-  align-self: flex-start;
-  flex-shrink: 0;
-  height: 22px;
-  width: auto;
-  opacity: 0.92;
-}
-
-.ah-corner-tag {
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  color: var(--primary-dim);
-}
-
-.ah-corner-title {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: var(--fg);
-}
-
-.ah-identity-copy {
-  margin: 0;
-  font-size: 10px;
-  line-height: 1.7;
-  letter-spacing: 0.03em;
-  color: var(--fg-dim);
-}
-
-.ah-cap-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--fg-dim);
-}
-
-.ah-cap-list li {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.ah-capabilities .ah-cap-list li {
-  flex-direction: row-reverse;
-}
-
-.ah-cap-index {
-  font-size: 9px;
-  color: var(--fg-dimmer);
-  font-variant-numeric: tabular-nums;
-}
-
-.ah-status {
+.ah-frame-deco {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--fg-dimmer);
 }
 
-.ah-status-dot {
+/* A short right-angle mark at the actual corner — orientation follows
+   which corner it's in, set below by descendant selector rather than a
+   modifier class, since the corner container already knows its own
+   position. */
+.ah-frame-bracket {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border: 0 solid var(--line-strong);
+}
+
+.ah-frame-tl .ah-frame-bracket {
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.ah-frame-tr .ah-frame-bracket {
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.ah-frame-bl .ah-frame-bracket {
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.ah-frame-br .ah-frame-bracket {
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* Fixed, short, and fading toward the center — never long enough to reach
+   it. Fades from the bracket (opaque) toward the open end (transparent),
+   so it reads as a signal trailing off into empty space rather than a cut
+   ruler. */
+.ah-frame-line {
+  height: 1px;
+  width: 64px;
+}
+
+.ah-frame-tl .ah-frame-line,
+.ah-frame-bl .ah-frame-line {
+  background: linear-gradient(to right, var(--line-strong), transparent);
+}
+
+.ah-frame-tr .ah-frame-line,
+.ah-frame-br .ah-frame-line {
+  background: linear-gradient(to left, var(--line-strong), transparent);
+}
+
+/* The one deliberately asymmetric detail — bottom-right only. */
+.ah-frame-cut {
+  width: 1px;
+  height: 10px;
+  background: var(--line-strong);
+  transform: rotate(28deg);
+}
+
+.ah-frame-label {
+  white-space: nowrap;
+}
+
+.ah-frame-label--dim {
+  color: var(--fg-dimmer);
+  opacity: 0.75;
+}
+
+.ah-frame-label--live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ah-frame-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--primary);
   box-shadow: 0 0 6px var(--primary-glow);
-  animation: ah-pulse-dot 2.4s ease-in-out infinite;
+  animation: ah-frame-pulse 2.4s ease-in-out infinite;
 }
 
-@keyframes ah-pulse-dot {
+@keyframes ah-frame-pulse {
   0%,
   100% {
     opacity: 1;
@@ -184,71 +178,53 @@
   }
 }
 
-.ah-meta {
-  position: relative;
-  z-index: 1;
-  padding-bottom: 32px;
+/* Broken vertical rules on each side: a short stack of ticks near the top,
+   a short stack near the bottom, and one large automatic gap between them
+   (space-between does the work — no manual positioning of the gap
+   itself). Never a continuous line top-to-bottom. */
+.ah-frame-side {
+  position: absolute;
+  top: 150px;
+  bottom: 96px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--fg-dimmer);
 }
 
-.ah-tag {
-  color: var(--fg-dimmer);
+.ah-frame-side-left {
+  left: 6vw;
 }
 
-.ah-scroll {
+.ah-frame-side-right {
+  right: 6vw;
+}
+
+.ah-frame-ticks {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  color: var(--fg-dim);
+  gap: 7px;
 }
 
-.ah-scroll-arrow {
-  display: inline-block;
-  animation: ah-bob 1.6s ease-in-out infinite;
+.ah-frame-tick {
+  width: 1px;
+  height: 11px;
+  background: var(--line-strong);
 }
 
-@keyframes ah-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(4px);
-  }
+.ah-frame-tick--faint {
+  background: var(--line);
+  opacity: 0.6;
 }
 
-/* Below this width the corner blocks would start crowding the centered
-   object, so they leave position:absolute and drop into the section's own
-   flex-column flow instead — stacked, full-width, no overlap possible. */
 @media (max-width: 860px) {
-  .ah-identity,
-  .ah-capabilities {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    width: 100%;
-    z-index: 2;
+  .ah-frame-side {
+    display: none;
   }
 
-  .ah-capabilities {
-    align-items: flex-start;
-    text-align: left;
-    padding-bottom: 18px;
-  }
-
-  .ah-capabilities .ah-cap-list li {
-    flex-direction: row;
-  }
-
-  .ah-identity {
-    padding-top: 18px;
+  .ah-frame-corner {
+    max-width: 46vw;
   }
 }
 
@@ -256,10 +232,18 @@
   .artifact-hero {
     padding: 0 6vw;
   }
-  .ah-hud {
-    padding-top: 76px;
+
+  .ah-frame-tl,
+  .ah-frame-tr {
+    top: 80px;
   }
-  .ah-body {
-    padding-bottom: clamp(24px, 8vh, 48px);
+
+  .ah-frame-bl,
+  .ah-frame-br {
+    bottom: 28px;
+  }
+
+  .ah-frame-line {
+    width: 36px;
   }
 }

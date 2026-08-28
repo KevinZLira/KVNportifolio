@@ -7,28 +7,22 @@ import "./ArtifactHero.css";
 // ARTIFACT_HERO — a full alternative to Hero.tsx, not a slot-fill inside it
 // (see src/config/heroExperience.ts). One object, centered, treated as a
 // physical thing that belongs to KVN rather than a decorative 3D render;
-// the rest of the page is mostly empty on purpose.
+// everything else on the page is either the fixed header (untouched here)
+// or this peripheral frame — nothing competes with the object for the
+// center of the screen.
 //
 // DataVeil (the Matrix-rain background) is unplugged for now — it was
 // noticeably janky on real hardware at the requested density. Component
 // is still in src/components/DataVeil, kept for when a video background
 // replaces it.
 //
-// ah-identity and ah-capabilities are the two corner blocks that balance
-// the composition diagonally against the central object; both are
-// position:absolute on desktop (zero effect on the existing hud/body/meta
-// flex flow) and drop into normal flow on mobile via CSS, in the DOM order
-// they're already written in below.
-
-const CAPABILITIES = [
-  { id: "01", label: "VISUAL IDENTITY" },
-  { id: "02", label: "MOTION DESIGN" },
-  { id: "03", label: "VIDEO PRODUCTION" },
-];
+// ah-frame is four independent corner clusters (own content, own line
+// lengths) plus two broken tick-stacks on the sides — deliberately not a
+// closed rectangle. See the CSS comment on .ah-frame for the reasoning.
 
 export default function ArtifactHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
-  const coordRef = useRef<HTMLDivElement>(null);
+  const coordRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -39,8 +33,12 @@ export default function ArtifactHero() {
       gsap
         .timeline({ delay: reduce ? 0 : 0.15 })
         .from(".ah-stage", { opacity: 0, scale: reduce ? 1 : 0.94, duration: reduce ? 0 : 0.9, ease: "power3.out" })
-        .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.5")
-        .from(".ah-corner", { opacity: 0, duration: reduce ? 0 : 0.6, ease: "power2.out" }, reduce ? 0 : "-=0.3");
+        .from(
+          ".ah-frame-corner",
+          { opacity: 0, duration: reduce ? 0 : 0.6, stagger: reduce ? 0 : 0.1, ease: "power2.out" },
+          reduce ? 0 : "-=0.5",
+        )
+        .from(".ah-frame-side", { opacity: 0, duration: reduce ? 0 : 0.6, ease: "power2.out" }, reduce ? 0 : "-=0.4");
     }, section);
 
     if (reduce || window.matchMedia("(hover: none)").matches) {
@@ -69,50 +67,80 @@ export default function ArtifactHero() {
         <PendantViewer />
       </div>
 
-      <div className="ah-hud t-mono">
-        <span>/SYSTEM/HOME</span>
-        <div className="ah-hud-right">
-          <span ref={coordRef} className="ah-coords">
-            X:0000 Y:0000
+      <div className="ah-frame t-mono">
+        <div className="ah-frame-side ah-frame-side-left" aria-hidden="true">
+          <span className="ah-frame-ticks">
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick ah-frame-tick--faint" />
+          </span>
+          <span className="ah-frame-ticks">
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick ah-frame-tick--faint" />
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick" />
           </span>
         </div>
-      </div>
 
-      <div className="ah-identity ah-corner">
-        <img src="/logo-kvn.svg" alt="KVN" className="ah-identity-logo" />
-        <span className="ah-corner-tag t-mono">// IDENTITY</span>
-        <h3 className="ah-corner-title t-mono">INDEPENDENT CREATIVE OPERATOR</h3>
-        <p className="ah-identity-copy t-mono">
-          VISUAL IDENTITY, MOTION DESIGN AND VIDEO PRODUCTION FOR WORK THAT DEMANDS MORE THAN A STANDARD SOLUTION.
-        </p>
-      </div>
+        <div className="ah-frame-side ah-frame-side-right" aria-hidden="true">
+          <span className="ah-frame-ticks">
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick ah-frame-tick--faint" />
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick" />
+          </span>
+          <span className="ah-frame-ticks">
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick" />
+            <span className="ah-frame-tick ah-frame-tick--faint" />
+            <span className="ah-frame-tick" />
+          </span>
+        </div>
 
-      {/* Kept as an empty flex:1 spacer -- it's what pushes ah-meta to the
-          bottom of the section; only its text content was removed. */}
-      <div className="ah-body" />
+        {/* institutional — a plain location tag, nothing more */}
+        <div className="ah-frame-corner ah-frame-tl">
+          <div className="ah-frame-deco" aria-hidden="true">
+            <span className="ah-frame-bracket" />
+            <span className="ah-frame-line" />
+          </div>
+          <span className="ah-frame-label">/SYSTEM/HOME</span>
+        </div>
 
-      <div className="ah-capabilities ah-corner">
-        <span className="ah-corner-tag t-mono">// CAPABILITIES</span>
-        <h3 className="ah-corner-title t-mono">OPERATIONAL CAPABILITIES</h3>
-        <ul className="ah-cap-list t-mono">
-          {CAPABILITIES.map((cap) => (
-            <li key={cap.id}>
-              <span className="ah-cap-index">{cap.id}</span>
-              {cap.label}
-            </li>
-          ))}
-        </ul>
-        <span className="ah-status t-mono">
-          <span className="ah-status-dot" aria-hidden="true" />
-          ALL SYSTEMS OPERATIONAL
-        </span>
-      </div>
+        {/* technical — live pointer coordinates plus a status dot standing
+            in for "status" without adding another line of text */}
+        <div className="ah-frame-corner ah-frame-tr">
+          <div className="ah-frame-deco" aria-hidden="true">
+            <span className="ah-frame-line" />
+            <span className="ah-frame-bracket" />
+          </div>
+          <span className="ah-frame-label ah-frame-label--live">
+            <span className="ah-frame-dot" aria-hidden="true" />
+            <span ref={coordRef}>X:0000 Y:0000</span>
+          </span>
+        </div>
 
-      <div className="ah-meta t-mono">
-        <span className="ah-tag">ACCESS: GRANTED</span>
-        <span className="ah-tag ah-scroll">
-          ARCHIVE ACCESS <span className="ah-scroll-arrow">↓</span>
-        </span>
+        {/* small indicators / id + access — two stacked lines, the only
+            corner with more than one text row */}
+        <div className="ah-frame-corner ah-frame-bl">
+          <span className="ah-frame-label">ACCESS: GRANTED</span>
+          <span className="ah-frame-label ah-frame-label--dim">ID: KVN-001</span>
+          <div className="ah-frame-deco" aria-hidden="true">
+            <span className="ah-frame-bracket" />
+            <span className="ah-frame-line" />
+          </div>
+        </div>
+
+        {/* object/system reference — the one corner with a diagonal cut,
+            for asymmetry */}
+        <div className="ah-frame-corner ah-frame-br">
+          <span className="ah-frame-label">ARCHIVE: KVN-001</span>
+          <div className="ah-frame-deco" aria-hidden="true">
+            <span className="ah-frame-line" />
+            <span className="ah-frame-cut" />
+            <span className="ah-frame-bracket" />
+          </div>
+        </div>
       </div>
     </section>
   );
