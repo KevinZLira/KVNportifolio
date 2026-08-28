@@ -19,6 +19,18 @@ const CELL = 17; // px per character row/column
 const BASE_SPEED = 120; // px/sec at speedScale = 1
 const BUCKET_COUNT = 8; // discrete brightness steps along a stream's trail
 
+// Three overlapping depth layers instead of one flat grid of columns: each
+// layer is its own full column grid, offset sideways so its characters
+// interleave with the other layers' rather than lining up exactly on top
+// of them. Front layer is brightest/fastest and reads as closest; back
+// layer is dimmest/slowest and reads as furthest away — a cheap parallax
+// cue that sells depth on top of the opacity falloff.
+const LAYERS = [
+  { opacity: 1, speedScale: 1.15, offset: 0 },
+  { opacity: 0.6, speedScale: 0.95, offset: CELL / 3 },
+  { opacity: 0.32, speedScale: 0.78, offset: (2 * CELL) / 3 },
+];
+
 // fillText is expensive per call, and re-setting fillStyle for every single
 // character (each one a different point along its trail's fade) makes it
 // worse. Both go away by pre-rendering every (char, brightness-bucket) pair
@@ -46,6 +58,7 @@ function buildSprites(): Map<string, HTMLCanvasElement> {
 
 interface ColumnMeta {
   x: number;
+  layer: number;
   speedScale: number;
   spawnInterval: number;
   nextSpawn: number;
@@ -53,6 +66,7 @@ interface ColumnMeta {
 
 interface Stream {
   x: number;
+  layer: number;
   headY: number;
   speed: number;
   length: number;
@@ -107,7 +121,7 @@ export default function DataVeil() {
     let clock = 0;
     let colMeta: ColumnMeta[] = [];
     let streams: Stream[] = [];
-    const MAX_STREAMS = 200;
+    const MAX_STREAMS = 200 * LAYERS.length;
 
     function spawnStream(col: ColumnMeta, initial: boolean): Stream {
       const length = 5 + Math.random() * 9;
@@ -116,8 +130,9 @@ export default function DataVeil() {
         : -length * CELL - Math.random() * h * 0.6;
       return {
         x: col.x,
+        layer: col.layer,
         headY,
-        speed: BASE_SPEED * col.speedScale * (0.85 + Math.random() * 0.3),
+        speed: BASE_SPEED * col.speedScale * LAYERS[col.layer].speedScale * (0.85 + Math.random() * 0.3),
         length,
         chars: Array.from({ length: Math.ceil(length) }, randomChar),
       };
@@ -125,17 +140,21 @@ export default function DataVeil() {
 
     function makeColumns() {
       const count = Math.ceil(w / CELL) + 1;
-      colMeta = Array.from({ length: count }, (_, i) => {
-        const roll = Math.random();
-        // a persistent per-column trait: some columns stay dense (frequent
-        // overlapping streams), most sit medium, a few stay sparse/spaced out
-        const [lo, hi] = roll < 0.25 ? [0.9, 1.8] : roll < 0.7 ? [2.0, 3.4] : [3.6, 6.2];
-        return {
-          x: i * CELL + CELL / 2,
-          speedScale: 0.5 + Math.random(),
-          spawnInterval: (lo + Math.random() * (hi - lo)) * intervalScale,
-          nextSpawn: reduce ? Infinity : 0,
-        };
+      colMeta = [];
+      LAYERS.forEach((layer, layerIdx) => {
+        for (let i = 0; i < count; i++) {
+          const roll = Math.random();
+          // a persistent per-column trait: some columns stay dense (frequent
+          // overlapping streams), most sit medium, a few stay sparse/spaced out
+          const [lo, hi] = roll < 0.25 ? [0.9, 1.8] : roll < 0.7 ? [2.0, 3.4] : [3.6, 6.2];
+          colMeta.push({
+            x: i * CELL + CELL / 2 + layer.offset,
+            layer: layerIdx,
+            speedScale: 0.5 + Math.random(),
+            spawnInterval: (lo + Math.random() * (hi - lo)) * intervalScale,
+            nextSpawn: reduce ? Infinity : 0,
+          });
+        }
       });
       streams = colMeta.map((col) => spawnStream(col, true));
     }
@@ -222,16 +241,24 @@ export default function DataVeil() {
       dataCtx!.fillStyle = "#0d0e0c";
       dataCtx!.fillRect(0, 0, w, h);
       const half = CELL / 2;
-      for (const s of streams) {
-        const denom = s.length - 1 || 1;
-        for (let j = 0; j < s.chars.length; j++) {
-          const y = s.headY - j * CELL;
-          if (y < -CELL || y > h + CELL) continue;
-          const bucket = Math.min(BUCKET_COUNT - 1, Math.floor((j / denom) * BUCKET_COUNT));
-          const sprite = sprites.get(`${s.chars[j]}|${bucket}`);
-          if (sprite) dataCtx!.drawImage(sprite, s.x - half, y - half);
+      // draw furthest layer first so nearer layers' characters overlap on
+      // top of them, then dim each layer as a whole (one globalAlpha set
+      // per layer, not per character) for the depth falloff
+      for (let layerIdx = LAYERS.length - 1; layerIdx >= 0; layerIdx--) {
+        dataCtx!.globalAlpha = LAYERS[layerIdx].opacity;
+        for (const s of streams) {
+          if (s.layer !== layerIdx) continue;
+          const denom = s.length - 1 || 1;
+          for (let j = 0; j < s.chars.length; j++) {
+            const y = s.headY - j * CELL;
+            if (y < -CELL || y > h + CELL) continue;
+            const bucket = Math.min(BUCKET_COUNT - 1, Math.floor((j / denom) * BUCKET_COUNT));
+            const sprite = sprites.get(`${s.chars[j]}|${bucket}`);
+            if (sprite) dataCtx!.drawImage(sprite, s.x - half, y - half);
+          }
         }
       }
+      dataCtx!.globalAlpha = 1;
     }
 
     function healAndReveal(now: number) {
