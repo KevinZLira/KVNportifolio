@@ -73,15 +73,24 @@ function isMedallionMesh(mesh: THREE.Mesh) {
   return !mesh.name.startsWith("Torus");
 }
 
-// Per-mesh material by name: the chain reads as actual chrome (mirror-flat,
-// near-zero roughness) rather than the medallion's brushed/etched metal;
-// "Detalhe" is a dedicated accent piece meant to read as a light source
-// (black base, nothing but its own emissive contributes) rather than a lit
-// surface; "KVN" is lightly frosted white glass (translucent, but the
-// roughness keeps it from being clear-glass sharp); everything else keeps
-// the medallion's default brushed metal + subtle emissive.
+// The chain links plus "Envolta do KVN" (the medallion's outer wrap) both
+// read as actual chrome — mirror-flat, near-zero roughness — rather than
+// the medallion body's brushed/etched metal. GLTFLoader sanitizes node
+// names, replacing spaces with underscores, so the runtime name is
+// "Envolta_do_KVN" even though it reads "Envolta do KVN" in Blender/the
+// source file.
+function isChromeMesh(name: string) {
+  return name.startsWith("Torus") || name === "Envolta_do_KVN";
+}
+
+// Per-mesh material by name: chrome per isChromeMesh() above; "Detalhe" is
+// a dedicated accent piece meant to read as a light source (black base,
+// nothing but its own emissive contributes) rather than a lit surface;
+// "KVN" is lightly frosted white glass (translucent, but the roughness
+// keeps it from being clear-glass sharp); everything else keeps the
+// medallion's default brushed metal + subtle emissive.
 function buildMeshMaterial(name: string): THREE.MeshStandardMaterial {
-  if (name.startsWith("Torus")) {
+  if (isChromeMesh(name)) {
     return new THREE.MeshStandardMaterial({
       color: 0xd9dcdd,
       metalness: 1,
@@ -276,16 +285,16 @@ export default function PendantViewer() {
 
       gltf.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          const isChain = child.name.startsWith("Torus");
+          const isChrome = isChromeMesh(child.name);
           const isDetail = child.name === "Detalhe";
           const isKvnGlass = child.name === "KVN";
           const material = buildMeshMaterial(child.name);
           child.material = material;
           // Only the medallion's default metal participates in the
-          // hover/idle emissive pulse below — the chain (chrome), Detalhe
-          // (fixed intense glow), and KVN (glass, no emissive at all) all
-          // stay exactly as authored regardless of interaction state.
-          if (!isChain && !isDetail && !isKvnGlass) highlightMats.push(material);
+          // hover/idle emissive pulse below — chrome parts, Detalhe (fixed
+          // intense glow), and KVN (glass, no emissive at all) all stay
+          // exactly as authored regardless of interaction state.
+          if (!isChrome && !isDetail && !isKvnGlass) highlightMats.push(material);
           disposables.push({ geometry: child.geometry, material });
 
           const edgeGeo = new THREE.EdgesGeometry(child.geometry, 50);
