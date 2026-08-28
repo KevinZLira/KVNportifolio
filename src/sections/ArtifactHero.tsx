@@ -39,12 +39,7 @@ export default function ArtifactHero() {
       gsap
         .timeline({ delay: reduce ? 0 : 0.15 })
         .from(".ah-stage", { opacity: 0, scale: reduce ? 1 : 0.94, duration: reduce ? 0 : 0.9, ease: "power3.out" })
-        .from(
-          ".ah-sub",
-          { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, ease: "power2.out" },
-          reduce ? 0 : "-=0.4",
-        )
-        .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.2")
+        .from(".ah-tag", { opacity: 0, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.08 }, reduce ? 0 : "-=0.5")
         .from(".ah-corner", { opacity: 0, duration: reduce ? 0 : 0.6, ease: "power2.out" }, reduce ? 0 : "-=0.3");
     }, section);
 
@@ -77,7 +72,6 @@ export default function ArtifactHero() {
       <div className="ah-hud t-mono">
         <span>/SYSTEM/HOME</span>
         <div className="ah-hud-right">
-          <span className="ah-tag">OBJECT: KVN-001</span>
           <span ref={coordRef} className="ah-coords">
             X:0000 Y:0000
           </span>
@@ -93,9 +87,9 @@ export default function ArtifactHero() {
         </p>
       </div>
 
-      <div className="ah-body">
-        <p className="ah-sub t-mono">AVAILABLE FOR SELECTED WORK.</p>
-      </div>
+      {/* Kept as an empty flex:1 spacer -- it's what pushes ah-meta to the
+          bottom of the section; only its text content was removed. */}
+      <div className="ah-body" />
 
       <div className="ah-capabilities ah-corner">
         <span className="ah-corner-tag t-mono">// CAPABILITIES</span>

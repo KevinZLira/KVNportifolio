@@ -70,13 +70,6 @@
   pointer-events: auto;
 }
 
-.ah-sub {
-  margin: 0;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  color: var(--fg-dim);
-}
-
 /* Diagonal-balance corner blocks — identity (top-left) and capabilities
    (bottom-right). Absolute on desktop so they sit entirely outside the
    hud/body/meta flex flow (zero effect on the existing composition);
