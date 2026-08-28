@@ -5,6 +5,7 @@ import { TransitionProvider } from "./state/TransitionContext";
 import BootSequence from "./components/Boot/BootSequence";
 import CustomCursor from "./components/Cursor/CustomCursor";
 import SystemBar from "./components/System/SystemBar";
+import BackgroundMusic from "./components/System/BackgroundMusic";
 import NavOverlay from "./components/System/NavOverlay";
 import SystemToaster from "./components/System/SystemToaster";
 import RandomEvents from "./components/System/RandomEvents";
@@ -33,6 +34,7 @@ function AppShell() {
   return (
     <div className="app-shell">
       <CustomCursor />
+      <BackgroundMusic />
       <SystemBar onMenu={() => setNavOpen((v) => !v)} />
       <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
       <SystemToaster />
