@@ -1,57 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { SystemProvider, useSystem } from "./state/SystemContext";
-import { TransitionProvider } from "./state/TransitionContext";
-import BootSequence from "./components/Boot/BootSequence";
-import CustomCursor from "./components/Cursor/CustomCursor";
-import SystemBar from "./components/System/SystemBar";
-import BackgroundMusic from "./components/System/BackgroundMusic";
-import NavOverlay from "./components/System/NavOverlay";
-import SystemToaster from "./components/System/SystemToaster";
-import RandomEvents from "./components/System/RandomEvents";
-import ScrollHUD from "./components/System/ScrollHUD";
+import { ParallaxProvider } from "./system/ParallaxField";
+import Nav from "./system/Nav";
+import Cursor from "./system/Cursor";
+import PageTransition from "./system/PageTransition";
 import Home from "./pages/Home";
-import ProjectPage from "./pages/ProjectPage";
-import "./App.css";
+import Archive from "./pages/Archive";
+import ArchiveFile from "./pages/ArchiveFile";
+import Operations from "./pages/Operations";
+import Contract from "./pages/Contract";
 
-function AppShell() {
-  const { systemState, enterSystem } = useSystem();
-  const [navOpen, setNavOpen] = useState(false);
+function Shell() {
   const location = useLocation();
 
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setNavOpen(false);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  if (systemState === "BOOT") {
-    return <BootSequence onEnter={enterSystem} />;
-  }
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
-    <div className="app-shell">
-      <CustomCursor />
-      <BackgroundMusic />
-      <SystemBar onMenu={() => setNavOpen((v) => !v)} />
-      <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
-      <SystemToaster />
-      <RandomEvents />
-      {location.pathname === "/" && <ScrollHUD />}
+    <div className="kvn-shell">
+      <div className="kvn-atmosphere" />
+      <span className="kvn-hud-mark tl" />
+      <span className="kvn-hud-mark tr" />
+      <span className="kvn-hud-mark bl" />
+      <span className="kvn-hud-mark br" />
 
-      <main className="app-main" key={location.pathname}>
+      <Cursor />
+      <Nav />
+      <PageTransition />
+
+      <main key={location.pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Home />} />
-          <Route path="/work/:slug" element={<ProjectPage />} />
+          <Route path="/archive" element={<Archive />} />
+          <Route path="/archive/:slug" element={<ArchiveFile />} />
+          <Route path="/operations" element={<Operations />} />
+          <Route path="/contract" element={<Contract />} />
         </Routes>
       </main>
-
-      <div className="crt-layer crt-scanlines" />
-      <div className="crt-layer crt-vignette" />
-      <div className="crt-layer crt-grain" />
     </div>
   );
 }
@@ -59,11 +45,9 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <SystemProvider>
-        <TransitionProvider>
-          <AppShell />
-        </TransitionProvider>
-      </SystemProvider>
+      <ParallaxProvider>
+        <Shell />
+      </ParallaxProvider>
     </BrowserRouter>
   );
 }

@@ -1,0 +1,38 @@
+.ascii-icon {
+  display: inline-flex;
+  color: var(--fg-dim);
+  transition: color 0.35s var(--ease-out);
+  line-height: 1;
+}
+
+.ascii-icon.is-hovered {
+  color: var(--accent);
+}
+
+.ascii-icon__art {
+  margin: 0;
+  font-family: var(--font-mono);
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+.ascii-icon--sm .ascii-icon__art {
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.ascii-icon--md .ascii-icon__art {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.ascii-icon--lg .ascii-icon__art {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+@media (max-width: 720px) {
+  .ascii-icon--lg .ascii-icon__art {
+    font-size: 12px;
+  }
+}

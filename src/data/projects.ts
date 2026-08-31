@@ -5,6 +5,8 @@ export type ProjectCategory =
   | "BRANDING"
   | "EXPERIMENTAL";
 
+export type ProjectStatus = "COMPLETED" | "IN_PROGRESS";
+
 export interface Project {
   id: string; // "007"
   slug: string;
@@ -15,6 +17,8 @@ export interface Project {
   tools: string[];
   description: string;
   accent: string;
+  status?: ProjectStatus;
+  ascii: "design" | "motion" | "video";
 }
 
 // PLACEHOLDER DATASET — replace with real work later.
@@ -31,7 +35,9 @@ export const projects: Project[] = [
     tools: ["AFTER EFFECTS", "PREMIERE PRO"],
     description:
       "Vinheta de abertura construída em camadas de ruído, distorção RGB e tipografia quebrada. O objetivo era simular a degradação de um sinal de vídeo analógico sendo recebido por um sistema desconhecido.",
+    ascii: "video",
     accent: "#6dffa8",
+    status: "IN_PROGRESS",
   },
   {
     id: "002",
@@ -43,6 +49,7 @@ export const projects: Project[] = [
     tools: ["ILLUSTRATOR", "FIGMA"],
     description:
       "Sistema de marca modular baseado em coordenadas e grids de precisão. Cada aplicação da marca é gerada a partir de um conjunto de regras, nunca fixa.",
+    ascii: "design",
     accent: "#ff2ec4",
   },
   {
@@ -55,6 +62,7 @@ export const projects: Project[] = [
     tools: ["AFTER EFFECTS", "BLENDER"],
     description:
       "Peça experimental que mistura captação real com camadas 3D de baixa resolução, propositalmente quebradas, evocando memória de VHS.",
+    ascii: "motion",
     accent: "#6dffa8",
   },
   {
@@ -67,6 +75,7 @@ export const projects: Project[] = [
     tools: ["PHOTOSHOP", "ILLUSTRATOR"],
     description:
       "Série de dez pôsteres explorando tipografia digital quebrada e composições assimétricas, um para cada dia de festival.",
+    ascii: "design",
     accent: "#ffd23f",
   },
   {
@@ -79,6 +88,7 @@ export const projects: Project[] = [
     tools: ["TOUCHDESIGNER", "AFTER EFFECTS"],
     description:
       "Instalação de vídeo em loop de 40 minutos, sem repetição perceptível, pensada para rodar continuamente em uma sala escura.",
+    ascii: "motion",
     accent: "#6dffa8",
   },
   {
@@ -91,6 +101,7 @@ export const projects: Project[] = [
     tools: ["AFTER EFFECTS", "CINEMA 4D"],
     description:
       "Trailer de 45 segundos construído inteiramente com elementos de HUD e tipografia técnica, sem uso de imagem real do produto.",
+    ascii: "motion",
     accent: "#ff2ec4",
   },
   {
@@ -103,6 +114,7 @@ export const projects: Project[] = [
     tools: ["PREMIERE PRO", "DAVINCI RESOLVE"],
     description:
       "Edição sincronizada quadro a quadro com a batida, usando cortes secos e glitches de compressão como elemento rítmico.",
+    ascii: "video",
     accent: "#6dffa8",
   },
   {
@@ -115,6 +127,7 @@ export const projects: Project[] = [
     tools: ["FIGMA", "ILLUSTRATOR"],
     description:
       "Sistema de identidade pensado para funcionar primeiro como interface, depois como marca — nasceu de uma tabela de dados.",
+    ascii: "design",
     accent: "#ffd23f",
   },
   {
@@ -127,6 +140,7 @@ export const projects: Project[] = [
     tools: ["AFTER EFFECTS"],
     description:
       "Sequência de 12 segundos com tipografia cinética e transições baseadas em corrupção de dados simulada.",
+    ascii: "motion",
     accent: "#6dffa8",
   },
   {
@@ -139,6 +153,7 @@ export const projects: Project[] = [
     tools: ["AFTER EFFECTS", "PROCESSING"],
     description:
       "Estudo de tipografia reagindo a um campo de forças simulado, renderizado quadro a quadro fora do tempo real.",
+    ascii: "motion",
     accent: "#ff2ec4",
   },
 ];
@@ -151,6 +166,10 @@ export const categories: (ProjectCategory | "ALL")[] = [
   "BRANDING",
   "EXPERIMENTAL",
 ];
+
+export function getStatus(project: Project): ProjectStatus {
+  return project.status ?? "COMPLETED";
+}
 
 export function getProjectBySlug(slug: string) {
   return projects.find((p) => p.slug === slug);

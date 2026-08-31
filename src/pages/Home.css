@@ -1,0 +1,137 @@
+.home {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nav-h) var(--edge) 80px;
+}
+
+.home__field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.home__corner-text {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--fg-dimmer);
+}
+
+.home__corner-text--tl {
+  top: 96px;
+  left: var(--edge);
+}
+.home__corner-text--tr {
+  top: 96px;
+  right: var(--edge);
+}
+
+.home__field--foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 40px;
+  top: auto;
+  left: var(--edge);
+  right: var(--edge);
+}
+
+.home__foot-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+}
+
+.home__hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(20px, 3vw, 32px);
+  max-width: 900px;
+}
+
+.home__wordmark-wrap {
+  line-height: 1;
+}
+
+.home__wordmark {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(88px, 16vw, 220px);
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  color: var(--fg);
+}
+
+.home__role {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.6vw, 16px);
+  letter-spacing: 0.3em;
+  color: var(--fg-dim);
+  line-height: 1.7;
+}
+
+.home__disciplines {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.4vw, 14px);
+  letter-spacing: 0.2em;
+  color: var(--fg);
+}
+
+.home__slash {
+  color: var(--accent);
+}
+
+.home__cta {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--fg);
+  padding: 14px 26px;
+  border: 1px solid var(--line-strong);
+  transition: color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.home__cta:hover {
+  color: var(--black);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.home__cta-bracket {
+  color: var(--accent);
+  transition: color 0.3s var(--ease-out);
+}
+
+.home__cta:hover .home__cta-bracket {
+  color: var(--black);
+}
+
+@media (max-width: 720px) {
+  .home__corner-text--tl,
+  .home__corner-text--tr {
+    top: 84px;
+  }
+  .home__field--foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,31 @@
+.status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dim);
+}
+
+.status-label__dot {
+  font-size: 8px;
+  transform: translateY(-1px);
+}
+
+.status-label--available .status-label__dot,
+.status-label--active .status-label__dot {
+  color: var(--accent);
+}
+
+.status-label--completed .status-label__dot {
+  color: var(--accent);
+}
+
+.status-label--pending .status-label__dot {
+  color: var(--warn);
+}
+
+.status-label--locked .status-label__dot {
+  color: var(--fg-dimmer);
+}

@@ -1,106 +1,51 @@
-import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Hero from "../sections/Hero";
-import ArtifactHero from "../sections/ArtifactHero";
-import MinimalHero from "../sections/MinimalHero";
-import WorkDatabase from "../sections/WorkDatabase";
-import About from "../sections/About";
-import Contact from "../sections/Contact";
-import { HERO_MODE } from "../config/heroExperience";
-
-gsap.registerPlugin(ScrollTrigger);
+import { Link } from "react-router-dom";
+import { ParallaxLayer } from "../system/ParallaxField";
+import StatusLabel from "../system/StatusLabel";
+import { projects } from "../data/projects";
+import "./Home.css";
 
 export default function Home() {
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".workdb-row").forEach((row, i) => {
-        gsap.from(row, {
-          opacity: 0,
-          y: 30,
-          duration: 0.5,
-          ease: "power2.out",
-          delay: (i % 6) * 0.02,
-          scrollTrigger: {
-            trigger: row,
-            start: "top 92%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
-
-      [".about-heading", ".contact-heading"].forEach((sel) => {
-        gsap.from(sel, {
-          opacity: 0,
-          y: 40,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sel,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
-
-      gsap.from(".sw-module", {
-        opacity: 0,
-        y: 16,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".sw-grid",
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      gsap.from(".about-field", {
-        opacity: 0,
-        x: -16,
-        duration: 0.4,
-        stagger: 0.08,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".about-col--info",
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      gsap.from(".contact-channel, .contact-transmit", {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".contact-grid",
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <>
-      {HERO_MODE === "artifact" ? (
-        <ArtifactHero />
-      ) : HERO_MODE === "minimal" ? (
-        <MinimalHero />
-      ) : (
-        <Hero />
-      )}
-      <WorkDatabase />
-      <About />
-      <Contact />
-    </>
+    <div className="home">
+      <ParallaxLayer depth={0.06} className="home__field home__field--far">
+        <span className="home__corner-text home__corner-text--tl">SYSTEM ONLINE</span>
+        <span className="home__corner-text home__corner-text--tr">2026</span>
+      </ParallaxLayer>
+
+      <div className="home__hero">
+        <ParallaxLayer depth={0.14} className="home__wordmark-wrap">
+          <h1 className="home__wordmark">KVN</h1>
+        </ParallaxLayer>
+
+        <ParallaxLayer depth={0.2}>
+          <p className="home__role">
+            INDEPENDENT<br />
+            CREATIVE<br />
+            OPERATOR
+          </p>
+        </ParallaxLayer>
+
+        <ParallaxLayer depth={0.26} className="home__disciplines">
+          <span>DESIGN</span>
+          <span className="home__slash">/</span>
+          <span>MOTION</span>
+          <span className="home__slash">/</span>
+          <span>VIDEO</span>
+        </ParallaxLayer>
+
+        <Link to="/archive" className="home__cta">
+          <span className="home__cta-bracket">[</span>
+          ENTER ARCHIVE
+          <span className="home__cta-bracket">]</span>
+        </Link>
+      </div>
+
+      <ParallaxLayer depth={0.08} className="home__field home__field--foot">
+        <StatusLabel status="available" label="AVAILABLE FOR CONTRACT" />
+        <span className="home__foot-index">
+          FILE_INDEX · {String(projects.length).padStart(3, "0")}
+        </span>
+      </ParallaxLayer>
+    </div>
   );
 }

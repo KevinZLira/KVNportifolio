@@ -1,0 +1,60 @@
+.file-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+}
+
+.file-thumb::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: repeating-linear-gradient(
+    var(--thumb-angle),
+    transparent 0px,
+    transparent 8px,
+    color-mix(in srgb, var(--thumb-accent) 14%, transparent) 8px,
+    color-mix(in srgb, var(--thumb-accent) 14%, transparent) 9px
+  );
+  transform: scale(var(--thumb-scale));
+  transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+  opacity: 0.7;
+}
+
+.file-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 30%,
+    color-mix(in srgb, var(--thumb-accent) 22%, transparent),
+    transparent 60%
+  );
+}
+
+.file-thumb__id {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 34px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--thumb-accent) 55%, var(--fg-dimmer));
+  opacity: 0.5;
+  letter-spacing: -0.02em;
+}
+
+.file-thumb__grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 100% 25%, 25% 100%;
+  opacity: 0.35;
+}
+
+.file-thumb--ascii {
+  background: var(--black);
+}

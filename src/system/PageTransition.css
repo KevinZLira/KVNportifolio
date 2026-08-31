@@ -1,0 +1,33 @@
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: var(--bg);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.18s var(--ease-snap);
+}
+
+.page-transition.is-active {
+  opacity: 1;
+  transition: opacity 0.06s linear;
+}
+
+.page-transition__glyphs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-dim, var(--accent));
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    display: none;
+  }
+}

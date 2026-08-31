@@ -1,0 +1,30 @@
+.file-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+}
+
+.file-header__index {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.file-header__total {
+  color: var(--fg-dimmer);
+}
+
+.file-header__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.file-header__title {
+  color: var(--fg);
+  flex-shrink: 0;
+}
