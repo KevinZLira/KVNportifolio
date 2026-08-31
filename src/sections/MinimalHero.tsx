@@ -9,12 +9,45 @@ import "./MinimalHero.css";
 // a sibling composition, not a replacement — ArtifactHero, PendantViewer,
 // DataVeil and every ASCII/HUD experiment stay exactly as they are; see
 // src/config/heroExperience.ts to switch back with a one-line change.
+//
+// Background is a real video loop (muted/looped) with a left-heavy dark
+// scrim so the now left-aligned text stays legible. object-fit: contain
+// keeps the full frame intact — no cropping — letterboxing against the
+// section's own background on any aspect ratio that doesn't exactly match
+// 16:9. Source resolution matches the viewer's actual monitor: a 4K
+// screen gets the native 4K encode, anything at or below Full HD gets a
+// separate 1080p encode (same full frame, just downscaled, so no crop
+// there either) — no point shipping 4K bytes to a screen that cannot
+// render more than 1080p of it.
 
 const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];
+
+/** True when the physical monitor exceeds Full HD — screen.width/height are
+ * already in CSS px, so devicePixelRatio converts them to actual device
+ * pixels (a 1920x1080 CSS viewport at dpr 2, e.g. many "4K" laptop panels
+ * run scaled, is genuinely a 4K panel). */
+function isHiResDisplay(): boolean {
+  if (typeof window === "undefined") return false;
+  const dpr = window.devicePixelRatio || 1;
+  const physicalWidth = window.screen.width * dpr;
+  const physicalHeight = window.screen.height * dpr;
+  return Math.max(physicalWidth, physicalHeight) > 1920;
+}
 
 export default function MinimalHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
   const logoRef = useRef<HTMLDivElement>(null);
+
+  // Read once at mount — not reactive, matching the matchMedia checks used
+  // elsewhere in this codebase. Autoplay is skipped (poster frame only)
+  // under reduced motion and on coarse/narrow (mobile) viewports, where a
+  // multi-MB video loop is a poor use of a mobile data connection.
+  const skipAutoplay =
+    typeof window !== "undefined" &&
+    (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(max-width: 640px), (hover: none)").matches);
+
+  const videoSrc = isHiResDisplay() ? "/video/hero-bg.mp4" : "/video/hero-bg-1080p.mp4";
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -80,6 +113,19 @@ export default function MinimalHero() {
 
   return (
     <section ref={sectionRef} id="hero" className="minimal-hero">
+      <video
+        className="mh-video-bg"
+        src={videoSrc}
+        poster="/video/hero-bg-poster.jpg"
+        autoPlay={!skipAutoplay}
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      <div className="mh-video-scrim" aria-hidden="true" />
+
       <div className="mh-content">
         <span className="mh-status t-mono">
           <span className="mh-status-dot" aria-hidden="true" />

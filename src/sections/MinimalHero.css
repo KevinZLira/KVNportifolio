@@ -1,7 +1,4 @@
-/* MINIMAL_HERO — editorial composition. Background is the plain site
-   surface (var(--bg-000), same as body) rather than a dedicated video/veil
-   layer — there isn't one wired up yet; when there is, it drops in behind
-   .mh-content without touching this file's layout. */
+/* MINIMAL_HERO — editorial composition over a real video background. */
 .minimal-hero {
   position: relative;
   min-height: 100vh;
@@ -11,6 +8,35 @@
   justify-content: flex-start;
   overflow: hidden;
   padding: 115px 6vw 77px;
+  background: var(--bg-000);
+}
+
+.mh-video-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-000);
+  /* contain, not cover — the full frame must stay intact, no cropping.
+     Letterboxes against the section's own background on any aspect ratio
+     that isn't exactly 16:9. */
+  object-fit: contain;
+}
+
+.mh-video-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* left-heavy so the (now left-aligned) text stays legible while the
+     right side of the frame stays readable as video. */
+  background: linear-gradient(
+    90deg,
+    rgba(33, 31, 32, 0.86) 0%,
+    rgba(33, 31, 32, 0.6) 32%,
+    rgba(33, 31, 32, 0.28) 65%,
+    rgba(33, 31, 32, 0.55) 100%
+  );
 }
 
 .mh-content {
