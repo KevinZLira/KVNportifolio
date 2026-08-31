@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import { AsciiArt, HERO_CORNER_MARK } from "../lib/ascii";
 import "./MinimalHero.css";
 
 // MINIMAL_HERO — the editorial/typography-led revision of ArtifactHero.
@@ -9,6 +10,10 @@ import "./MinimalHero.css";
 // a sibling composition, not a replacement — ArtifactHero, PendantViewer,
 // DataVeil and every ASCII/HUD experiment stay exactly as they are; see
 // src/config/heroExperience.ts to switch back with a one-line change.
+//
+// The one quiet ASCII touch the market-redesign brief allows in the Hero:
+// a tiny static corner mark, sized and dimmed to stay clearly subordinate
+// to the logo — texture, never a second focal point.
 
 const SPECIALTIES = ["DESIGN", "MOTION", "VIDEO"];
 
@@ -46,7 +51,7 @@ export default function MinimalHero() {
         )
         .from(".mh-cta", { opacity: 0, y: 8, duration: reduce ? 0 : 0.5, ease: "power2.out" }, reduce ? 0 : "-=0.25")
         .from(
-          ".mh-detail",
+          ".mh-detail, .mh-ascii-mark",
           { opacity: 0, duration: reduce ? 0 : 0.6, stagger: reduce ? 0 : 0.1, ease: "power1.out" },
           reduce ? 0 : "-=0.3",
         );
@@ -115,8 +120,12 @@ export default function MinimalHero() {
         </a>
       </div>
 
-      <span className="mh-detail mh-detail-left t-mono">AVAILABLE FOR SELECTED CONTRACTS</span>
+      <span className="mh-detail mh-detail-left t-mono">AVAILABLE FOR CONTRACT</span>
       <span className="mh-detail mh-detail-right t-mono">2026</span>
+
+      <span className="mh-ascii-mark" aria-hidden="true">
+        <AsciiArt art={HERO_CORNER_MARK} color="#4a4f44" />
+      </span>
     </section>
   );
 }

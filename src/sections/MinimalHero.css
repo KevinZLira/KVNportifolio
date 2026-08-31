@@ -164,6 +164,27 @@
   right: 6vw;
 }
 
+/* Sole permitted ASCII touch in the Hero — quiet corner texture, sized and
+   dimmed well below the logo/message so it never competes for attention. */
+.mh-ascii-mark {
+  position: absolute;
+  z-index: 1;
+  top: 32px;
+  left: 6vw;
+  width: 20px;
+  height: 20px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .mh-ascii-mark {
+    top: 24px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
 @media (max-width: 640px) {
   .minimal-hero {
     padding: 101px 8vw 67px;

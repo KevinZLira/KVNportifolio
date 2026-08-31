@@ -4,10 +4,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../sections/Hero";
 import ArtifactHero from "../sections/ArtifactHero";
 import MinimalHero from "../sections/MinimalHero";
+import Operations from "../sections/Operations";
 import WorkDatabase from "../sections/WorkDatabase";
+import MarketArchive from "../sections/MarketArchive";
 import About from "../sections/About";
 import Contact from "../sections/Contact";
 import { HERO_MODE } from "../config/heroExperience";
+import { ARCHIVE_MODE } from "../config/archiveExperience";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +35,21 @@ export default function Home() {
         });
       });
 
+      gsap.utils.toArray<HTMLElement>(".market-archive-tile").forEach((tile, i) => {
+        gsap.from(tile, {
+          opacity: 0,
+          y: 24,
+          duration: 0.5,
+          ease: "power2.out",
+          delay: (i % 6) * 0.03,
+          scrollTrigger: {
+            trigger: tile,
+            start: "top 92%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
       [".about-heading", ".contact-heading"].forEach((sel) => {
         gsap.from(sel, {
           opacity: 0,
@@ -44,6 +62,19 @@ export default function Home() {
             toggleActions: "play none none reverse",
           },
         });
+      });
+
+      gsap.from(".operations-row", {
+        opacity: 0,
+        y: 16,
+        duration: 0.4,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".operations-list",
+          start: "top 88%",
+          toggleActions: "play none none reverse",
+        },
       });
 
       gsap.from(".sw-module", {
@@ -98,7 +129,8 @@ export default function Home() {
       ) : (
         <Hero />
       )}
-      <WorkDatabase />
+      <Operations />
+      {ARCHIVE_MODE === "market" ? <MarketArchive /> : <WorkDatabase />}
       <About />
       <Contact />
     </>

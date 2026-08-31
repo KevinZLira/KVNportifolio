@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { categories, projects, type ProjectCategory } from "../data/projects";
+import { categories, projects } from "../data/projects";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import { useProjectFilter } from "../hooks/useProjectFilter";
 import { useSystem } from "../state/SystemContext";
 import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
@@ -11,20 +12,11 @@ import "./WorkDatabase.css";
 
 export default function WorkDatabase() {
   const sectionRef = useSectionLabel<HTMLElement>("WORK_DATABASE");
-  const [filter, setFilter] = useState<ProjectCategory | "ALL">("ALL");
+  const { filter, setFilter, visible } = useProjectFilter();
   const [activeId, setActiveId] = useState<string | null>(null);
-  const { setCursorMode, pendingFilter, clearPendingFilter } = useSystem();
+  const { setCursorMode } = useSystem();
   const { runTransition } = useTransition();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (pendingFilter) {
-      setFilter(pendingFilter as ProjectCategory | "ALL");
-      clearPendingFilter();
-    }
-  }, [pendingFilter, clearPendingFilter]);
-
-  const visible = projects.filter((p) => filter === "ALL" || p.category === filter);
 
   function openProject(slug: string, id: string) {
     sfx.click();

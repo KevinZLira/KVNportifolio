@@ -43,3 +43,30 @@
   display: inline-block;
   width: 1ch;
 }
+
+.sys-transition-file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sys-transition-file-id {
+  font-size: clamp(20px, 3vw, 32px);
+  letter-spacing: 0.08em;
+  color: var(--fg);
+}
+
+.sys-transition-file-status {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--primary);
+  text-shadow: 0 0 14px var(--primary-glow);
+}
+
+.sys-transition-file-meta {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
