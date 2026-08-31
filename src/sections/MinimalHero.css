@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: flex-start;
   overflow: hidden;
-  padding: 115px 6vw 77px;
+  padding: 115px 90px 77px;
   background: var(--bg-000);
 }
 
@@ -45,7 +45,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(22px, 3.6vw, 36px);
+  gap: 30px;
   max-width: 768px;
   text-align: left;
 }
@@ -84,7 +84,7 @@
 }
 
 .mh-logo img {
-  height: clamp(100px, 16.2vw, 201px);
+  height: 200px;
   width: auto;
   /* transform/filter here are the JS proximity effect above; keep the
      transition short so it reads as responsive, not laggy */
@@ -95,7 +95,7 @@
 
 .mh-message {
   margin: 0;
-  font-size: clamp(19px, 2.76vw, 30px);
+  font-size: 30px;
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: var(--fg);
@@ -183,19 +183,9 @@
 }
 
 .mh-detail-left {
-  left: 6vw;
+  left: 90px;
 }
 
 .mh-detail-right {
-  right: 6vw;
-}
-
-@media (max-width: 640px) {
-  .minimal-hero {
-    padding: 101px 8vw 67px;
-  }
-
-  .mh-detail {
-    font-size: 10px;
-  }
+  right: 90px;
 }
