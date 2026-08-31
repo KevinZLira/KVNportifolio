@@ -10,7 +10,7 @@ import "./MinimalHero.css";
 // DataVeil and every ASCII/HUD experiment stay exactly as they are; see
 // src/config/heroExperience.ts to switch back with a one-line change.
 
-const SPECIALTIES = ["DESIGN", "MOTION", "VIDEO"];
+const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];
 
 export default function MinimalHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
