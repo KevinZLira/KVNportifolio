@@ -11,13 +11,12 @@ import "./MinimalHero.css";
 // src/config/heroExperience.ts to switch back with a one-line change.
 //
 // Background is a real video loop (muted/looped) with a left-heavy dark
-// scrim so the now left-aligned text stays legible. object-fit: contain
-// keeps the full frame intact — no cropping — letterboxing against the
-// section's own background on any aspect ratio that doesn't exactly match
-// 16:9. Source resolution matches the viewer's actual monitor: a 4K
-// screen gets the native 4K encode, anything at or below Full HD gets a
-// separate 1080p encode (same full frame, just downscaled, so no crop
-// there either) — no point shipping 4K bytes to a screen that cannot
+// scrim so the now left-aligned text stays legible. object-fit: cover
+// always fills the frame edge-to-edge on any screen size/aspect ratio —
+// cropping the sides or top/bottom is preferred over letterbox bars.
+// Source resolution matches the viewer's actual monitor: a 4K screen gets
+// the native 4K encode, anything at or below Full HD gets a separate
+// 1080p encode — no point shipping 4K bytes to a screen that cannot
 // render more than 1080p of it.
 
 const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];

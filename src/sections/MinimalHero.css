@@ -18,10 +18,10 @@
   width: 100%;
   height: 100%;
   background: var(--bg-000);
-  /* contain, not cover — the full frame must stay intact, no cropping.
-     Letterboxes against the section's own background on any aspect ratio
-     that isn't exactly 16:9. */
-  object-fit: contain;
+  /* cover — always fills the frame edge-to-edge on any screen size/aspect
+     ratio, even if that means cropping the sides or top/bottom. Letterbox
+     bars (object-fit: contain) read as broken on non-16:9 monitors. */
+  object-fit: cover;
 }
 
 .mh-video-scrim {
