@@ -80,62 +80,6 @@
   flex-direction: column;
 }
 
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.contact-field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.contact-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.contact-field-label {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--fg-dimmer);
-}
-
-.contact-input {
-  background: var(--bg-050);
-  border: 1px solid var(--line-strong);
-  color: var(--fg);
-  padding: 10px 12px;
-  font-size: 13px;
-}
-
-.contact-input:focus {
-  outline: none;
-  border-color: var(--primary-dim);
-}
-
-.contact-loading {
-  width: 120px;
-  height: 24px;
-  margin: 0.4em 0 1em;
-}
-
-.contact-confirm {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--primary);
-  max-width: 40ch;
-}
-
-@media (max-width: 520px) {
-  .contact-field-row {
-    grid-template-columns: 1fr;
-  }
-}
-
 .contact-textarea {
   background: var(--bg-050);
   border: 1px solid var(--line-strong);

@@ -48,9 +48,6 @@ export default function About() {
 
   return (
     <section ref={sectionRef} id="about" className="about">
-      <span className="hud-corner hud-corner--tl" aria-hidden="true" />
-      <span className="hud-corner hud-corner--br" aria-hidden="true" />
-
       <div className="about-header">
         <span className="about-comment t-mono">// USER_PROFILE</span>
         <h2 className="about-heading t-display">KEVIN LIRA</h2>

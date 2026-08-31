@@ -14,12 +14,11 @@ interface NavItem {
 
 const ITEMS: NavItem[] = [
   { index: "00", label: "SYSTEM", target: "hero" },
-  { index: "01", label: "OPERATIONS", target: "operations" },
-  { index: "02", label: "WORK", target: "work" },
-  { index: "03", label: "VIDEO", target: "work", filter: "VIDEO" },
-  { index: "04", label: "DESIGN", target: "work", filter: "DESIGN" },
-  { index: "05", label: "ABOUT", target: "about" },
-  { index: "06", label: "CONTACT", target: "contact" },
+  { index: "01", label: "WORK", target: "work" },
+  { index: "02", label: "VIDEO", target: "work", filter: "VIDEO" },
+  { index: "03", label: "DESIGN", target: "work", filter: "DESIGN" },
+  { index: "04", label: "ABOUT", target: "about" },
+  { index: "05", label: "CONTACT", target: "contact" },
 ];
 
 export default function NavOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {

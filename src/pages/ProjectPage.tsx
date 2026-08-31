@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAdjacentProjects, getProjectBySlug, getProjectStatus, type Project } from "../data/projects";
+import { getAdjacentProjects, getProjectBySlug } from "../data/projects";
 import { useSystem } from "../state/SystemContext";
 import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
 import MediaPreview from "../components/Media/MediaPreview";
-import { AsciiAnimated, getCategoryPlaceholderArt } from "../lib/ascii";
 import "./ProjectPage.css";
 
 export default function ProjectPage() {
@@ -46,25 +45,13 @@ export default function ProjectPage() {
     });
   }
 
-  function goToProject(target: Project) {
+  function goToProject(targetSlug: string, id: string) {
     sfx.click();
-    runTransition(`LOADING PROJECT_${target.id}...`, () => navigate(`/work/${target.slug}`), undefined, {
-      file: `FILE_${target.id}`,
-      category: target.category,
-      status: getProjectStatus(target),
-    });
+    runTransition(`LOADING PROJECT_${id}...`, () => navigate(`/work/${targetSlug}`));
   }
 
   return (
     <article className="project-page">
-      <span className="project-ascii-floater" aria-hidden="true">
-        <AsciiAnimated
-          art={getCategoryPlaceholderArt(project.category)}
-          behavior="breathe"
-          color="#4a4f44"
-        />
-      </span>
-
       <div className="project-path t-mono">/SYSTEM/WORK/PROJECT_{project.id}</div>
 
       <button
@@ -77,14 +64,11 @@ export default function ProjectPage() {
       </button>
 
       <header className="project-head">
-        <span className="hud-corner hud-corner--tl" aria-hidden="true" />
-        <span className="hud-corner hud-corner--tr" aria-hidden="true" />
         <span className="project-tag t-mono">PROJECT FILE</span>
         <h1 className="project-title t-display">{project.title}</h1>
         <div className="project-meta t-mono">
           <span>{project.category} / MOTION DESIGN</span>
           <span>{project.year}</span>
-          <span>{getProjectStatus(project)}</span>
         </div>
       </header>
 
@@ -118,7 +102,7 @@ export default function ProjectPage() {
         <button
           type="button"
           className="project-nav-btn"
-          onClick={() => goToProject(prev)}
+          onClick={() => goToProject(prev.slug, prev.id)}
           onMouseEnter={() => sfx.hover()}
         >
           <span className="project-nav-dir">← PREV</span>
@@ -127,7 +111,7 @@ export default function ProjectPage() {
         <button
           type="button"
           className="project-nav-btn project-nav-btn--next"
-          onClick={() => goToProject(next)}
+          onClick={() => goToProject(next.slug, next.id)}
           onMouseEnter={() => sfx.hover()}
         >
           <span className="project-nav-dir">NEXT →</span>

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSectionLabel } from "../hooks/useSectionLabel";
 import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
-import { AsciiAnimated } from "../lib/ascii";
 import "./Contact.css";
 
 interface Channel {
@@ -20,28 +19,12 @@ const CHANNELS: Channel[] = [
 ];
 
 type ChannelState = "idle" | "opening" | "established";
-type SubmitState = "idle" | "sending" | "sent";
-
-interface BriefForm {
-  name: string;
-  email: string;
-  project: string;
-  budget: string;
-  brief: string;
-}
-
-const EMPTY_FORM: BriefForm = { name: "", email: "", project: "", budget: "", brief: "" };
-
-// Small, quiet "processing" glyph for the brief-submit confirmation beat —
-// not a fake-hacker screen, just one animated beat between submit and
-// confirmation, per the brief.
-const LOADING_ART = "[ . . . ]";
 
 export default function Contact() {
-  const sectionRef = useSectionLabel<HTMLElement>("CONTRACT_MODULE");
+  const sectionRef = useSectionLabel<HTMLElement>("COMMUNICATION_MODULE");
   const [channelState, setChannelState] = useState<Record<string, ChannelState>>({});
-  const [form, setForm] = useState<BriefForm>(EMPTY_FORM);
-  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
 
   function openChannel(channel: Channel) {
     if (channelState[channel.id]) return;
@@ -60,43 +43,29 @@ export default function Contact() {
     }, 550);
   }
 
-  function updateField(key: keyof BriefForm, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  function submitBrief() {
-    if (!form.name.trim() || !form.email.trim() || !form.brief.trim()) {
+  function sendTransmission() {
+    if (!message.trim()) {
       sfx.error();
-      emitToast("ERROR: INCOMPLETE BRIEF");
+      emitToast("ERROR: EMPTY TRANSMISSION");
       return;
     }
     sfx.confirm();
-    setSubmitState("sending");
-
-    const subject = encodeURIComponent(`CONTRACT REQUEST — ${form.project || "UNTITLED"}`);
-    const body = encodeURIComponent(
-      `NAME: ${form.name}\nEMAIL: ${form.email}\nPROJECT: ${form.project}\nBUDGET: ${form.budget}\n\nBRIEF:\n${form.brief}`,
-    );
-
+    setSent(true);
+    const body = encodeURIComponent(message);
     window.setTimeout(() => {
-      setSubmitState("sent");
-      window.location.href = `mailto:contact@kvnlira.com?subject=${subject}&body=${body}`;
-    }, 900);
-
+      window.location.href = `mailto:contact@kvnlira.com?subject=TRANSMISSION%20FROM%20KVN_OS&body=${body}`;
+    }, 500);
     window.setTimeout(() => {
-      setSubmitState("idle");
-      setForm(EMPTY_FORM);
-    }, 3400);
+      setSent(false);
+      setMessage("");
+    }, 2400);
   }
 
   return (
     <section ref={sectionRef} id="contact" className="contact">
-      <span className="hud-corner hud-corner--tl" aria-hidden="true" />
-      <span className="hud-corner hud-corner--br" aria-hidden="true" />
-
       <div className="contact-header">
-        <span className="contact-comment t-mono">// CONTRACT_MODULE</span>
-        <h2 className="contact-heading t-display">INITIATE CONTRACT</h2>
+        <span className="contact-comment t-mono">// COMMUNICATION_MODULE</span>
+        <h2 className="contact-heading t-display">GET IN TOUCH</h2>
       </div>
 
       <div className="contact-grid">
@@ -130,90 +99,23 @@ export default function Contact() {
 
         <div className="contact-transmit">
           <span className="contact-label t-mono">
-            {submitState === "idle" && (
-              <>
-                BRIEF READY<span className="blink">_</span>
-              </>
-            )}
-            {submitState === "sending" && "REQUEST RECEIVED"}
-            {submitState === "sent" && "CONTRACT STATUS: PENDING"}
+            TRANSMISSION READY<span className="blink">_</span>
           </span>
-
-          {submitState === "sending" && (
-            <div className="contact-loading" aria-hidden="true">
-              <AsciiAnimated art={LOADING_ART} behavior="flicker" color="#80f425" fit="tile" cellPx={16} />
-            </div>
-          )}
-
-          {submitState === "sent" && (
-            <div className="contact-confirm t-mono">
-              CONTRACT SUBMITTED. KVN WILL RESPOND WITHIN 48H.
-            </div>
-          )}
-
-          {submitState === "idle" && (
-            <form
-              className="contact-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                submitBrief();
-              }}
-            >
-              <div className="contact-field-row">
-                <label className="contact-field">
-                  <span className="contact-field-label t-mono">NAME</span>
-                  <input
-                    className="contact-input t-mono"
-                    value={form.name}
-                    onChange={(e) => updateField("name", e.target.value)}
-                  />
-                </label>
-                <label className="contact-field">
-                  <span className="contact-field-label t-mono">EMAIL</span>
-                  <input
-                    type="email"
-                    className="contact-input t-mono"
-                    value={form.email}
-                    onChange={(e) => updateField("email", e.target.value)}
-                  />
-                </label>
-              </div>
-
-              <div className="contact-field-row">
-                <label className="contact-field">
-                  <span className="contact-field-label t-mono">PROJECT</span>
-                  <input
-                    className="contact-input t-mono"
-                    value={form.project}
-                    onChange={(e) => updateField("project", e.target.value)}
-                  />
-                </label>
-                <label className="contact-field">
-                  <span className="contact-field-label t-mono">BUDGET</span>
-                  <input
-                    className="contact-input t-mono"
-                    value={form.budget}
-                    onChange={(e) => updateField("budget", e.target.value)}
-                  />
-                </label>
-              </div>
-
-              <label className="contact-field contact-field--full">
-                <span className="contact-field-label t-mono">BRIEF</span>
-                <textarea
-                  className="contact-textarea t-mono"
-                  placeholder="DESCRIBE THE OPERATION..."
-                  value={form.brief}
-                  onChange={(e) => updateField("brief", e.target.value)}
-                  rows={5}
-                />
-              </label>
-
-              <button type="submit" className="contact-send t-mono" onMouseEnter={() => sfx.hover()}>
-                [ SUBMIT BRIEF ]
-              </button>
-            </form>
-          )}
+          <textarea
+            className="contact-textarea t-mono"
+            placeholder="TYPE MESSAGE..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={5}
+          />
+          <button
+            type="button"
+            className="contact-send t-mono"
+            onClick={sendTransmission}
+            onMouseEnter={() => sfx.hover()}
+          >
+            {sent ? "TRANSMISSION SENT." : "[ SEND TRANSMISSION ]"}
+          </button>
         </div>
       </div>
 

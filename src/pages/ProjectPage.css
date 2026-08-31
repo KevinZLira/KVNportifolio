@@ -6,28 +6,6 @@
   animation: project-in 0.5s var(--ease-system);
 }
 
-/* One sparse, low-density decorative element — the project's own category
-   glyph breathing faintly behind the content. Kept to a single instance
-   per the ASCII library's performance guardrails. */
-.project-ascii-floater {
-  position: absolute;
-  top: -4vh;
-  right: -4vw;
-  width: min(46vw, 420px);
-  height: min(46vw, 420px);
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-@media (max-width: 780px) {
-  .project-ascii-floater {
-    width: 60vw;
-    height: 60vw;
-    opacity: 0.35;
-  }
-}
-
 @keyframes project-in {
   from {
     opacity: 0;
@@ -59,8 +37,6 @@
 }
 
 .project-head {
-  position: relative;
-  padding: 4px 22px;
   margin-bottom: 2.4em;
 }
 
@@ -85,7 +61,6 @@
 }
 
 .project-media {
-  position: relative;
   aspect-ratio: 16 / 9;
   border: 1px solid var(--line-strong);
   margin-bottom: 3em;

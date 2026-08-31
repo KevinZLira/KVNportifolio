@@ -5,8 +5,6 @@ export type ProjectCategory =
   | "BRANDING"
   | "EXPERIMENTAL";
 
-export type ProjectStatus = "ARCHIVED" | "ACTIVE";
-
 export interface Project {
   id: string; // "007"
   slug: string;
@@ -17,17 +15,6 @@ export interface Project {
   tools: string[];
   description: string;
   accent: string;
-  /** Real project image, used by the Archive's ASCII image-reveal hover.
-   * Optional — no real assets exist yet, so every current entry omits it
-   * and falls back to a category-abstract ASCII placeholder instead. */
-  thumbnail?: string;
-  /** Defaults to "ARCHIVED" via getProjectStatus() below rather than
-   * back-filling every entry. */
-  status?: ProjectStatus;
-}
-
-export function getProjectStatus(project: Project): ProjectStatus {
-  return project.status ?? "ARCHIVED";
 }
 
 // PLACEHOLDER DATASET — replace with real work later.
