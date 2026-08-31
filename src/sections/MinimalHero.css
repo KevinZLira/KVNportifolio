@@ -58,7 +58,7 @@
 }
 
 .mh-logo img {
-  height: clamp(67px, 10.8vw, 134px);
+  height: clamp(100px, 16.2vw, 201px);
   width: auto;
   /* transform/filter here are the JS proximity effect above; keep the
      transition short so it reads as responsive, not laggy */
