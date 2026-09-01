@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useSystem } from "../../state/SystemContext";
 
-const TRACK_URL = "/audio/neon-static.mp3";
+const TRACK_URL = "/audio/cold-rain-noise.mp3";
 const VOLUME = 0.35;
 
 // Mounted once in AppShell (alongside SystemBar) so the <audio> element and
