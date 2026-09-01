@@ -46,18 +46,29 @@ export default function MinimalHero() {
     if (reduce || window.matchMedia("(hover: none)").matches) return;
 
     // Logo microinteraction: a very slight lift as the cursor passes near
-    // it, nothing that reads as an effect on first glance. Proximity-based
-    // rather than a plain :hover so it starts before the pointer actually
-    // touches the mark.
+    // it (proximity-based rather than a plain :hover, so it starts before
+    // the pointer actually touches the mark) plus a mini parallax drift —
+    // the logo nudges a few px toward the cursor's position within the
+    // whole section, independent of proximity. Both ride the same CSS
+    // transition (see .mh-logo img), so the drift eases rather than snaps.
+    const PARALLAX_MAX_PX = 10;
     function onMove(e: MouseEvent) {
       const logo = logoRef.current;
-      if (!logo) return;
+      const sectionEl = sectionRef.current;
+      if (!logo || !sectionEl) return;
       const rect = logo.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
       const proximity = Math.max(0, 1 - dist / 420);
-      logo.style.transform = `scale(${1 + proximity * 0.02})`;
+
+      const sectionRect = sectionEl.getBoundingClientRect();
+      const nx = (e.clientX - (sectionRect.left + sectionRect.width / 2)) / (sectionRect.width / 2);
+      const ny = (e.clientY - (sectionRect.top + sectionRect.height / 2)) / (sectionRect.height / 2);
+      const offsetX = Math.max(-1, Math.min(1, nx)) * PARALLAX_MAX_PX;
+      const offsetY = Math.max(-1, Math.min(1, ny)) * PARALLAX_MAX_PX;
+
+      logo.style.transform = `translate(${offsetX.toFixed(2)}px, ${offsetY.toFixed(2)}px) scale(${1 + proximity * 0.02})`;
       logo.style.filter = `brightness(${1 + proximity * 0.1})`;
     }
     section.addEventListener("mousemove", onMove);

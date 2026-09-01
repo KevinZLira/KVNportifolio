@@ -81,16 +81,18 @@
 .mh-logo {
   display: flex;
   will-change: transform, filter;
+  /* transform/filter here are the JS proximity + mini-parallax effect
+     below; the transition is what makes the drift ease rather than snap
+     to the cursor on every mousemove tick. */
+  transition:
+    transform 0.4s ease-out,
+    filter 0.4s ease-out;
 }
 
 .mh-logo img {
   height: clamp(120px, 11vw, 340px);
   width: auto;
-  /* transform/filter here are the JS proximity effect above; keep the
-     transition short so it reads as responsive, not laggy */
-  transition:
-    transform 0.4s ease-out,
-    filter 0.4s ease-out;
+  display: block;
 }
 
 .mh-message {
