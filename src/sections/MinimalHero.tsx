@@ -45,13 +45,27 @@ export default function MinimalHero() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || window.matchMedia("(hover: none)").matches) return;
 
-    // Logo microinteraction: a very slight lift as the cursor passes near
-    // it (proximity-based rather than a plain :hover, so it starts before
-    // the pointer actually touches the mark) plus a mini parallax drift —
-    // the logo nudges a few px toward the cursor's position within the
-    // whole section, independent of proximity. Both ride the same CSS
-    // transition (see .mh-logo img), so the drift eases rather than snaps.
-    const PARALLAX_MAX_PX = 10;
+    // Mini parallax across the whole composition: every element drifts a
+    // few px toward the cursor's position within the section, each at its
+    // own depth (bigger/foreground-feeling elements move more) — one
+    // shared mousemove listener, not one per element. The logo additionally
+    // keeps its cursor-proximity scale/glow, layered on top of its own
+    // parallax offset. All of it eases via each element's own CSS
+    // transition rather than snapping to the cursor on every tick.
+    const LOGO_DEPTH = 10;
+    const PARALLAX_TARGETS: { selector: string; depth: number }[] = [
+      { selector: ".mh-status", depth: 4 },
+      { selector: ".mh-message", depth: 7 },
+      { selector: ".mh-specialties", depth: 5 },
+      { selector: ".mh-cta", depth: 5 },
+      { selector: ".mh-detail-left", depth: 3 },
+      { selector: ".mh-detail-right", depth: 3 },
+    ];
+    const parallaxEls = PARALLAX_TARGETS.map(({ selector, depth }) => {
+      const el = section.querySelector<HTMLElement>(selector);
+      return el ? { el, depth } : null;
+    }).filter((x): x is { el: HTMLElement; depth: number } => x !== null);
+
     function onMove(e: MouseEvent) {
       const logo = logoRef.current;
       const sectionEl = sectionRef.current;
@@ -63,13 +77,15 @@ export default function MinimalHero() {
       const proximity = Math.max(0, 1 - dist / 420);
 
       const sectionRect = sectionEl.getBoundingClientRect();
-      const nx = (e.clientX - (sectionRect.left + sectionRect.width / 2)) / (sectionRect.width / 2);
-      const ny = (e.clientY - (sectionRect.top + sectionRect.height / 2)) / (sectionRect.height / 2);
-      const offsetX = Math.max(-1, Math.min(1, nx)) * PARALLAX_MAX_PX;
-      const offsetY = Math.max(-1, Math.min(1, ny)) * PARALLAX_MAX_PX;
+      const nx = Math.max(-1, Math.min(1, (e.clientX - (sectionRect.left + sectionRect.width / 2)) / (sectionRect.width / 2)));
+      const ny = Math.max(-1, Math.min(1, (e.clientY - (sectionRect.top + sectionRect.height / 2)) / (sectionRect.height / 2)));
 
-      logo.style.transform = `translate(${offsetX.toFixed(2)}px, ${offsetY.toFixed(2)}px) scale(${1 + proximity * 0.02})`;
+      logo.style.transform = `translate(${(nx * LOGO_DEPTH).toFixed(2)}px, ${(ny * LOGO_DEPTH).toFixed(2)}px) scale(${1 + proximity * 0.02})`;
       logo.style.filter = `brightness(${1 + proximity * 0.1})`;
+
+      for (const { el, depth } of parallaxEls) {
+        el.style.transform = `translate(${(nx * depth).toFixed(2)}px, ${(ny * depth).toFixed(2)}px)`;
+      }
     }
     section.addEventListener("mousemove", onMove);
     return () => section.removeEventListener("mousemove", onMove);

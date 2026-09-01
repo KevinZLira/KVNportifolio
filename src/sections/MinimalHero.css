@@ -57,6 +57,7 @@
   font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--fg-dimmer);
+  transition: transform 0.4s ease-out;
 }
 
 .mh-status-dot {
@@ -101,6 +102,7 @@
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: var(--fg);
+  transition: transform 0.4s ease-out;
 }
 
 .mh-specialties {
@@ -112,6 +114,7 @@
   font-size: 13px;
   letter-spacing: 0.24em;
   color: var(--fg-dim);
+  transition: transform 0.4s ease-out;
 }
 
 .mh-specialty {
@@ -139,6 +142,7 @@
   color: var(--fg-dim);
   text-decoration: none;
   cursor: none;
+  transition: transform 0.4s ease-out;
 }
 
 @media (max-width: 860px), (hover: none) {
@@ -182,6 +186,7 @@
   color: var(--fg-dimmer);
   opacity: 0.8;
   white-space: nowrap;
+  transition: transform 0.4s ease-out;
 }
 
 .mh-detail-left {

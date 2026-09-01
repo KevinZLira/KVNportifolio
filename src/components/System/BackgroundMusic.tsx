@@ -9,7 +9,7 @@ const VOLUME = 0.35;
 // page. Plays/pauses strictly off the same sfxOn flag the SFX:ON/OFF toggle
 // already drives; no separate on/off control of its own.
 export default function BackgroundMusic() {
-  const { sfxOn } = useSystem();
+  const { sfxOn, systemState } = useSystem();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -22,17 +22,21 @@ export default function BackgroundMusic() {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (sfxOn) {
-      // toggleSfx() runs this state update from inside a click handler, so
-      // this play() call still lands close enough to the user gesture for
-      // autoplay policies — but browsers can still reject it (e.g. a second
-      // rapid toggle racing an earlier pause), so this is swallowed rather
-      // than surfaced as an unhandled rejection.
+    // sfxOn now defaults to true, so this component's very first mount
+    // (during BOOT, no user gesture yet) would otherwise attempt play()
+    // immediately and get silently blocked by autoplay policy, with
+    // nothing to ever retry it. Gating on systemState === "ONLINE" ties
+    // the actual play() attempt to the ENTER SYSTEM click instead — a
+    // real user gesture, which autoplay policies allow.
+    if (sfxOn && systemState === "ONLINE") {
+      // Still swallowed rather than surfaced as an unhandled rejection —
+      // browsers can reject even a gesture-adjacent play() (e.g. a second
+      // rapid toggle racing an earlier pause).
       audio.play().catch(() => {});
     } else {
       audio.pause();
     }
-  }, [sfxOn]);
+  }, [sfxOn, systemState]);
 
   return <audio ref={audioRef} src={TRACK_URL} loop preload="none" />;
 }

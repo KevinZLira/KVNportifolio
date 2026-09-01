@@ -27,7 +27,7 @@ const SystemContext = createContext<SystemContextValue | null>(null);
 
 export function SystemProvider({ children }: { children: ReactNode }) {
   const [systemState, setSystemState] = useState<SystemState>("BOOT");
-  const [sfxOn, setSfxOn] = useState(false);
+  const [sfxOn, setSfxOn] = useState(true);
   const [cursorMode, setCursorMode] = useState<CursorMode>({ kind: "default" });
   const [sectionLabel, setSectionLabel] = useState("KVN_SYSTEM");
   const [pendingFilter, setPendingFilter] = useState<string | null>(null);

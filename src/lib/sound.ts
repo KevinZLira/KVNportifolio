@@ -42,7 +42,7 @@ function playTone({ freq, duration, type = "square", gain = 0.05, delay = 0, gli
   osc.stop(t0 + duration + 0.02);
 }
 
-let enabled = false;
+let enabled = true;
 export function setSfxEnabled(v: boolean) {
   enabled = v;
 }
