@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
-import { useSystem } from "../state/SystemContext";
 import { getHeroVideoSrc, shouldSkipHeroVideoAutoplay } from "../lib/heroVideoSrc";
 import "./MinimalHero.css";
 
@@ -24,17 +22,15 @@ import "./MinimalHero.css";
 // This component is mounted the whole time, even during BOOT (see
 // App.tsx's AppShell) — inert and hidden behind BootSequence's opaque
 // overlay — specifically so the video/fonts/layout are already warm by
-// the time the user enters. The entrance timeline below deliberately
-// waits for systemState to actually flip to ONLINE rather than firing on
-// mount, so the choreographed reveal still plays fresh at that moment
-// instead of having already run to completion while hidden.
+// the time the user enters. No entrance animation on the content itself
+// (removed) — everything renders in its final state immediately; the
+// logo still has a subtle cursor-proximity microinteraction.
 
 const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];
 
 export default function MinimalHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
   const logoRef = useRef<HTMLDivElement>(null);
-  const { systemState } = useSystem();
 
   // Read once at mount — not reactive, matching the matchMedia checks used
   // elsewhere in this codebase. Autoplay is skipped (poster frame only)
@@ -45,43 +41,9 @@ export default function MinimalHero() {
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section || systemState !== "ONLINE") return;
+    if (!section) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Entrance is the composition's only real flourish, so it's a single
-    // short sequence (status -> logo -> message -> specialties -> cta ->
-    // footer details) rather than several effects running at once — matches
-    // the "interface initializing" feel asked for, not a shower of tweens.
-    const ctx = gsap.context(() => {
-      gsap
-        .timeline({ delay: reduce ? 0 : 0.2 })
-        .from(".mh-status", { opacity: 0, y: 6, duration: reduce ? 0 : 0.5, ease: "power2.out" })
-        .from(
-          ".mh-logo",
-          { opacity: 0, y: 14, duration: reduce ? 0 : 0.7, ease: "power3.out" },
-          reduce ? 0 : "-=0.15",
-        )
-        .from(
-          ".mh-message",
-          { opacity: 0, y: 10, duration: reduce ? 0 : 0.6, ease: "power2.out" },
-          reduce ? 0 : "-=0.35",
-        )
-        .from(
-          ".mh-specialty",
-          { opacity: 0, y: 8, duration: reduce ? 0 : 0.5, stagger: reduce ? 0 : 0.06, ease: "power2.out" },
-          reduce ? 0 : "-=0.3",
-        )
-        .from(".mh-cta", { opacity: 0, y: 8, duration: reduce ? 0 : 0.5, ease: "power2.out" }, reduce ? 0 : "-=0.25")
-        .from(
-          ".mh-detail",
-          { opacity: 0, duration: reduce ? 0 : 0.6, stagger: reduce ? 0 : 0.1, ease: "power1.out" },
-          reduce ? 0 : "-=0.3",
-        );
-    }, section);
-
-    if (reduce || window.matchMedia("(hover: none)").matches) {
-      return () => ctx.revert();
-    }
+    if (reduce || window.matchMedia("(hover: none)").matches) return;
 
     // Logo microinteraction: a very slight lift as the cursor passes near
     // it, nothing that reads as an effect on first glance. Proximity-based
@@ -99,11 +61,8 @@ export default function MinimalHero() {
       logo.style.filter = `brightness(${1 + proximity * 0.1})`;
     }
     section.addEventListener("mousemove", onMove);
-    return () => {
-      section.removeEventListener("mousemove", onMove);
-      ctx.revert();
-    };
-  }, [sectionRef, systemState]);
+    return () => section.removeEventListener("mousemove", onMove);
+  }, [sectionRef]);
 
   return (
     <section ref={sectionRef} id="hero" className="minimal-hero">
