@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import { getHeroVideoSrc, shouldSkipHeroVideoAutoplay } from "../lib/heroVideoSrc";
 import "./MinimalHero.css";
 
 // MINIMAL_HERO — the editorial/typography-led revision of ArtifactHero.
@@ -21,18 +22,6 @@ import "./MinimalHero.css";
 
 const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];
 
-/** True when the physical monitor exceeds Full HD — screen.width/height are
- * already in CSS px, so devicePixelRatio converts them to actual device
- * pixels (a 1920x1080 CSS viewport at dpr 2, e.g. many "4K" laptop panels
- * run scaled, is genuinely a 4K panel). */
-function isHiResDisplay(): boolean {
-  if (typeof window === "undefined") return false;
-  const dpr = window.devicePixelRatio || 1;
-  const physicalWidth = window.screen.width * dpr;
-  const physicalHeight = window.screen.height * dpr;
-  return Math.max(physicalWidth, physicalHeight) > 1920;
-}
-
 export default function MinimalHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
   const logoRef = useRef<HTMLDivElement>(null);
@@ -40,13 +29,11 @@ export default function MinimalHero() {
   // Read once at mount — not reactive, matching the matchMedia checks used
   // elsewhere in this codebase. Autoplay is skipped (poster frame only)
   // under reduced motion and on coarse/narrow (mobile) viewports, where a
-  // multi-MB video loop is a poor use of a mobile data connection.
-  const skipAutoplay =
-    typeof window !== "undefined" &&
-    (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      window.matchMedia("(max-width: 640px), (hover: none)").matches);
-
-  const videoSrc = isHiResDisplay() ? "/video/hero-bg.mp4" : "/video/hero-bg-1080p.mp4";
+  // multi-MB video loop is a poor use of a mobile data connection. Shared
+  // with BootSequence's hidden warm-up video so both resolve the exact
+  // same URL/decision.
+  const skipAutoplay = shouldSkipHeroVideoAutoplay();
+  const videoSrc = getHeroVideoSrc();
 
   useEffect(() => {
     const section = sectionRef.current;

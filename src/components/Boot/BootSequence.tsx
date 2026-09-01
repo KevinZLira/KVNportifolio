@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { sfx } from "../../lib/sound";
+import { HERO_MODE } from "../../config/heroExperience";
+import { getHeroVideoSrc, shouldSkipHeroVideoAutoplay } from "../../lib/heroVideoSrc";
 import "./BootSequence.css";
 
 interface BootLine {
@@ -112,6 +114,19 @@ export default function BootSequence({ onEnter }: { onEnter: () => void }) {
       ref={rootRef}
       className={`boot-root ${exiting ? "is-exiting" : ""} ${glitchTick % 2 ? "is-glitching" : ""}`}
     >
+      {HERO_MODE === "minimal" && !shouldSkipHeroVideoAutoplay() && (
+        <video
+          className="boot-video-warmup"
+          src={getHeroVideoSrc()}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+      )}
       <div className="boot-noise" />
       <div className="boot-scanlines" />
       <div className="boot-content">
