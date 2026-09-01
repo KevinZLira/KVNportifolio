@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useSectionLabel } from "../hooks/useSectionLabel";
+import { useSystem } from "../state/SystemContext";
 import { getHeroVideoSrc, shouldSkipHeroVideoAutoplay } from "../lib/heroVideoSrc";
 import "./MinimalHero.css";
 
@@ -19,25 +20,32 @@ import "./MinimalHero.css";
 // the native 4K encode, anything at or below Full HD gets a separate
 // 1080p encode — no point shipping 4K bytes to a screen that cannot
 // render more than 1080p of it.
+//
+// This component is mounted the whole time, even during BOOT (see
+// App.tsx's AppShell) — inert and hidden behind BootSequence's opaque
+// overlay — specifically so the video/fonts/layout are already warm by
+// the time the user enters. The entrance timeline below deliberately
+// waits for systemState to actually flip to ONLINE rather than firing on
+// mount, so the choreographed reveal still plays fresh at that moment
+// instead of having already run to completion while hidden.
 
 const SPECIALTIES = ["DESIGN", "MOTION", "3D", "VIDEO"];
 
 export default function MinimalHero() {
   const sectionRef = useSectionLabel<HTMLElement>("KVN_SYSTEM");
   const logoRef = useRef<HTMLDivElement>(null);
+  const { systemState } = useSystem();
 
   // Read once at mount — not reactive, matching the matchMedia checks used
   // elsewhere in this codebase. Autoplay is skipped (poster frame only)
   // under reduced motion and on coarse/narrow (mobile) viewports, where a
-  // multi-MB video loop is a poor use of a mobile data connection. Shared
-  // with BootSequence's hidden warm-up video so both resolve the exact
-  // same URL/decision.
+  // multi-MB video loop is a poor use of a mobile data connection.
   const skipAutoplay = shouldSkipHeroVideoAutoplay();
   const videoSrc = getHeroVideoSrc();
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    if (!section || systemState !== "ONLINE") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Entrance is the composition's only real flourish, so it's a single
@@ -95,7 +103,7 @@ export default function MinimalHero() {
       section.removeEventListener("mousemove", onMove);
       ctx.revert();
     };
-  }, [sectionRef]);
+  }, [sectionRef, systemState]);
 
   return (
     <section ref={sectionRef} id="hero" className="minimal-hero">

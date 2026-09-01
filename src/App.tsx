@@ -18,6 +18,7 @@ function AppShell() {
   const { systemState, enterSystem } = useSystem();
   const [navOpen, setNavOpen] = useState(false);
   const location = useLocation();
+  const booting = systemState === "BOOT";
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -27,32 +28,41 @@ function AppShell() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  if (systemState === "BOOT") {
-    return <BootSequence onEnter={enterSystem} />;
-  }
-
   return (
-    <div className="app-shell">
-      <CustomCursor />
-      <BackgroundMusic />
-      <SystemBar onMenu={() => setNavOpen((v) => !v)} />
-      <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
-      <SystemToaster />
-      <RandomEvents />
-      {location.pathname === "/" && <ScrollHUD />}
+    <>
+      {/* Mounted at all times, even during BOOT — so the real page (assets,
+          fonts, the Hero's background video, GSAP/ScrollTrigger setup) is
+          already loaded and running by the time the user enters, instead of
+          cold-starting the moment BootSequence exits. `inert` keeps it
+          non-interactive and hidden from assistive tech while booting;
+          BootSequence's own opaque full-screen layer keeps it hidden
+          visually. Hero-mode entrance animations gate on systemState
+          themselves so they still play fresh on entry rather than firing
+          while hidden. */}
+      <div className="app-shell" inert={booting}>
+        <CustomCursor />
+        <BackgroundMusic />
+        <SystemBar onMenu={() => setNavOpen((v) => !v)} />
+        <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
+        <SystemToaster />
+        <RandomEvents />
+        {location.pathname === "/" && <ScrollHUD />}
 
-      <main className="app-main" key={location.pathname}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/work" element={<Home />} />
-          <Route path="/work/:slug" element={<ProjectPage />} />
-        </Routes>
-      </main>
+        <main className="app-main" key={location.pathname}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/work" element={<Home />} />
+            <Route path="/work/:slug" element={<ProjectPage />} />
+          </Routes>
+        </main>
 
-      <div className="crt-layer crt-scanlines" />
-      <div className="crt-layer crt-vignette" />
-      <div className="crt-layer crt-grain" />
-    </div>
+        <div className="crt-layer crt-scanlines" />
+        <div className="crt-layer crt-vignette" />
+        <div className="crt-layer crt-grain" />
+      </div>
+
+      {booting && <BootSequence onEnter={enterSystem} />}
+    </>
   );
 }
 

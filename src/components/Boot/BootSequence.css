@@ -17,19 +17,6 @@
   filter: brightness(3) blur(6px);
 }
 
-/* Invisible warm-up for the Hero's background video — same URL as the
-   real one, started here so the browser has already fetched/decoded it
-   by the time the Hero mounts. Not display:none (browsers can deprioritize
-   or skip loading an element that was never laid out at all) — instead
-   sized to nothing and fully transparent, still actively decoding. */
-.boot-video-warmup {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .boot-root.is-glitching .boot-content {
   transform: translate(1px, 0);
 }
