@@ -12,6 +12,7 @@ import RandomEvents from "./components/System/RandomEvents";
 import ScrollHUD from "./components/System/ScrollHUD";
 import Home from "./pages/Home";
 import ProjectPage from "./pages/ProjectPage";
+import Plugins from "./pages/Plugins";
 import "./App.css";
 
 function AppShell() {
@@ -53,6 +54,7 @@ function AppShell() {
             <Route path="/" element={<Home />} />
             <Route path="/work" element={<Home />} />
             <Route path="/work/:slug" element={<ProjectPage />} />
+            <Route path="/plugins" element={<Plugins />} />
           </Routes>
         </main>
 

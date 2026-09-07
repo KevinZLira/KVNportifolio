@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useClock } from "../../hooks/useClock";
 import { useSystem } from "../../state/SystemContext";
 import { sfx } from "../../lib/sound";
@@ -25,6 +26,14 @@ export default function SystemBar({ onMenu }: { onMenu: () => void }) {
         <div className="sysbar-cluster sysbar-cluster--right">
           <span className="sysbar-user">USER: VISITOR_001</span>
           <span className="sysbar-time">{time}</span>
+          <Link
+            to="/plugins"
+            className="sysbar-plugins"
+            onMouseEnter={() => sfx.hover()}
+            onClick={() => sfx.click()}
+          >
+            PLUGINS
+          </Link>
           <button
             type="button"
             className={`sysbar-sfx ${sfxOn ? "is-on" : ""}`}

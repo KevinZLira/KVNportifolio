@@ -72,6 +72,15 @@
   min-width: 6.5ch;
 }
 
+.sysbar-plugins {
+  color: var(--fg-dimmer);
+  display: none;
+}
+
+.sysbar-plugins:hover {
+  color: var(--primary);
+}
+
 .sysbar-sfx {
   color: var(--fg-dimmer);
   border: 1px solid var(--line-strong);
@@ -117,6 +126,12 @@
 
 @media (min-width: 720px) {
   .sysbar-user {
+    display: inline;
+  }
+}
+
+@media (min-width: 560px) {
+  .sysbar-plugins {
     display: inline;
   }
 }

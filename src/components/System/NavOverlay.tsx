@@ -8,8 +8,9 @@ import "./NavOverlay.css";
 interface NavItem {
   index: string;
   label: string;
-  target: string;
+  target?: string;
   filter?: string;
+  route?: string;
 }
 
 const ITEMS: NavItem[] = [
@@ -19,6 +20,7 @@ const ITEMS: NavItem[] = [
   { index: "03", label: "DESIGN", target: "work", filter: "DESIGN" },
   { index: "04", label: "ABOUT", target: "about" },
   { index: "05", label: "CONTACT", target: "contact" },
+  { index: "06", label: "PLUGINS", route: "/plugins" },
 ];
 
 export default function NavOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -53,10 +55,14 @@ export default function NavOverlay({ open, onClose }: { open: boolean; onClose: 
 
   function goTo(item: NavItem) {
     sfx.click();
-    if (item.filter) requestFilter(item.filter);
     onClose();
+    if (item.route) {
+      navigate(item.route);
+      return;
+    }
+    if (item.filter) requestFilter(item.filter);
     const scroll = () =>
-      document.getElementById(item.target)?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById(item.target!)?.scrollIntoView({ behavior: "smooth" });
     if (location.pathname !== "/") {
       navigate("/");
       window.setTimeout(scroll, 80);
