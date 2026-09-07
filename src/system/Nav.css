@@ -47,6 +47,26 @@
   color: var(--accent);
 }
 
+.kvn-nav__divider {
+  width: 1px;
+  height: 12px;
+  background: var(--line-strong);
+}
+
+.kvn-nav__link--side {
+  font-size: 11px;
+  color: var(--fg-dimmer);
+  letter-spacing: 0.14em;
+}
+
+.kvn-nav__link--side:hover {
+  color: var(--fg-dim);
+}
+
+.kvn-nav__link--side.is-active {
+  color: var(--accent);
+}
+
 .kvn-nav__link-icon {
   display: inline-block;
   width: 0;

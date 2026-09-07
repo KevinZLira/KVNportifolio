@@ -9,6 +9,7 @@ import Archive from "./pages/Archive";
 import ArchiveFile from "./pages/ArchiveFile";
 import Operations from "./pages/Operations";
 import Contract from "./pages/Contract";
+import Plugins from "./pages/Plugins";
 
 function Shell() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function Shell() {
           <Route path="/archive/:slug" element={<ArchiveFile />} />
           <Route path="/operations" element={<Operations />} />
           <Route path="/contract" element={<Contract />} />
+          <Route path="/plugins" element={<Plugins />} />
         </Routes>
       </main>
     </div>

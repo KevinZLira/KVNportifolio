@@ -29,6 +29,15 @@ export default function Nav() {
             <span className="kvn-nav__link-label">{link.label}</span>
           </NavLink>
         ))}
+
+        <span className="kvn-nav__divider" aria-hidden="true" />
+
+        <NavLink
+          to="/plugins"
+          className={({ isActive }) => `kvn-nav__link kvn-nav__link--side ${isActive ? "is-active" : ""}`}
+        >
+          <span className="kvn-nav__link-label">PLUGINS</span>
+        </NavLink>
       </nav>
     </header>
   );

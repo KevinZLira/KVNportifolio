@@ -1,0 +1,139 @@
+.plugins-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 40px) var(--edge) 120px;
+}
+
+.plugins-page__intro {
+  margin-bottom: 56px;
+}
+
+.plugins-page__lede {
+  margin: 18px 0 0;
+  max-width: 480px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--fg-dim);
+}
+
+.plugins-list {
+  border-top: 1px solid var(--line);
+}
+
+.plugin-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.plugin-row.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.plugin-row__icon {
+  color: var(--fg-dimmer);
+  padding-top: 4px;
+}
+
+.plugin-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.plugin-row__title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.plugin-row__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+}
+
+.plugin-row__tagline {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+
+.plugin-row__desc {
+  margin: 4px 0 0;
+  max-width: 520px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--fg-dimmer);
+}
+
+.plugin-row__compat {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.plugin-row__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: right;
+}
+
+.plugin-row__price {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.plugin-row__cta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  white-space: nowrap;
+  transition: color 0.25s var(--ease-out);
+}
+
+.plugin-row__cta:hover {
+  color: var(--fg);
+}
+
+.plugin-row__cta--muted {
+  color: var(--fg-dim);
+}
+
+.plugin-row__cta--muted:hover {
+  color: var(--fg);
+}
+
+@media (max-width: 720px) {
+  .plugin-row {
+    grid-template-columns: auto 1fr;
+  }
+  .plugin-row__side {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    margin-top: 8px;
+  }
+}

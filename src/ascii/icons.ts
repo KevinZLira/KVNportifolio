@@ -250,6 +250,40 @@ const contactHover: AsciiFrame[] = [
   ],
 ];
 
+const plugin: AsciiFrame[] = [
+  [
+    "┌─────────────┐",
+    "│   ┌┬┐        │",
+    "│───┤├┤   ▪ ▪ │",
+    "│   └┴┘        │",
+    "└─────────────┘",
+  ],
+  [
+    "┌─────────────┐",
+    "│   ┌┬┐        │",
+    "│───┤├┤  ▪ ▪  │",
+    "│   └┴┘        │",
+    "└─────────────┘",
+  ],
+];
+
+const pluginHover: AsciiFrame[] = [
+  [
+    "┌─────────────┐",
+    "│   ┌┬┐        │",
+    "│═══┤█├══▸▸▸  │",
+    "│   └┴┘        │",
+    "└─────────────┘",
+  ],
+  [
+    "┌─────────────┐",
+    "│   ┌┬┐        │",
+    "│═══┤█├═▸▸▸   │",
+    "│   └┴┘        │",
+    "└─────────────┘",
+  ],
+];
+
 const system: AsciiFrame[] = [
   ["[ ●───○───○ ]"],
   ["[ ○───●───○ ]"],
@@ -291,6 +325,7 @@ export const asciiIcons: Record<string, AsciiIconDef> = {
   archive: { id: "archive", label: "ARCHIVE", hoverLabel: "OPEN FILE", frames: archive, hoverFrames: archiveHover },
   contract: { id: "contract", label: "CONTRACT", hoverLabel: "SIGNED", frames: contract, hoverFrames: contractHover },
   contact: { id: "contact", label: "CONTACT", hoverLabel: "LISTENING", frames: contact, hoverFrames: contactHover },
+  plugin: { id: "plugin", label: "PLUGIN", hoverLabel: "LOADED", frames: plugin, hoverFrames: pluginHover },
   system: { id: "system", label: "SYSTEM", frames: system, hoverFrames: systemHover },
   available: { id: "available", label: "AVAILABLE", frames: available, hoverFrames: availableHover },
   locked: { id: "locked", label: "LOCKED", frames: locked, hoverFrames: lockedHover },
