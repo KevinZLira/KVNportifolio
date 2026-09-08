@@ -1,40 +1,83 @@
-export type PluginStatus = "IN_DEVELOPMENT" | "COMING_SOON";
+export type PluginStatus = "AVAILABLE" | "IN_DEVELOPMENT" | "CLASSIFIED";
 
-export interface PluginItem {
-  id: string;
-  name: string;
-  category: string;
+export interface PluginBenefit {
+  index: string;
+  title: string;
   description: string;
+}
+
+export interface PluginPrice {
+  amount: number;
+  currency: string;
+  interval?: string; // e.g. "ONE-TIME", "/MO" — omit for a flat one-time price
+}
+
+export interface Plugin {
+  id: string; // "001"
+  slug: string;
+  name: string;
+  tagline: string;
+  category: string;
   status: PluginStatus;
+  pitch: string;
+  highlights: string[]; // short "no X. no Y." friction-removal lines
+  oldWay: string[];
+  newWay: string[];
+  benefits: PluginBenefit[];
+  steps: string[];
+  demoVideo?: string;
+  demoPoster?: string;
+  price?: PluginPrice; // omit entirely until a real price is set — never invent one
+  purchaseUrl?: string; // omit until a real checkout/store link exists
   accent: string;
 }
 
-// PLACEHOLDER DATASET — replace with real plugins as they ship.
-// Structure is what matters: add/remove entries here, nothing
-// else in the app needs to change.
-export const plugins: PluginItem[] = [
-  {
-    id: "PLG_01",
-    name: "AUTO_CUT",
-    category: "EDITING AUTOMATION",
-    description: "Corte automático de timeline por picos de áudio e silêncio.",
-    status: "IN_DEVELOPMENT",
-    accent: "#6dffa8",
-  },
-  {
-    id: "PLG_02",
-    name: "GRADE_KIT",
-    category: "COLOR TOOLS",
-    description: "Presets e utilitários de color grading para fluxo rápido.",
-    status: "IN_DEVELOPMENT",
-    accent: "#ff2ec4",
-  },
-  {
-    id: "PLG_03",
-    name: "GLITCH_PACK",
-    category: "TRANSITIONS",
-    description: "Pacote de transições e efeitos de glitch/VHS prontos para uso.",
-    status: "COMING_SOON",
-    accent: "#ffd23f",
-  },
+export const featuredPlugin: Plugin = {
+  id: "001",
+  slug: "video-importer",
+  name: "KVN VIDEO IMPORTER",
+  tagline: "YOUTUBE → PREMIERE PRO",
+  category: "IMPORT UTILITY",
+  status: "AVAILABLE",
+  pitch: "Import video directly into your Premiere timeline.",
+  highlights: ["NO DOWNLOAD.", "NO MANUAL FILE HANDLING.", "NO BROKEN WORKFLOW."],
+  oldWay: [
+    "COPY LINK",
+    "OPEN DOWNLOADER",
+    "DOWNLOAD FILE",
+    "WAIT",
+    "FIND FILE",
+    "IMPORT TO PREMIERE",
+    "DRAG TO TIMELINE",
+  ],
+  newWay: ["YOUTUBE", "KVN VIDEO IMPORTER", "TIMELINE"],
+  benefits: [
+    { index: "01", title: "DIRECT", description: "YouTube → Premiere without leaving your workflow." },
+    { index: "02", title: "FAST", description: "Skip unnecessary downloads, tabs and file management." },
+    { index: "03", title: "NATIVE", description: "Built specifically around your Premiere workflow." },
+    { index: "04", title: "SIMPLE", description: "Paste. Import. Edit." },
+  ],
+  steps: ["COPY URL", "PASTE", "IMPORT", "EDIT"],
+  accent: "#80f425",
+};
+
+// Only shipped product today — the list is the extension point for every
+// plugin that ships after this one; nothing above this file needs to change.
+export const plugins: Plugin[] = [featuredPlugin];
+
+export function getPluginBySlug(slug: string) {
+  return plugins.find((p) => p.slug === slug);
+}
+
+export interface UpcomingPlugin {
+  id: string; // "002"
+  codename: string;
+  status: "IN_DEVELOPMENT" | "CLASSIFIED";
+  progress?: number; // 0..1 — only rendered for IN_DEVELOPMENT
+}
+
+// PLACEHOLDER DATASET — swap for real roadmap entries as they firm up.
+export const upcomingPlugins: UpcomingPlugin[] = [
+  { id: "002", codename: "SYSTEM_002", status: "IN_DEVELOPMENT", progress: 0.35 },
+  { id: "003", codename: "SYSTEM_003", status: "CLASSIFIED" },
 ];
