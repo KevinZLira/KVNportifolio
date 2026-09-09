@@ -99,7 +99,7 @@ export default function Plugins() {
   return (
     <article className="plugins-page">
       <div className="plugins-top t-mono">
-        <span className="plugins-path">/SYSTEM/PLUGINS</span>
+        <span className="plugins-path">/SISTEMA/PLUGINS</span>
         <button
           type="button"
           className="plugins-back"
@@ -109,7 +109,7 @@ export default function Plugins() {
           }}
           onMouseEnter={() => sfx.hover()}
         >
-          ← BACK TO SYSTEM
+          ← VOLTAR AO SISTEMA
         </button>
       </div>
 
@@ -125,7 +125,7 @@ export default function Plugins() {
 
       <footer className="plugins-footer t-mono">
         <span>KVN_SYSTEMS © 2026</span>
-        <span>END OF FILE</span>
+        <span>FIM DO ARQUIVO</span>
       </footer>
     </article>
   );

@@ -10,7 +10,7 @@ export default function SocialProof({ plugin }: { plugin: Plugin }) {
 
   return (
     <section className="signals">
-      <span className="signals-label t-mono">// FROM THE BUILD LOG</span>
+      <span className="signals-label t-mono">// DIÁRIO DE BORDO</span>
       <div className="signals-track-wrap">
         <div className="signals-track">
           {loop.map((line, i) => (

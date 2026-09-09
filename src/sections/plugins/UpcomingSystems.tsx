@@ -1,4 +1,4 @@
-import type { UpcomingPlugin } from "../../data/plugins";
+import { STATUS_LABEL_PT, type UpcomingPlugin } from "../../data/plugins";
 import { useParallax } from "../../hooks/useParallax";
 import "./UpcomingSystems.css";
 
@@ -22,9 +22,9 @@ export default function UpcomingSystems({ items }: { items: UpcomingPlugin[] }) 
       <div className="upcoming-bg" ref={bgRef} aria-hidden="true" />
 
       <div className="upcoming-inner">
-        <span className="upcoming-label t-mono">SYSTEMS IN DEVELOPMENT</span>
-        <h2 className="upcoming-heading t-display">MORE TOOLS COMING ONLINE</h2>
-        <p className="upcoming-sub t-mono">The KVN toolkit is expanding.</p>
+        <span className="upcoming-label t-mono">SISTEMAS EM DESENVOLVIMENTO</span>
+        <h2 className="upcoming-heading t-display">MAIS FERRAMENTAS CHEGANDO</h2>
+        <p className="upcoming-sub t-mono">O conjunto de ferramentas KVN está crescendo.</p>
 
         <div className="upcoming-list">
           {items.map((item) => (
@@ -36,9 +36,7 @@ export default function UpcomingSystems({ items }: { items: UpcomingPlugin[] }) 
               {item.status === "IN_DEVELOPMENT" && item.progress !== undefined && (
                 <ProgressBar progress={item.progress} />
               )}
-              <span className="upcoming-card-status t-mono">
-                STATUS: {item.status.replace("_", " ")}
-              </span>
+              <span className="upcoming-card-status t-mono">STATUS: {STATUS_LABEL_PT[item.status]}</span>
             </div>
           ))}
         </div>

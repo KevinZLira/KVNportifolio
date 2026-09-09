@@ -1,4 +1,4 @@
-import type { Plugin } from "../../data/plugins";
+import { getPurchaseHref, type Plugin } from "../../data/plugins";
 import { useParallax } from "../../hooks/useParallax";
 import { sfx } from "../../lib/sound";
 import "./PluginHero.css";
@@ -13,26 +13,38 @@ export default function PluginHero({ plugin }: { plugin: Plugin }) {
       <div className="plugin-hero-content">
         <span className="plugin-hero-tag t-mono">KVN / PLUGINS</span>
         <h1 className="plugin-hero-title t-display">
-          TOOLS FOR PEOPLE
+          FERRAMENTAS PARA
           <br />
-          WHO MAKE THINGS.
+          QUEM CRIA.
         </h1>
         <p className="plugin-hero-sub t-mono">
-          Professional utilities built to remove friction from creative workflows.
+          Utilitários profissionais feitos para remover fricção do seu fluxo criativo.
         </p>
 
-        <a
-          href="#spotlight"
-          className="plugin-hero-available t-mono"
-          onMouseEnter={() => sfx.hover()}
-          onClick={() => sfx.click()}
-        >
-          <span className="plugin-hero-dot" aria-hidden="true" />
-          AVAILABLE: {plugin.name}
-          <span className="plugin-hero-arrow" aria-hidden="true">
-            ↓
-          </span>
-        </a>
+        <div className="plugin-hero-actions">
+          <a
+            href="#spotlight"
+            className="plugin-hero-available t-mono"
+            onMouseEnter={() => sfx.hover()}
+            onClick={() => sfx.click()}
+          >
+            <span className="plugin-hero-dot" aria-hidden="true" />
+            DISPONÍVEL: {plugin.name}
+            <span className="plugin-hero-arrow" aria-hidden="true">
+              ↓
+            </span>
+          </a>
+
+          <a
+            href={getPurchaseHref(plugin)}
+            className="plugin-hero-buy t-mono"
+            onMouseEnter={() => sfx.hover()}
+            onClick={() => sfx.confirm()}
+          >
+            COMPRAR AGORA
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </section>
   );

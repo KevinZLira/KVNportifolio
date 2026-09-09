@@ -5,7 +5,7 @@ import "./PluginBenefits.css";
 export default function PluginBenefits({ plugin }: { plugin: Plugin }) {
   return (
     <section className="benefits">
-      <span className="benefits-eyebrow t-mono">// WHY IT'S DIFFERENT</span>
+      <span className="benefits-eyebrow t-mono">// POR QUE É DIFERENTE</span>
       <div className="benefits-grid">
         {plugin.benefits.map((b) => (
           <div key={b.index} className="benefit" onMouseEnter={() => sfx.hover()}>

@@ -1,4 +1,5 @@
-import type { Plugin } from "../../data/plugins";
+import { formatPriceAmount, getPurchaseHref, STATUS_LABEL_PT, type Plugin } from "../../data/plugins";
+import { sfx } from "../../lib/sound";
 import "./ProductSpotlight.css";
 
 export default function ProductSpotlight({ plugin }: { plugin: Plugin }) {
@@ -6,8 +7,7 @@ export default function ProductSpotlight({ plugin }: { plugin: Plugin }) {
     <section id="spotlight" className="spotlight">
       <div className="spotlight-frame">
         <span className="spotlight-status t-mono">
-          <span className="spotlight-status-dot" aria-hidden="true" />
-          [ {plugin.status === "AVAILABLE" ? "AVAILABLE" : plugin.status.replace("_", " ")} ]
+          <span className="spotlight-status-dot" aria-hidden="true" />[ {STATUS_LABEL_PT[plugin.status]} ]
         </span>
 
         <h2 className="spotlight-name t-display">{plugin.name}</h2>
@@ -20,15 +20,41 @@ export default function ProductSpotlight({ plugin }: { plugin: Plugin }) {
           ))}
         </ul>
 
+        {plugin.price && (
+          <div className="spotlight-buy">
+            <div className="spotlight-price t-mono">
+              {plugin.price.originalAmount && (
+                <span className="spotlight-price-was">
+                  DE {plugin.price.currency} {formatPriceAmount(plugin.price.originalAmount)}
+                </span>
+              )}
+              <span className="spotlight-price-now">
+                {plugin.price.originalAmount ? "POR " : ""}
+                {plugin.price.currency} {formatPriceAmount(plugin.price.amount)}
+                {plugin.price.interval && <span className="spotlight-price-interval">{plugin.price.interval}</span>}
+              </span>
+            </div>
+            <a
+              href={getPurchaseHref(plugin)}
+              className="spotlight-cta t-mono"
+              onMouseEnter={() => sfx.hover()}
+              onClick={() => sfx.confirm()}
+            >
+              COMPRAR AGORA
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        )}
+
         <div className="spotlight-spec t-mono">
           <span>
             FILE_<b>{plugin.id}</b>
           </span>
           <span>
-            CATEGORY: <b>{plugin.category}</b>
+            CATEGORIA: <b>{plugin.category}</b>
           </span>
           <span>
-            STATUS: <b>{plugin.status.replace("_", " ")}</b>
+            STATUS: <b>{STATUS_LABEL_PT[plugin.status]}</b>
           </span>
         </div>
       </div>

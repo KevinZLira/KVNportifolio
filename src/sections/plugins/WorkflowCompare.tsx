@@ -9,11 +9,11 @@ export default function WorkflowCompare({ plugin }: { plugin: Plugin }) {
     <section className="workflow">
       <div className="workflow-bg" ref={bgRef} aria-hidden="true" />
 
-      <span className="workflow-eyebrow t-mono">// THE PROBLEM → THE FIX</span>
+      <span className="workflow-eyebrow t-mono">// O PROBLEMA → A SOLUÇÃO</span>
 
       <div className="workflow-inner">
         <div className="workflow-col workflow-col--old">
-          <span className="workflow-label t-mono">THE OLD WAY</span>
+          <span className="workflow-label t-mono">O JEITO ANTIGO</span>
           <ol className="workflow-chain">
             {plugin.oldWay.map((step, i) => (
               <li key={step} className="workflow-step workflow-step--old">
@@ -33,7 +33,7 @@ export default function WorkflowCompare({ plugin }: { plugin: Plugin }) {
         </span>
 
         <div className="workflow-col workflow-col--new">
-          <span className="workflow-label workflow-label--accent t-mono">THE KVN WAY</span>
+          <span className="workflow-label workflow-label--accent t-mono">O JEITO KVN</span>
           <ol className="workflow-chain">
             {plugin.newWay.map((step, i) => (
               <li key={step} className="workflow-step workflow-step--new">
@@ -49,7 +49,7 @@ export default function WorkflowCompare({ plugin }: { plugin: Plugin }) {
         </div>
       </div>
 
-      <p className="workflow-tagline t-display">LESS FRICTION. MORE EDITING.</p>
+      <p className="workflow-tagline t-display">MENOS FRICÇÃO. MAIS EDIÇÃO.</p>
     </section>
   );
 }

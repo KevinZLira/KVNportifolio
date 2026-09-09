@@ -28,8 +28,14 @@
   margin: 0.4em 0;
 }
 
+.purchase-price-was {
+  font-size: 14px;
+  color: var(--fg-dimmer);
+  text-decoration: line-through;
+}
+
 .purchase-price-amount {
-  font-size: 22px;
+  font-size: 26px;
   color: var(--fg);
 }
 

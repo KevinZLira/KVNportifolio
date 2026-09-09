@@ -4,7 +4,7 @@ import "./HowItWorks.css";
 export default function HowItWorks({ plugin }: { plugin: Plugin }) {
   return (
     <section className="how">
-      <span className="how-label t-mono">// HOW IT WORKS</span>
+      <span className="how-label t-mono">// COMO FUNCIONA</span>
       <div className="how-steps">
         {plugin.steps.map((step, i) => (
           <div key={step} className="how-step">

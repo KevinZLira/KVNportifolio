@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Plugin } from "../../data/plugins";
+import { STATUS_LABEL_PT, type Plugin } from "../../data/plugins";
 import "./PluginDemo.css";
 
 function ProductLoader() {
@@ -29,7 +29,7 @@ function ProductLoader() {
   return (
     <div ref={ref} className="demo-loader t-mono">
       <div className="demo-loader-row">
-        <span>{loaded ? "PRODUCT ONLINE" : "LOADING PRODUCT..."}</span>
+        <span>{loaded ? "PRODUTO ONLINE" : "CARREGANDO PRODUTO..."}</span>
         <span>{loaded ? "100%" : "0%"}</span>
       </div>
       <div className="demo-loader-track">
@@ -45,10 +45,10 @@ export default function PluginDemo({ plugin }: { plugin: Plugin }) {
   return (
     <section className="demo">
       <div className="demo-briefing t-mono">
-        <span>FIELD TEST // {plugin.id}</span>
+        <span>TESTE DE CAMPO // {plugin.id}</span>
         <span className="demo-briefing-name t-display">{plugin.name}</span>
         <span className="demo-briefing-status">
-          {plugin.status === "AVAILABLE" ? "OPERATIONAL" : plugin.status.replace("_", " ")}
+          {plugin.status === "AVAILABLE" ? "OPERACIONAL" : STATUS_LABEL_PT[plugin.status]}
         </span>
       </div>
 
@@ -69,7 +69,7 @@ export default function PluginDemo({ plugin }: { plugin: Plugin }) {
             <span className="demo-placeholder-corner demo-placeholder-corner--tl" aria-hidden="true" />
             <span className="demo-placeholder-corner demo-placeholder-corner--br" aria-hidden="true" />
             <span className="demo-placeholder-line">DEMO_FEED: OFFLINE</span>
-            <span className="demo-placeholder-sub">FOOTAGE PENDING UPLOAD</span>
+            <span className="demo-placeholder-sub">MATERIAL AGUARDANDO UPLOAD</span>
           </div>
         )}
       </div>

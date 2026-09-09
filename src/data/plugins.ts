@@ -1,5 +1,11 @@
 export type PluginStatus = "AVAILABLE" | "IN_DEVELOPMENT" | "CLASSIFIED";
 
+export const STATUS_LABEL_PT: Record<PluginStatus, string> = {
+  AVAILABLE: "DISPONÍVEL",
+  IN_DEVELOPMENT: "EM DESENVOLVIMENTO",
+  CLASSIFIED: "CLASSIFICADO",
+};
+
 export interface PluginBenefit {
   index: string;
   title: string;
@@ -9,7 +15,8 @@ export interface PluginBenefit {
 export interface PluginPrice {
   amount: number;
   currency: string;
-  interval?: string; // e.g. "ONE-TIME", "/MO" — omit for a flat one-time price
+  originalAmount?: number; // set for a "DE X POR Y" promo — omit for a flat price
+  interval?: string; // e.g. "/MÊS" — omit for a one-time price
 }
 
 export interface Plugin {
@@ -20,7 +27,7 @@ export interface Plugin {
   category: string;
   status: PluginStatus;
   pitch: string;
-  highlights: string[]; // short "no X. no Y." friction-removal lines
+  highlights: string[]; // short "sem X. sem Y." friction-removal lines
   oldWay: string[];
   newWay: string[];
   benefits: PluginBenefit[];
@@ -38,35 +45,36 @@ export const featuredPlugin: Plugin = {
   slug: "video-importer",
   name: "KVN VIDEO IMPORTER",
   tagline: "YOUTUBE → PREMIERE PRO",
-  category: "IMPORT UTILITY",
+  category: "UTILITÁRIO DE IMPORTAÇÃO",
   status: "AVAILABLE",
-  pitch: "Import video directly into your Premiere timeline.",
-  highlights: ["NO DOWNLOAD.", "NO MANUAL FILE HANDLING.", "NO BROKEN WORKFLOW."],
+  pitch: "Importe vídeos direto para a timeline do Premiere.",
+  highlights: ["SEM DOWNLOAD.", "SEM MANUSEIO MANUAL DE ARQUIVOS.", "SEM QUEBRAR O FLUXO DE TRABALHO."],
   oldWay: [
-    "COPY LINK",
-    "OPEN DOWNLOADER",
-    "DOWNLOAD FILE",
-    "WAIT",
-    "FIND FILE",
-    "IMPORT TO PREMIERE",
-    "DRAG TO TIMELINE",
+    "COPIAR LINK",
+    "ABRIR DOWNLOADER",
+    "BAIXAR ARQUIVO",
+    "ESPERAR",
+    "ENCONTRAR ARQUIVO",
+    "IMPORTAR PRO PREMIERE",
+    "ARRASTAR PRA TIMELINE",
   ],
   newWay: ["YOUTUBE", "KVN VIDEO IMPORTER", "TIMELINE"],
   benefits: [
-    { index: "01", title: "DIRECT", description: "YouTube → Premiere without leaving your workflow." },
-    { index: "02", title: "FAST", description: "Skip unnecessary downloads, tabs and file management." },
-    { index: "03", title: "NATIVE", description: "Built specifically around your Premiere workflow." },
-    { index: "04", title: "SIMPLE", description: "Paste. Import. Edit." },
+    { index: "01", title: "DIRETO", description: "Do YouTube pro Premiere sem sair do seu fluxo de trabalho." },
+    { index: "02", title: "RÁPIDO", description: "Pule downloads, abas e gerenciamento de arquivos desnecessários." },
+    { index: "03", title: "NATIVO", description: "Construído especificamente para o seu fluxo no Premiere." },
+    { index: "04", title: "SIMPLES", description: "Cole. Importe. Edite." },
   ],
-  steps: ["COPY URL", "PASTE", "IMPORT", "EDIT"],
+  steps: ["COPIAR URL", "COLAR", "IMPORTAR", "EDITAR"],
   signals: [
-    "BUILT BECAUSE TAB-SWITCHING MID-EDIT SHOULDN'T BE A STEP.",
-    "ONE PASTE. ONE IMPORT. BACK TO THE TIMELINE.",
-    "NO DOWNLOAD FOLDER. NO ORPHANED FILES.",
-    "MADE FOR THE WORKFLOW, NOT AROUND IT.",
-    "LESS FRICTION BETWEEN FOOTAGE AND EDIT.",
-    "SHIPPED BY SOMEONE WHO EDITS FOR A LIVING.",
+    "CRIADO PORQUE TROCAR DE ABA NO MEIO DA EDIÇÃO NÃO DEVERIA SER UMA ETAPA.",
+    "UM COLAR. UM IMPORT. DE VOLTA PRA TIMELINE.",
+    "SEM PASTA DE DOWNLOADS. SEM ARQUIVO ÓRFÃO.",
+    "FEITO PARA O FLUXO DE TRABALHO, NÃO AO REDOR DELE.",
+    "MENOS FRICÇÃO ENTRE O MATERIAL E A EDIÇÃO.",
+    "FEITO POR QUEM VIVE DE EDITAR VÍDEO.",
   ],
+  price: { amount: 27.9, currency: "R$", originalAmount: 59.9 },
   accent: "#80f425",
 };
 
@@ -76,6 +84,19 @@ export const plugins: Plugin[] = [featuredPlugin];
 
 export function getPluginBySlug(slug: string) {
   return plugins.find((p) => p.slug === slug);
+}
+
+export function formatPriceAmount(amount: number): string {
+  return amount.toFixed(2).replace(".", ",");
+}
+
+// No purchaseUrl is configured yet (no checkout link exists) — every CTA
+// falls back to a mailto so the button is never a dead click. Swap this for
+// the real checkout link the moment one exists; nothing else needs to change.
+export function getPurchaseHref(plugin: Plugin): string {
+  return (
+    plugin.purchaseUrl ?? `mailto:contact@kvnlira.com?subject=${encodeURIComponent(`${plugin.name} — COMPRA`)}`
+  );
 }
 
 export interface UpcomingPlugin {
