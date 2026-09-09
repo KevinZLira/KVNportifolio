@@ -1,5 +1,5 @@
 .purchase {
-  padding: 14vh 6vw;
+  padding: clamp(72px, 10vh, 110px) 6vw;
   border-top: 1px solid var(--line-strong);
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@
 
 @media (max-width: 640px) {
   .purchase {
-    padding: 10vh 6vw;
+    padding: clamp(48px, 8vh, 72px) 6vw;
   }
   .purchase-cta {
     width: 100%;

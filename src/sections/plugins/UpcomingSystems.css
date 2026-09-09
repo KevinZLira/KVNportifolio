@@ -1,6 +1,6 @@
 .upcoming {
   position: relative;
-  padding: 12vh 6vw;
+  padding: clamp(64px, 9vh, 100px) 6vw;
   border-top: 1px solid var(--line-strong);
   overflow: hidden;
 }
@@ -94,6 +94,6 @@
 
 @media (max-width: 640px) {
   .upcoming {
-    padding: 8vh 6vw;
+    padding: clamp(40px, 8vh, 64px) 6vw;
   }
 }

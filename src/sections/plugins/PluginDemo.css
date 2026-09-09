@@ -1,5 +1,5 @@
 .demo {
-  padding: 12vh 6vw;
+  padding: clamp(64px, 9vh, 100px) 6vw;
   border-top: 1px solid var(--line-strong);
   max-width: 1100px;
   margin: 0 auto;
@@ -124,6 +124,6 @@
 
 @media (max-width: 640px) {
   .demo {
-    padding: 8vh 6vw;
+    padding: clamp(40px, 8vh, 64px) 6vw;
   }
 }

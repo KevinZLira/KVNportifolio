@@ -19,6 +19,18 @@ export default function ProductSpotlight({ plugin }: { plugin: Plugin }) {
             <li key={point}>{point}</li>
           ))}
         </ul>
+
+        <div className="spotlight-spec t-mono">
+          <span>
+            FILE_<b>{plugin.id}</b>
+          </span>
+          <span>
+            CATEGORY: <b>{plugin.category}</b>
+          </span>
+          <span>
+            STATUS: <b>{plugin.status.replace("_", " ")}</b>
+          </span>
+        </div>
       </div>
     </section>
   );

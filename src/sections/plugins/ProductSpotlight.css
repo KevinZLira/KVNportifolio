@@ -1,6 +1,6 @@
 .spotlight {
   position: relative;
-  padding: 10vh 6vw;
+  padding: clamp(56px, 8vh, 96px) 6vw;
   display: flex;
   justify-content: center;
 }
@@ -8,7 +8,7 @@
 .spotlight-frame {
   position: relative;
   width: 100%;
-  max-width: 760px;
+  max-width: 920px;
   background: var(--bg-050);
   border: 1px solid var(--line-strong);
   border-top: 2px solid var(--primary);
@@ -91,6 +91,23 @@
   background: var(--primary);
 }
 
+.spotlight-spec {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-top: 1.8em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--fg-dimmer);
+}
+
+.spotlight-spec b {
+  color: var(--fg-dim);
+  font-weight: 400;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spotlight-status-dot {
     animation: none;
@@ -99,6 +116,6 @@
 
 @media (max-width: 640px) {
   .spotlight {
-    padding: 8vh 6vw;
+    padding: clamp(40px, 8vh, 64px) 6vw;
   }
 }

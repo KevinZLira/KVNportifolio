@@ -9,6 +9,8 @@ export default function WorkflowCompare({ plugin }: { plugin: Plugin }) {
     <section className="workflow">
       <div className="workflow-bg" ref={bgRef} aria-hidden="true" />
 
+      <span className="workflow-eyebrow t-mono">// THE PROBLEM → THE FIX</span>
+
       <div className="workflow-inner">
         <div className="workflow-col workflow-col--old">
           <span className="workflow-label t-mono">THE OLD WAY</span>
@@ -25,6 +27,10 @@ export default function WorkflowCompare({ plugin }: { plugin: Plugin }) {
             ))}
           </ol>
         </div>
+
+        <span className="workflow-connector" aria-hidden="true">
+          →
+        </span>
 
         <div className="workflow-col workflow-col--new">
           <span className="workflow-label workflow-label--accent t-mono">THE KVN WAY</span>

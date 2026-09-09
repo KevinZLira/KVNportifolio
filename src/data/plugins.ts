@@ -25,6 +25,7 @@ export interface Plugin {
   newWay: string[];
   benefits: PluginBenefit[];
   steps: string[];
+  signals: string[]; // short build-log lines for the horizontal ticker — creator's voice, not customer quotes
   demoVideo?: string;
   demoPoster?: string;
   price?: PluginPrice; // omit entirely until a real price is set — never invent one
@@ -58,6 +59,14 @@ export const featuredPlugin: Plugin = {
     { index: "04", title: "SIMPLE", description: "Paste. Import. Edit." },
   ],
   steps: ["COPY URL", "PASTE", "IMPORT", "EDIT"],
+  signals: [
+    "BUILT BECAUSE TAB-SWITCHING MID-EDIT SHOULDN'T BE A STEP.",
+    "ONE PASTE. ONE IMPORT. BACK TO THE TIMELINE.",
+    "NO DOWNLOAD FOLDER. NO ORPHANED FILES.",
+    "MADE FOR THE WORKFLOW, NOT AROUND IT.",
+    "LESS FRICTION BETWEEN FOOTAGE AND EDIT.",
+    "SHIPPED BY SOMEONE WHO EDITS FOR A LIVING.",
+  ],
   accent: "#80f425",
 };
 

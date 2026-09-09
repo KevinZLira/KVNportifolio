@@ -11,6 +11,7 @@ import WorkflowCompare from "../sections/plugins/WorkflowCompare";
 import PluginBenefits from "../sections/plugins/PluginBenefits";
 import PluginDemo from "../sections/plugins/PluginDemo";
 import HowItWorks from "../sections/plugins/HowItWorks";
+import SocialProof from "../sections/plugins/SocialProof";
 import PurchaseCTA from "../sections/plugins/PurchaseCTA";
 import UpcomingSystems from "../sections/plugins/UpcomingSystems";
 import "./Plugins.css";
@@ -118,6 +119,7 @@ export default function Plugins() {
       <PluginBenefits plugin={plugin} />
       <PluginDemo plugin={plugin} />
       <HowItWorks plugin={plugin} />
+      <SocialProof plugin={plugin} />
       <PurchaseCTA plugin={plugin} />
       <UpcomingSystems items={upcomingPlugins} />
 
