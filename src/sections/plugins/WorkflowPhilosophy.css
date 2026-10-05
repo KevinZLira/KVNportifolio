@@ -1,0 +1,88 @@
+.phil {
+  padding: clamp(56px, 8vh, 96px) 6vw;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.phil-heading {
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 1em;
+}
+
+.phil-lines {
+  max-width: 420px;
+  margin: 0 auto 3em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phil-lines p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg-dim);
+}
+
+.phil-examples {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.phil-example {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(24px, 3.4vw, 36px);
+  background: var(--bg-050);
+}
+
+.phil-example-name {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dimmer);
+}
+
+.phil-example-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.phil-example-label {
+  flex-shrink: 0;
+  width: 56px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dimmer);
+}
+
+.phil-example-label--accent {
+  color: var(--primary);
+}
+
+.phil-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--fg-dim);
+}
+
+.phil-chain-arrow {
+  color: var(--line-strong);
+  margin-left: 6px;
+}
+
+@media (max-width: 720px) {
+  .phil-examples {
+    grid-template-columns: 1fr;
+  }
+}

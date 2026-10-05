@@ -1,0 +1,67 @@
+.pain {
+  padding: clamp(56px, 8vh, 96px) 6vw;
+  border-bottom: 1px solid var(--line-strong);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pain-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  margin: 0 0 1.4em;
+  max-width: 20ch;
+}
+
+.pain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 0 2em;
+  border-top: 1px solid var(--line);
+}
+
+.pain-item {
+  position: relative;
+  padding: 14px 0 14px 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-dim);
+  border-bottom: 1px solid var(--line);
+}
+
+.pain-item::before {
+  content: "×";
+  position: absolute;
+  left: 0;
+  top: 13px;
+  color: var(--fg-dimmer);
+  font-size: 14px;
+}
+
+.pain-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--fg);
+  margin: 0 0 0.6em;
+}
+
+.pain-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2.4em;
+  padding-top: 1.6em;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dimmer);
+}
+
+.pain-flow-accent {
+  color: var(--primary);
+}
+
+.pain-flow-arrow {
+  color: var(--line-strong);
+}

@@ -1,113 +1,193 @@
-export type PluginStatus = "AVAILABLE" | "IN_DEVELOPMENT" | "CLASSIFIED";
-
-export const STATUS_LABEL_PT: Record<PluginStatus, string> = {
-  AVAILABLE: "DISPONÍVEL",
-  IN_DEVELOPMENT: "EM DESENVOLVIMENTO",
-  CLASSIFIED: "CLASSIFICADO",
-};
-
-export interface PluginBenefit {
-  index: string;
-  title: string;
-  description: string;
-}
+// Catalog data for the Plugins sales page. Prices below are fixed by the
+// product owner and must never be derived/rounded differently — they are
+// literal values, not computed from anything else.
+//
+// No testimonials, review counts, user counts, refund policy, Premiere
+// version compatibility, install difficulty, delivery process or
+// multi-device policy are invented here. Anywhere one of those would
+// normally go, the copy either omits the claim entirely or carries an
+// explicit "A DEFINIR" placeholder for Kevin to fill in later.
 
 export interface PluginPrice {
   amount: number;
-  currency: string;
-  originalAmount?: number; // set for a "DE X POR Y" promo — omit for a flat price
-  interval?: string; // e.g. "/MÊS" — omit for a one-time price
+  currency: string; // "R$"
 }
 
-export interface Plugin {
-  id: string; // "001"
-  slug: string;
-  name: string;
-  tagline: string;
-  category: string;
-  status: PluginStatus;
+export interface PluginItem {
+  id: string; // "01"
+  slug: string; // "copy-pasta"
+  badge: string; // "PLUGIN #01"
+  name: string; // "Copy & Pasta"
+  headline: string;
   pitch: string;
-  highlights: string[]; // short "sem X. sem Y." friction-removal lines
+  platforms?: string[]; // only the YouTube Importer has these
+  explainerSteps: string[];
+  benefits: string[];
   oldWay: string[];
   newWay: string[];
-  benefits: PluginBenefit[];
-  steps: string[];
-  signals: string[]; // short build-log lines for the horizontal ticker — creator's voice, not customer quotes
+  demoCaption: string;
   demoVideo?: string;
   demoPoster?: string;
-  price?: PluginPrice; // omit entirely until a real price is set — never invent one
-  purchaseUrl?: string; // omit until a real checkout/store link exists
+  idealFor: string[];
+  price: PluginPrice;
+  purchaseUrl?: string; // no checkout link exists yet — every CTA falls back to mailto
   accent: string;
+  mockup: "paste" | "link";
 }
 
-export const featuredPlugin: Plugin = {
-  id: "001",
-  slug: "video-importer",
-  name: "KVN VIDEO IMPORTER",
-  tagline: "YOUTUBE → PREMIERE PRO",
-  category: "UTILITÁRIO DE IMPORTAÇÃO",
-  status: "AVAILABLE",
-  pitch: "Importe vídeos direto para a timeline do Premiere.",
-  highlights: ["SEM DOWNLOAD.", "SEM MANUSEIO MANUAL DE ARQUIVOS.", "SEM QUEBRAR O FLUXO DE TRABALHO."],
-  oldWay: [
-    "COPIAR LINK",
-    "ABRIR DOWNLOADER",
-    "BAIXAR ARQUIVO",
-    "ESPERAR",
-    "ENCONTRAR ARQUIVO",
-    "IMPORTAR PRO PREMIERE",
-    "ARRASTAR PRA TIMELINE",
-  ],
-  newWay: ["YOUTUBE", "KVN VIDEO IMPORTER", "TIMELINE"],
+export const copyPasta: PluginItem = {
+  id: "01",
+  slug: "copy-pasta",
+  badge: "PLUGIN #01",
+  name: "Copy & Pasta",
+  headline: "Copie uma imagem. Cole no Premiere.",
+  pitch:
+    "O Copy & Pasta permite copiar imagens diretamente para o Premiere Pro sem precisar salvar o arquivo no computador antes.",
+  explainerSteps: ["Encontrou uma referência no navegador?", "Copie.", "Volte para o Premiere.", "Cole.", "Pronto."],
   benefits: [
-    { index: "01", title: "DIRETO", description: "Do YouTube pro Premiere sem sair do seu fluxo de trabalho." },
-    { index: "02", title: "RÁPIDO", description: "Pule downloads, abas e gerenciamento de arquivos desnecessários." },
-    { index: "03", title: "NATIVO", description: "Construído especificamente para o seu fluxo no Premiere." },
-    { index: "04", title: "SIMPLES", description: "Cole. Importe. Edite." },
+    "Cole imagens diretamente no Premiere",
+    "Não precisa salvar arquivos manualmente",
+    "Menos arquivos temporários no computador",
+    "Workflow muito mais rápido",
+    "Ideal para referências, thumbnails, memes, screenshots e assets rápidos",
   ],
-  steps: ["COPIAR URL", "COLAR", "IMPORTAR", "EDITAR"],
-  signals: [
-    "CRIADO PORQUE TROCAR DE ABA NO MEIO DA EDIÇÃO NÃO DEVERIA SER UMA ETAPA.",
-    "UM COLAR. UM IMPORT. DE VOLTA PRA TIMELINE.",
-    "SEM PASTA DE DOWNLOADS. SEM ARQUIVO ÓRFÃO.",
-    "FEITO PARA O FLUXO DE TRABALHO, NÃO AO REDOR DELE.",
-    "MENOS FRICÇÃO ENTRE O MATERIAL E A EDIÇÃO.",
-    "FEITO POR QUEM VIVE DE EDITAR VÍDEO.",
+  oldWay: ["BROWSER", "DOWNLOAD", "PASTA", "LOCALIZAR ARQUIVO", "PREMIERE", "IMPORTAR"],
+  newWay: ["COPY", "PREMIERE"],
+  demoCaption: "Copiar → Colar → Pronto.",
+  idealFor: [
+    "Trabalha com referências visuais",
+    "Usa screenshots e imagens durante a edição",
+    "Precisa colocar imagens rapidamente no Premiere",
+    "Quer eliminar downloads desnecessários",
   ],
-  price: { amount: 27.9, currency: "R$", originalAmount: 59.9 },
+  price: { amount: 27.9, currency: "R$" },
   accent: "#80f425",
+  mockup: "paste",
 };
 
-// Only shipped product today — the list is the extension point for every
-// plugin that ships after this one; nothing above this file needs to change.
-export const plugins: Plugin[] = [featuredPlugin];
+export const youtubeImporter: PluginItem = {
+  id: "02",
+  slug: "youtube-importer",
+  badge: "PLUGIN #02",
+  name: "YouTube Importer",
+  headline: "Um link. O arquivo está no seu Premiere.",
+  pitch: "O YouTube Importer permite importar conteúdos diretamente para o Premiere Pro simplesmente colando o link.",
+  platforms: ["YouTube", "TikTok", "Instagram"],
+  explainerSteps: [
+    "Encontrou um vídeo ou uma música que precisa usar na edição?",
+    "Copie o link.",
+    "Cole no plugin.",
+    "Importe.",
+  ],
+  benefits: [
+    "Importação através de link",
+    "YouTube",
+    "TikTok",
+    "Instagram",
+    "Menos downloads manuais",
+    "Menos troca de janela",
+    "Workflow mais rápido",
+    "Feito para quem vive dentro do Premiere",
+  ],
+  oldWay: ["YOUTUBE / TIKTOK / INSTAGRAM", "DOWNLOAD", "PASTA", "PREMIERE", "IMPORTAR"],
+  newWay: ["LINK", "PLUGIN", "PREMIERE"],
+  demoCaption: "Copiar link → Colar → Importar.",
+  idealFor: [
+    "Trabalha constantemente com vídeos online",
+    "Usa YouTube, TikTok ou Instagram como fonte",
+    "Precisa importar músicas e vídeos",
+    "Quer reduzir etapas no workflow",
+  ],
+  price: { amount: 27.9, currency: "R$" },
+  accent: "#80f425",
+  mockup: "link",
+};
+
+export const plugins: PluginItem[] = [copyPasta, youtubeImporter];
 
 export function getPluginBySlug(slug: string) {
   return plugins.find((p) => p.slug === slug);
+}
+
+export interface ComboOffer {
+  name: string;
+  price: number;
+  items: PluginItem[];
+  purchaseUrl?: string;
+}
+
+export const combo: ComboOffer = {
+  name: "Copy & Pasta + YouTube Importer",
+  price: 47.9,
+  items: [copyPasta, youtubeImporter],
+};
+
+export function getComboTotal(): number {
+  return combo.items.reduce((sum, p) => sum + p.price.amount, 0);
+}
+
+export function getComboSavings(): number {
+  return getComboTotal() - combo.price;
 }
 
 export function formatPriceAmount(amount: number): string {
   return amount.toFixed(2).replace(".", ",");
 }
 
-// No purchaseUrl is configured yet (no checkout link exists) — every CTA
-// falls back to a mailto so the button is never a dead click. Swap this for
-// the real checkout link the moment one exists; nothing else needs to change.
-export function getPurchaseHref(plugin: Plugin): string {
-  return (
-    plugin.purchaseUrl ?? `mailto:contact@kvnlira.com?subject=${encodeURIComponent(`${plugin.name} — COMPRA`)}`
-  );
+// No purchaseUrl is configured yet for any product — every CTA falls back
+// to a mailto so the button is never a dead click. Swap this for the real
+// checkout link(s) the moment they exist; nothing else needs to change.
+export function getPurchaseHref(name: string, purchaseUrl?: string): string {
+  return purchaseUrl ?? `mailto:contact@kvnlira.com?subject=${encodeURIComponent(`${name} — COMPRA`)}`;
 }
 
-export interface UpcomingPlugin {
-  id: string; // "002"
-  codename: string;
-  status: "IN_DEVELOPMENT" | "CLASSIFIED";
-  progress?: number; // 0..1 — only rendered for IN_DEVELOPMENT
+export interface FaqItem {
+  question: string;
+  answer: string;
+  placeholder?: boolean; // true when the answer depends on info not provided yet
 }
 
-// PLACEHOLDER DATASET — swap for real roadmap entries as they firm up.
-export const upcomingPlugins: UpcomingPlugin[] = [
-  { id: "002", codename: "SYSTEM_002", status: "IN_DEVELOPMENT", progress: 0.35 },
-  { id: "003", codename: "SYSTEM_003", status: "CLASSIFIED" },
+export const pluginsFaq: FaqItem[] = [
+  {
+    question: "Os plugins funcionam no Adobe Premiere Pro?",
+    answer:
+      "Sim, os dois são feitos especificamente para funcionar dentro do Adobe Premiere Pro. Compatibilidade com versões específicas ainda será confirmada aqui.",
+    placeholder: true,
+  },
+  {
+    question: "Preciso pagar mensalidade?",
+    answer: "Não. O pagamento é único, sem assinatura e sem mensalidade.",
+  },
+  {
+    question: "Posso comprar apenas um plugin?",
+    answer:
+      "Sim. Você pode comprar o Copy & Pasta ou o YouTube Importer separadamente, ou levar os dois no combo com desconto.",
+  },
+  {
+    question: "O combo inclui os dois plugins?",
+    answer: "Sim. O combo inclui o Copy & Pasta e o YouTube Importer por R$ 47,90.",
+  },
+  {
+    question: "Como recebo os plugins depois da compra?",
+    answer: "A DEFINIR — o processo de entrega após a compra será detalhado aqui.",
+    placeholder: true,
+  },
+  {
+    question: "Preciso ter conhecimento técnico para usar?",
+    answer: "Não. Os dois foram feitos para serem simples: copiar e colar, sem configuração complicada.",
+  },
+  {
+    question: "Os plugins são difíceis de instalar?",
+    answer: "A DEFINIR — o passo a passo de instalação será detalhado aqui.",
+    placeholder: true,
+  },
+  {
+    question: "O YouTube Importer funciona com quais plataformas?",
+    answer: "YouTube, TikTok e Instagram.",
+  },
+  {
+    question: "Posso usar os plugins em mais de um computador?",
+    answer: "A DEFINIR — a política de uso em múltiplos computadores será detalhada aqui.",
+    placeholder: true,
+  },
 ];

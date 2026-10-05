@@ -2,40 +2,16 @@
   position: relative;
 }
 
-.plugins-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 90px 6vw 0;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-
-.plugins-path {
-  color: var(--fg-dimmer);
-}
-
-.plugins-back {
-  color: var(--fg-dim);
-  padding: 6px 0;
-}
-
-.plugins-back:hover {
-  color: var(--primary);
-}
-
-.plugins-footer {
-  display: flex;
-  justify-content: space-between;
-  padding: 2em 6vw 3em;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--fg-dimmer);
-  border-top: 1px solid var(--line-strong);
+#plugins,
+#como-funciona,
+#faq {
+  scroll-margin-top: 110px;
 }
 
 @media (max-width: 640px) {
-  .plugins-top {
-    padding: 76px 6vw 0;
+  #plugins,
+  #como-funciona,
+  #faq {
+    scroll-margin-top: 90px;
   }
 }

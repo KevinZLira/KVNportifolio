@@ -1,0 +1,122 @@
+.plugins-nav {
+  position: sticky;
+  top: 49px;
+  z-index: 300;
+  background: rgba(20, 20, 19, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.plugins-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 6vw;
+}
+
+.plugins-nav-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.plugins-nav-brand span {
+  color: var(--primary);
+}
+
+.plugins-nav-links {
+  display: none;
+  flex: 1;
+  align-items: center;
+  gap: 28px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+}
+
+.plugins-nav-links button {
+  transition: color 0.2s ease;
+}
+
+.plugins-nav-links button:hover {
+  color: var(--primary);
+}
+
+.plugins-nav-cta {
+  display: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--bg-000);
+  background: var(--primary);
+  padding: 9px 18px;
+  transition: background 0.2s ease, transform 0.15s var(--ease-snap);
+}
+
+.plugins-nav-cta:hover {
+  background: #93ff3d;
+  transform: translateY(-1px);
+}
+
+.plugins-nav-toggle {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+}
+
+.plugins-nav-toggle span {
+  width: 18px;
+  height: 1px;
+  background: var(--fg);
+}
+
+.plugins-nav-mobile {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 6vw 18px;
+  gap: 2px;
+}
+
+.plugins-nav-mobile button {
+  text-align: left;
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--fg-dim);
+  border-bottom: 1px solid var(--line);
+}
+
+.plugins-nav-mobile-cta {
+  margin-top: 12px;
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--bg-000);
+  background: var(--primary);
+}
+
+@media (min-width: 860px) {
+  .plugins-nav-links {
+    display: flex;
+  }
+  .plugins-nav-cta {
+    display: inline-flex;
+    margin-left: auto;
+  }
+  .plugins-nav-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .plugins-nav {
+    top: 41px;
+  }
+  .plugins-nav-row {
+    padding: 12px 6vw;
+  }
+}
