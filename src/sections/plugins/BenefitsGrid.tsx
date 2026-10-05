@@ -5,7 +5,7 @@ const BENEFITS = [
   { icon: "🧠", title: "MENOS INTERRUPÇÕES", text: "Mantenha sua atenção na edição." },
   { icon: "📁", title: "MENOS ARQUIVOS DESNECESSÁRIOS", text: "Evite encher o computador com arquivos temporários." },
   { icon: "🎬", title: "FEITO PARA PREMIERE", text: "Tudo pensado para funcionar dentro do seu fluxo de edição." },
-  { icon: "💰", title: "PAGAMENTO ÚNICO", text: "Sem assinatura mensal." },
+  { icon: "💰", title: "ACESSO VITALÍCIO", text: "Pague uma vez, use para sempre. Sem assinatura mensal." },
   { icon: "🛠️", title: "SIMPLES DE USAR", text: "Sem curva de aprendizado complicada." },
 ];
 

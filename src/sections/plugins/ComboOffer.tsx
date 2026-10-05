@@ -45,7 +45,7 @@ export default function ComboOffer() {
         <span className="combo-savings t-mono">
           ECONOMIZE {combo.items[0].price.currency} {formatPriceAmount(savings)}
         </span>
-        <span className="combo-tagline t-mono">2 PLUGINS • 1 OFERTA • PAGAMENTO ÚNICO</span>
+        <span className="combo-tagline t-mono">2 PLUGINS • 1 OFERTA • ACESSO VITALÍCIO</span>
 
         <a
           href={getPurchaseHref(combo.name, combo.purchaseUrl)}
@@ -55,7 +55,7 @@ export default function ComboOffer() {
         >
           QUERO OS DOIS — {combo.items[0].price.currency} {formatPriceAmount(combo.price)}
         </a>
-        <span className="combo-microcopy t-mono">Sem assinatura. Sem mensalidade.</span>
+        <span className="combo-microcopy t-mono">Acesso vitalício. Sem assinatura. Sem mensalidade.</span>
       </div>
     </section>
   );

@@ -156,7 +156,7 @@ export const pluginsFaq: FaqItem[] = [
   },
   {
     question: "Preciso pagar mensalidade?",
-    answer: "Não. O pagamento é único, sem assinatura e sem mensalidade.",
+    answer: "Não. O pagamento é único e o acesso é vitalício — sem assinatura e sem mensalidade.",
   },
   {
     question: "Posso comprar apenas um plugin?",
@@ -169,8 +169,7 @@ export const pluginsFaq: FaqItem[] = [
   },
   {
     question: "Como recebo os plugins depois da compra?",
-    answer: "A DEFINIR — o processo de entrega após a compra será detalhado aqui.",
-    placeholder: true,
+    answer: "A entrega é feita por WhatsApp e e-mail.",
   },
   {
     question: "Preciso ter conhecimento técnico para usar?",

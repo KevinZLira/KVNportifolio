@@ -38,7 +38,7 @@ export default function PluginsHero() {
             </button>
           </div>
 
-          <p className="phero-microcopy t-mono">Pagamento único • Acesso ao plugin • Sem mensalidade</p>
+          <p className="phero-microcopy t-mono">Pagamento único • Acesso vitalício • Sem mensalidade</p>
 
           <div className="phero-tags t-mono">
             {TAGS.map((tag) => (

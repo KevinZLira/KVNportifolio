@@ -38,7 +38,7 @@ export default function FinalOffer({ items }: { items: PluginItem[] }) {
       >
         QUERO OTIMIZAR MEU WORKFLOW
       </a>
-      <span className="final-offer-microcopy t-mono">Pagamento único • Sem mensalidade</span>
+      <span className="final-offer-microcopy t-mono">Pagamento único • Acesso vitalício • Sem mensalidade</span>
     </section>
   );
 }

@@ -95,7 +95,7 @@ export default function PluginSection({ item, reverse = false }: { item: PluginI
           >
             QUERO {item.name.toUpperCase()} — {item.price.currency} {formatPriceAmount(item.price.amount)}
           </a>
-          <span className="pfeature-microcopy t-mono">Pagamento único</span>
+          <span className="pfeature-microcopy t-mono">Pagamento único • Acesso vitalício</span>
         </div>
       </div>
 
