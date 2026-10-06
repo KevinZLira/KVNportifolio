@@ -1,120 +1,67 @@
 import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Link, useNavigate } from "react-router-dom";
 import { plugins } from "../data/plugins";
 import { useSystem } from "../state/SystemContext";
-import PluginsNav from "../sections/plugins/PluginsNav";
-import PluginsHero from "../sections/plugins/PluginsHero";
-import PainSection from "../sections/plugins/PainSection";
-import PluginSection from "../sections/plugins/PluginSection";
-import ComparisonSection from "../sections/plugins/ComparisonSection";
-import ComboOffer from "../sections/plugins/ComboOffer";
-import WorkflowPhilosophy from "../sections/plugins/WorkflowPhilosophy";
-import BenefitsGrid from "../sections/plugins/BenefitsGrid";
-import DemoSection from "../sections/plugins/DemoSection";
-import FinalOffer from "../sections/plugins/FinalOffer";
-import FAQSection from "../sections/plugins/FAQSection";
+import { sfx } from "../lib/sound";
 import PluginsFooter from "../sections/plugins/PluginsFooter";
 import "./Plugins.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
-// High-conversion sales page for the two KVN Premiere plugins (Copy & Pasta,
-// YouTube Importer) + the combo offer. Progressive-sale order per brief:
-// hero -> pain -> product 01 -> product 02 -> comparison -> combo ->
-// philosophy/how-it-works -> benefits -> demo -> final offer -> FAQ.
-// All copy, prices and claims come from src/data/plugins.ts — no invented
-// testimonials, user counts, reviews, refund policy or install/compat
-// details; anywhere that info is missing the data carries an explicit
-// placeholder instead.
+// Showroom: a catalog, not a sales funnel. Each plugin gets its own
+// dedicated page (/plugins/:slug) with its own price, purchase CTA and
+// (eventually) its own checkout link — splitting them keeps Hotmart
+// tracking per-product instead of mixed on one combined page. This page
+// only has to get someone to click through.
 export default function Plugins() {
+  const navigate = useNavigate();
   const { setSectionLabel } = useSystem();
-  const [copyPasta, youtubeImporter] = plugins;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     setSectionLabel("KVN_PLUGINS");
   }, [setSectionLabel]);
 
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(".pfeature", {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".pfeature", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-
-      gsap.from(".compare-col", {
-        opacity: 0,
-        y: 20,
-        duration: 0.4,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".compare-grid", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-
-      gsap.from(".combo-card", {
-        opacity: 0,
-        y: 24,
-        duration: 0.5,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".combo-card", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-
-      gsap.from(".phil-example", {
-        opacity: 0,
-        y: 20,
-        duration: 0.4,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".phil-examples", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-
-      gsap.from(".bgrid-card", {
-        opacity: 0,
-        y: 16,
-        duration: 0.35,
-        stagger: 0.06,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".bgrid", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-
-      gsap.from(".demo2-card", {
-        opacity: 0,
-        y: 20,
-        duration: 0.4,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".demo2-grid", start: "top 85%", toggleActions: "play none none reverse" },
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <article className="plugins-page">
-      <PluginsNav />
-      <PluginsHero />
-      <PainSection />
-
-      <div className="plugins-stack" id="plugins">
-        <PluginSection item={copyPasta} />
-        <PluginSection item={youtubeImporter} reverse />
+      <div className="plugins-top t-mono">
+        <span className="plugins-path">/SISTEMA/PLUGINS</span>
+        <button
+          type="button"
+          className="plugins-back"
+          onClick={() => {
+            sfx.click();
+            navigate("/");
+          }}
+          onMouseEnter={() => sfx.hover()}
+        >
+          ← VOLTAR AO SISTEMA
+        </button>
       </div>
 
-      <ComparisonSection items={plugins} />
-      <ComboOffer />
-      <WorkflowPhilosophy items={plugins} />
-      <BenefitsGrid />
-      <DemoSection items={plugins} />
-      <FinalOffer items={plugins} />
-      <FAQSection />
+      <header className="showroom-head">
+        <span className="showroom-eyebrow t-mono">PLUGINS PARA ADOBE PREMIERE PRO</span>
+        <h1 className="showroom-title t-display">Ferramentas para quem vive no Premiere.</h1>
+      </header>
+
+      <div className="showroom-grid">
+        {plugins.map((item) => (
+          <Link
+            key={item.id}
+            to={`/plugins/${item.slug}`}
+            className="showroom-card"
+            onMouseEnter={() => sfx.hover()}
+            onClick={() => sfx.click()}
+          >
+            <span className="showroom-card-badge t-mono">{item.badge}</span>
+            <h2 className="showroom-card-name t-display">{item.name}</h2>
+            <p className="showroom-card-desc t-mono">{item.pitch}</p>
+            <span className="showroom-card-cta t-mono">
+              VER PLUGIN
+              <span aria-hidden="true">→</span>
+            </span>
+          </Link>
+        ))}
+      </div>
+
       <PluginsFooter />
     </article>
   );

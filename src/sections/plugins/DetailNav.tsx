@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { getPurchaseHref } from "../../data/plugins";
+import { Link } from "react-router-dom";
+import { getPurchaseHref, type PluginItem } from "../../data/plugins";
 import { sfx } from "../../lib/sound";
-import "./PluginsNav.css";
+import "./DetailNav.css";
 
 const LINKS = [
-  { label: "Plugins", href: "#plugins" },
   { label: "Como funciona", href: "#como-funciona" },
   { label: "FAQ", href: "#faq" },
 ];
 
-export default function PluginsNav() {
+export default function DetailNav({ item }: { item: PluginItem }) {
   const [open, setOpen] = useState(false);
+  const purchaseHref = getPurchaseHref(item.name, item.purchaseUrl);
 
   function go(href: string) {
     sfx.click();
@@ -19,13 +20,13 @@ export default function PluginsNav() {
   }
 
   return (
-    <nav className="plugins-nav t-mono">
-      <div className="plugins-nav-row">
-        <button type="button" className="plugins-nav-brand" onClick={() => go("#plugins-hero")}>
-          KVN <span>PLUGINS</span>
-        </button>
+    <nav className="dnav t-mono">
+      <div className="dnav-row">
+        <Link to="/plugins" className="dnav-brand" onClick={() => sfx.click()}>
+          ← <span>PLUGINS</span>
+        </Link>
 
-        <div className="plugins-nav-links">
+        <div className="dnav-links">
           {LINKS.map((link) => (
             <button key={link.href} type="button" onClick={() => go(link.href)} onMouseEnter={() => sfx.hover()}>
               {link.label}
@@ -34,20 +35,15 @@ export default function PluginsNav() {
         </div>
 
         <a
-          href={getPurchaseHref("Oferta KVN Plugins")}
-          className="plugins-nav-cta"
+          href={purchaseHref}
+          className="dnav-cta"
           onMouseEnter={() => sfx.hover()}
           onClick={() => sfx.confirm()}
         >
           Comprar
         </a>
 
-        <button
-          type="button"
-          className="plugins-nav-toggle"
-          aria-label="Abrir menu"
-          onClick={() => setOpen((v) => !v)}
-        >
+        <button type="button" className="dnav-toggle" aria-label="Abrir menu" onClick={() => setOpen((v) => !v)}>
           <span />
           <span />
           <span />
@@ -55,13 +51,13 @@ export default function PluginsNav() {
       </div>
 
       {open && (
-        <div className="plugins-nav-mobile">
+        <div className="dnav-mobile">
           {LINKS.map((link) => (
             <button key={link.href} type="button" onClick={() => go(link.href)}>
               {link.label}
             </button>
           ))}
-          <a href={getPurchaseHref("Oferta KVN Plugins")} className="plugins-nav-mobile-cta" onClick={() => sfx.confirm()}>
+          <a href={purchaseHref} className="dnav-mobile-cta" onClick={() => sfx.confirm()}>
             Comprar
           </a>
         </div>

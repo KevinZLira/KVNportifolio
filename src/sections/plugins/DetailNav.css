@@ -1,4 +1,4 @@
-.plugins-nav {
+.dnav {
   position: sticky;
   top: 49px;
   z-index: 300;
@@ -7,14 +7,14 @@
   border-bottom: 1px solid var(--line-strong);
 }
 
-.plugins-nav-row {
+.dnav-row {
   display: flex;
   align-items: center;
   gap: 24px;
   padding: 14px 6vw;
 }
 
-.plugins-nav-brand {
+.dnav-brand {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -22,11 +22,11 @@
   white-space: nowrap;
 }
 
-.plugins-nav-brand span {
+.dnav-brand span {
   color: var(--primary);
 }
 
-.plugins-nav-links {
+.dnav-links {
   display: none;
   flex: 1;
   align-items: center;
@@ -36,15 +36,15 @@
   color: var(--fg-dim);
 }
 
-.plugins-nav-links button {
+.dnav-links button {
   transition: color 0.2s ease;
 }
 
-.plugins-nav-links button:hover {
+.dnav-links button:hover {
   color: var(--primary);
 }
 
-.plugins-nav-cta {
+.dnav-cta {
   display: none;
   font-size: 12px;
   font-weight: 700;
@@ -55,12 +55,12 @@
   transition: background 0.2s ease, transform 0.15s var(--ease-snap);
 }
 
-.plugins-nav-cta:hover {
+.dnav-cta:hover {
   background: #93ff3d;
   transform: translateY(-1px);
 }
 
-.plugins-nav-toggle {
+.dnav-toggle {
   margin-left: auto;
   display: flex;
   flex-direction: column;
@@ -68,20 +68,20 @@
   padding: 6px;
 }
 
-.plugins-nav-toggle span {
+.dnav-toggle span {
   width: 18px;
   height: 1px;
   background: var(--fg);
 }
 
-.plugins-nav-mobile {
+.dnav-mobile {
   display: flex;
   flex-direction: column;
   padding: 4px 6vw 18px;
   gap: 2px;
 }
 
-.plugins-nav-mobile button {
+.dnav-mobile button {
   text-align: left;
   padding: 10px 0;
   font-size: 13px;
@@ -89,7 +89,7 @@
   border-bottom: 1px solid var(--line);
 }
 
-.plugins-nav-mobile-cta {
+.dnav-mobile-cta {
   margin-top: 12px;
   text-align: center;
   padding: 12px;
@@ -100,23 +100,23 @@
 }
 
 @media (min-width: 860px) {
-  .plugins-nav-links {
+  .dnav-links {
     display: flex;
   }
-  .plugins-nav-cta {
+  .dnav-cta {
     display: inline-flex;
     margin-left: auto;
   }
-  .plugins-nav-toggle {
+  .dnav-toggle {
     display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .plugins-nav {
+  .dnav {
     top: 41px;
   }
-  .plugins-nav-row {
+  .dnav-row {
     padding: 12px 6vw;
   }
 }

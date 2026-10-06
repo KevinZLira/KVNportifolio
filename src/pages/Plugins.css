@@ -2,16 +2,111 @@
   position: relative;
 }
 
-#plugins,
-#como-funciona,
-#faq {
-  scroll-margin-top: 110px;
+.plugins-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 90px 6vw 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.plugins-path {
+  color: var(--fg-dimmer);
+}
+
+.plugins-back {
+  color: var(--fg-dim);
+  padding: 6px 0;
+}
+
+.plugins-back:hover {
+  color: var(--primary);
+}
+
+.showroom-head {
+  padding: clamp(32px, 6vh, 56px) 6vw clamp(24px, 4vh, 40px);
+  text-align: center;
+}
+
+.showroom-eyebrow {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--primary);
+  margin-bottom: 1em;
+}
+
+.showroom-title {
+  font-size: clamp(1.8rem, 4.4vw, 2.8rem);
+  max-width: 24ch;
+  margin: 0 auto;
+}
+
+.showroom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 2.4vw, 32px);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 6vw clamp(56px, 8vh, 96px);
+}
+
+.showroom-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(28px, 4vw, 40px);
+  background: var(--bg-050);
+  border: 1px solid var(--line-strong);
+  transition: border-color 0.2s ease, transform 0.15s var(--ease-snap);
+}
+
+.showroom-card:hover {
+  border-color: var(--primary-dim);
+  transform: translateY(-2px);
+}
+
+.showroom-card-badge {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--primary);
+}
+
+.showroom-card-name {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  margin: 0;
+}
+
+.showroom-card-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-dim);
+  flex: 1;
+}
+
+.showroom-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+  transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.showroom-card:hover .showroom-card-cta {
+  color: var(--primary);
+  gap: 12px;
 }
 
 @media (max-width: 640px) {
-  #plugins,
-  #como-funciona,
-  #faq {
-    scroll-margin-top: 90px;
+  .plugins-top {
+    padding: 76px 6vw 0;
+  }
+  .showroom-grid {
+    grid-template-columns: 1fr;
   }
 }

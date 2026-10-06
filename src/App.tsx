@@ -13,6 +13,7 @@ import ScrollHUD from "./components/System/ScrollHUD";
 import Home from "./pages/Home";
 import ProjectPage from "./pages/ProjectPage";
 import Plugins from "./pages/Plugins";
+import PluginDetail from "./pages/PluginDetail";
 import "./App.css";
 
 function AppShell() {
@@ -55,6 +56,7 @@ function AppShell() {
             <Route path="/work" element={<Home />} />
             <Route path="/work/:slug" element={<ProjectPage />} />
             <Route path="/plugins" element={<Plugins />} />
+            <Route path="/plugins/:slug" element={<PluginDetail />} />
           </Routes>
         </main>
 

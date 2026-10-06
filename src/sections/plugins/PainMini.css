@@ -1,0 +1,33 @@
+.pain-mini {
+  padding: clamp(40px, 6vh, 64px) 6vw 0;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.pain-mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 1.2em;
+}
+
+.pain-mini-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-dim);
+}
+
+.pain-mini-item span {
+  color: var(--fg-dimmer);
+  flex-shrink: 0;
+}
+
+.pain-mini-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fg-dimmer);
+}

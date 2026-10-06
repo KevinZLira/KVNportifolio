@@ -1,13 +1,19 @@
-import { getPurchaseHref } from "../../data/plugins";
+import { Link } from "react-router-dom";
 import { sfx } from "../../lib/sound";
 import "./PluginsFooter.css";
 
-function go(href: string) {
+function goToFaq() {
   sfx.click();
-  document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  document.querySelector("#faq")?.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function PluginsFooter() {
+export default function PluginsFooter({
+  purchaseHref,
+  showFaqAnchor = false,
+}: {
+  purchaseHref?: string;
+  showFaqAnchor?: boolean;
+}) {
   return (
     <footer className="pfooter t-mono">
       <div className="pfooter-top">
@@ -17,15 +23,19 @@ export default function PluginsFooter() {
         </div>
 
         <nav className="pfooter-links">
-          <button type="button" onClick={() => go("#plugins")}>
+          <Link to="/plugins" onClick={() => sfx.click()}>
             Plugins
-          </button>
-          <a href={getPurchaseHref("Oferta KVN Plugins")} onClick={() => sfx.click()}>
-            Comprar
-          </a>
-          <button type="button" onClick={() => go("#faq")}>
-            FAQ
-          </button>
+          </Link>
+          {purchaseHref && (
+            <a href={purchaseHref} onClick={() => sfx.click()}>
+              Comprar
+            </a>
+          )}
+          {showFaqAnchor && (
+            <button type="button" onClick={goToFaq}>
+              FAQ
+            </button>
+          )}
           <a href="mailto:contact@kvnlira.com" onClick={() => sfx.click()}>
             Suporte
           </a>

@@ -1,12 +1,18 @@
-// Catalog data for the Plugins sales page. Prices below are fixed by the
-// product owner and must never be derived/rounded differently — they are
-// literal values, not computed from anything else.
+// Catalog data for the KVN plugins showroom + per-plugin detail pages.
+// Each plugin has its own dedicated page (/plugins/:slug) so its own
+// checkout link gets its own Hotmart tracking, independent of the other
+// product. The showroom (/plugins) itself only shows name + description —
+// price and the buy flow live entirely on the detail page.
+//
+// Prices below are fixed by the product owner and must never be
+// derived/rounded differently — they are literal values, not computed
+// from anything else.
 //
 // No testimonials, review counts, user counts, refund policy, Premiere
-// version compatibility, install difficulty, delivery process or
-// multi-device policy are invented here. Anywhere one of those would
-// normally go, the copy either omits the claim entirely or carries an
-// explicit "A DEFINIR" placeholder for Kevin to fill in later.
+// version compatibility, or install difficulty are invented here.
+// Anywhere one of those would normally go, the copy either omits the
+// claim entirely or carries an explicit "A DEFINIR" placeholder for
+// Kevin to fill in later.
 
 export interface PluginPrice {
   amount: number;
@@ -21,6 +27,7 @@ export interface PluginItem {
   headline: string;
   pitch: string;
   platforms?: string[]; // only the YouTube Importer has these
+  pains: string[]; // the specific friction this plugin removes
   explainerSteps: string[];
   benefits: string[];
   oldWay: string[];
@@ -43,6 +50,10 @@ export const copyPasta: PluginItem = {
   headline: "Copie uma imagem. Cole no Premiere.",
   pitch:
     "O Copy & Pasta permite copiar imagens diretamente para o Premiere Pro sem precisar salvar o arquivo no computador antes.",
+  pains: [
+    "Precisar salvar uma imagem no computador só para conseguir colocá-la no Premiere.",
+    "Interromper o fluxo criativo por causa de tarefas pequenas e repetitivas.",
+  ],
   explainerSteps: ["Encontrou uma referência no navegador?", "Copie.", "Volte para o Premiere.", "Cole.", "Pronto."],
   benefits: [
     "Cole imagens diretamente no Premiere",
@@ -73,6 +84,10 @@ export const youtubeImporter: PluginItem = {
   headline: "Um link. O arquivo está no seu Premiere.",
   pitch: "O YouTube Importer permite importar conteúdos diretamente para o Premiere Pro simplesmente colando o link.",
   platforms: ["YouTube", "TikTok", "Instagram"],
+  pains: [
+    "Abrir navegador, baixar arquivo, localizar pasta e importar manualmente.",
+    "Ficar alternando entre Premiere e navegador para pegar vídeos ou músicas.",
+  ],
   explainerSteps: [
     "Encontrou um vídeo ou uma música que precisa usar na edição?",
     "Copie o link.",
@@ -103,40 +118,26 @@ export const youtubeImporter: PluginItem = {
   mockup: "link",
 };
 
+// Only two products today — the array is the extension point: a third
+// plugin is a data entry here plus one PluginSection usage, nothing else.
 export const plugins: PluginItem[] = [copyPasta, youtubeImporter];
 
-export function getPluginBySlug(slug: string) {
+export function getPluginBySlug(slug: string | undefined) {
   return plugins.find((p) => p.slug === slug);
 }
 
-export interface ComboOffer {
-  name: string;
-  price: number;
-  items: PluginItem[];
-  purchaseUrl?: string;
-}
-
-export const combo: ComboOffer = {
-  name: "Copy & Pasta + YouTube Importer",
-  price: 47.9,
-  items: [copyPasta, youtubeImporter],
-};
-
-export function getComboTotal(): number {
-  return combo.items.reduce((sum, p) => sum + p.price.amount, 0);
-}
-
-export function getComboSavings(): number {
-  return getComboTotal() - combo.price;
+export function getOtherPlugin(slug: string) {
+  return plugins.find((p) => p.slug !== slug);
 }
 
 export function formatPriceAmount(amount: number): string {
   return amount.toFixed(2).replace(".", ",");
 }
 
-// No purchaseUrl is configured yet for any product — every CTA falls back
-// to a mailto so the button is never a dead click. Swap this for the real
-// checkout link(s) the moment they exist; nothing else needs to change.
+// No purchaseUrl is configured yet for either product — every CTA falls
+// back to a mailto so the button is never a dead click. Swap this for the
+// real per-plugin checkout link the moment it exists; nothing else needs
+// to change.
 export function getPurchaseHref(name: string, purchaseUrl?: string): string {
   return purchaseUrl ?? `mailto:contact@kvnlira.com?subject=${encodeURIComponent(`${name} — COMPRA`)}`;
 }
@@ -145,13 +146,14 @@ export interface FaqItem {
   question: string;
   answer: string;
   placeholder?: boolean; // true when the answer depends on info not provided yet
+  onlyFor?: string; // restrict this question to one plugin's slug — omit to show on every plugin page
 }
 
 export const pluginsFaq: FaqItem[] = [
   {
-    question: "Os plugins funcionam no Adobe Premiere Pro?",
+    question: "O plugin funciona no Adobe Premiere Pro?",
     answer:
-      "Sim, os dois são feitos especificamente para funcionar dentro do Adobe Premiere Pro. Compatibilidade com versões específicas ainda será confirmada aqui.",
+      "Sim, é feito especificamente para funcionar dentro do Adobe Premiere Pro. Compatibilidade com versões específicas ainda será confirmada aqui.",
     placeholder: true,
   },
   {
@@ -159,34 +161,30 @@ export const pluginsFaq: FaqItem[] = [
     answer: "Não. O pagamento é único e o acesso é vitalício — sem assinatura e sem mensalidade.",
   },
   {
-    question: "Posso comprar apenas um plugin?",
-    answer:
-      "Sim. Você pode comprar o Copy & Pasta ou o YouTube Importer separadamente, ou levar os dois no combo com desconto.",
-  },
-  {
-    question: "O combo inclui os dois plugins?",
-    answer: "Sim. O combo inclui o Copy & Pasta e o YouTube Importer por R$ 47,90.",
-  },
-  {
-    question: "Como recebo os plugins depois da compra?",
+    question: "Como recebo o plugin depois da compra?",
     answer: "A entrega é feita por WhatsApp e e-mail.",
   },
   {
     question: "Preciso ter conhecimento técnico para usar?",
-    answer: "Não. Os dois foram feitos para serem simples: copiar e colar, sem configuração complicada.",
+    answer: "Não. Foi feito para ser simples: copiar e colar, sem configuração complicada.",
   },
   {
-    question: "Os plugins são difíceis de instalar?",
+    question: "O plugin é difícil de instalar?",
     answer: "A DEFINIR — o passo a passo de instalação será detalhado aqui.",
     placeholder: true,
   },
   {
     question: "O YouTube Importer funciona com quais plataformas?",
     answer: "YouTube, TikTok e Instagram.",
+    onlyFor: "youtube-importer",
   },
   {
-    question: "Posso usar os plugins em mais de um computador?",
+    question: "Posso usar o plugin em mais de um computador?",
     answer: "A DEFINIR — a política de uso em múltiplos computadores será detalhada aqui.",
     placeholder: true,
   },
 ];
+
+export function getFaqForPlugin(slug: string): FaqItem[] {
+  return pluginsFaq.filter((item) => !item.onlyFor || item.onlyFor === slug);
+}

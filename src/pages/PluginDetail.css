@@ -1,0 +1,89 @@
+.plugin-detail {
+  position: relative;
+}
+
+.plugin-detail-top {
+  padding: 16px 6vw 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dimmer);
+}
+
+.plugin-detail-missing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: var(--error);
+  letter-spacing: 0.1em;
+  padding-top: 90px;
+}
+
+.plugin-detail-back {
+  color: var(--fg-dim);
+}
+
+.plugin-detail-back:hover {
+  color: var(--primary);
+}
+
+.cross-sell {
+  padding: clamp(56px, 8vh, 96px) 6vw;
+  border-bottom: 1px solid var(--line-strong);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4em;
+}
+
+.cross-sell-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--fg-dimmer);
+}
+
+.cross-sell-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  padding: clamp(28px, 4vw, 40px);
+  background: var(--bg-050);
+  border: 1px solid var(--line-strong);
+  transition: border-color 0.2s ease, transform 0.15s var(--ease-snap);
+}
+
+.cross-sell-card:hover {
+  border-color: var(--primary-dim);
+  transform: translateY(-2px);
+}
+
+.cross-sell-name {
+  font-size: 1.4rem;
+}
+
+.cross-sell-pitch {
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+
+.cross-sell-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+  margin-top: 0.4em;
+  transition: color 0.2s ease;
+}
+
+.cross-sell-card:hover .cross-sell-cta {
+  color: var(--primary);
+}

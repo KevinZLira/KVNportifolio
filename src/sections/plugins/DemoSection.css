@@ -11,16 +11,17 @@
   margin: 0 0 2em;
 }
 
-.demo2-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(24px, 3vw, 40px);
-}
-
 .demo2-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.demo2-card .demo2-frame {
+  width: 100%;
 }
 
 .demo2-frame {
@@ -80,19 +81,7 @@
   border-top: none;
 }
 
-.demo2-name {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--fg-dimmer);
-}
-
 .demo2-caption {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--fg);
-}
-
-@media (max-width: 720px) {
-  .demo2-grid {
-    grid-template-columns: 1fr;
-  }
 }

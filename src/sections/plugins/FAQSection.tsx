@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { pluginsFaq } from "../../data/plugins";
+import type { FaqItem } from "../../data/plugins";
 import { sfx } from "../../lib/sound";
 import "./FAQSection.css";
 
-export default function FAQSection() {
+export default function FAQSection({ items }: { items: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -11,7 +11,7 @@ export default function FAQSection() {
       <h2 className="faq-title t-display">Perguntas frequentes</h2>
 
       <div className="faq-list">
-        {pluginsFaq.map((item, i) => {
+        {items.map((item, i) => {
           const isOpen = openIndex === i;
           return (
             <div key={item.question} className={`faq-item ${isOpen ? "is-open" : ""}`}>
