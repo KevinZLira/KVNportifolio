@@ -1,0 +1,64 @@
+.buybar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 6vw;
+  background: rgba(20, 20, 19, 0.92);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line-strong);
+  transform: translateY(100%);
+  transition: transform 0.3s var(--ease-system);
+  pointer-events: none;
+}
+
+.buybar.is-visible {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.buybar-name {
+  display: none;
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+
+.buybar-price {
+  font-size: 16px;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.buybar-price-was {
+  font-size: 11px;
+  color: var(--fg-dimmer);
+  text-decoration: line-through;
+  margin-right: 6px;
+}
+
+.buybar-cta {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--bg-000);
+  background: var(--primary);
+  padding: 11px 20px;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s var(--ease-snap);
+}
+
+.buybar-cta:hover {
+  background: #93ff3d;
+  transform: translateY(-1px);
+}
+
+@media (min-width: 640px) {
+  .buybar-name {
+    display: inline;
+  }
+}

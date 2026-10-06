@@ -17,6 +17,7 @@
 export interface PluginPrice {
   amount: number;
   currency: string; // "R$"
+  originalAmount?: number; // set this to show a "DE X POR Y" discount — never invent a value here
 }
 
 export interface PluginItem {
@@ -36,6 +37,7 @@ export interface PluginItem {
   demoVideo?: string;
   demoPoster?: string;
   idealFor: string[];
+  signals: string[]; // short build-log lines for the ticker — creator's voice, not customer quotes
   price: PluginPrice;
   purchaseUrl?: string; // no checkout link exists yet — every CTA falls back to mailto
   accent: string;
@@ -70,6 +72,12 @@ export const copyPasta: PluginItem = {
     "Usa screenshots e imagens durante a edição",
     "Precisa colocar imagens rapidamente no Premiere",
     "Quer eliminar downloads desnecessários",
+  ],
+  signals: [
+    "CRIADO PORQUE SALVAR UMA IMAGEM SÓ PRA IMPORTAR NÃO FAZIA SENTIDO.",
+    "COPIAR E COLAR DEVERIA SER ASSIM TÃO SIMPLES.",
+    "MENOS ARQUIVO SOLTO NO COMPUTADOR.",
+    "FEITO PRA QUEM EDITA TODO DIA.",
   ],
   price: { amount: 27.9, currency: "R$" },
   accent: "#80f425",
@@ -112,6 +120,12 @@ export const youtubeImporter: PluginItem = {
     "Usa YouTube, TikTok ou Instagram como fonte",
     "Precisa importar músicas e vídeos",
     "Quer reduzir etapas no workflow",
+  ],
+  signals: [
+    "CRIADO PORQUE BAIXAR VÍDEO SÓ PRA IMPORTAR TOMA TEMPO DEMAIS.",
+    "COLOU O LINK. IMPORTOU. SEGUIU EDITANDO.",
+    "MENOS ABA, MENOS DOWNLOAD, MENOS FRICÇÃO.",
+    "FEITO PRA QUEM VIVE DENTRO DO PREMIERE.",
   ],
   price: { amount: 27.9, currency: "R$" },
   accent: "#80f425",

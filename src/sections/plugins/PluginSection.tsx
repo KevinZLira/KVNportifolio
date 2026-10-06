@@ -87,13 +87,25 @@ export default function PluginSection({ item, reverse = false }: { item: PluginI
         </ul>
 
         <div className="pfeature-buy">
+          <div className="pfeature-price">
+            {item.price.originalAmount && (
+              <span className="pfeature-price-was t-mono">
+                DE {item.price.currency} {formatPriceAmount(item.price.originalAmount)}
+              </span>
+            )}
+            <span className="pfeature-price-now t-display">
+              {item.price.originalAmount ? "POR " : ""}
+              {item.price.currency} {formatPriceAmount(item.price.amount)}
+            </span>
+          </div>
           <a
             href={getPurchaseHref(item.name, item.purchaseUrl)}
             className="pfeature-cta t-mono"
             onMouseEnter={() => sfx.hover()}
             onClick={() => sfx.confirm()}
           >
-            QUERO {item.name.toUpperCase()} — {item.price.currency} {formatPriceAmount(item.price.amount)}
+            QUERO {item.name.toUpperCase()}
+            <span aria-hidden="true">→</span>
           </a>
           <span className="pfeature-microcopy t-mono">Pagamento único • Acesso vitalício</span>
         </div>

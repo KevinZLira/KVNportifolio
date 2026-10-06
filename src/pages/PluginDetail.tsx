@@ -10,9 +10,12 @@ import PainMini from "../sections/plugins/PainMini";
 import PluginSection from "../sections/plugins/PluginSection";
 import WorkflowPhilosophy from "../sections/plugins/WorkflowPhilosophy";
 import BenefitsGrid from "../sections/plugins/BenefitsGrid";
+import SocialProof from "../sections/plugins/SocialProof";
 import DemoSection from "../sections/plugins/DemoSection";
+import FinalPush from "../sections/plugins/FinalPush";
 import FAQSection from "../sections/plugins/FAQSection";
 import PluginsFooter from "../sections/plugins/PluginsFooter";
+import StickyBuyBar from "../sections/plugins/StickyBuyBar";
 import "./PluginDetail.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,12 +37,29 @@ export default function PluginDetail() {
     if (reduce || !item) return;
 
     const ctx = gsap.context(() => {
+      gsap.from(".pain-mini-item", {
+        opacity: 0,
+        x: -12,
+        duration: 0.35,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".pain-mini", start: "top 90%", toggleActions: "play none none reverse" },
+      });
+
       gsap.from(".pfeature", {
         opacity: 0,
         y: 30,
         duration: 0.6,
         ease: "power2.out",
         scrollTrigger: { trigger: ".pfeature", start: "top 85%", toggleActions: "play none none reverse" },
+      });
+
+      gsap.from(".phil-example", {
+        opacity: 0,
+        y: 20,
+        duration: 0.45,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".phil-example", start: "top 85%", toggleActions: "play none none reverse" },
       });
 
       gsap.from(".bgrid-card", {
@@ -57,6 +77,23 @@ export default function PluginDetail() {
         duration: 0.4,
         ease: "power2.out",
         scrollTrigger: { trigger: ".demo2-card", start: "top 85%", toggleActions: "play none none reverse" },
+      });
+
+      gsap.from(".final-push-heading, .final-push-price, .final-push-cta", {
+        opacity: 0,
+        y: 20,
+        duration: 0.45,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".final-push", start: "top 85%", toggleActions: "play none none reverse" },
+      });
+
+      gsap.from(".cross-sell-card", {
+        opacity: 0,
+        y: 20,
+        duration: 0.4,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".cross-sell", start: "top 88%", toggleActions: "play none none reverse" },
       });
     });
 
@@ -86,7 +123,9 @@ export default function PluginDetail() {
       <PluginSection item={item} />
       <WorkflowPhilosophy item={item} />
       <BenefitsGrid />
+      <SocialProof item={item} />
       <DemoSection item={item} />
+      <FinalPush item={item} />
       <FAQSection items={getFaqForPlugin(item.slug)} />
 
       {other && (
@@ -109,6 +148,7 @@ export default function PluginDetail() {
       )}
 
       <PluginsFooter purchaseHref={getPurchaseHref(item.name, item.purchaseUrl)} showFaqAnchor />
+      <StickyBuyBar item={item} />
     </article>
   );
 }
