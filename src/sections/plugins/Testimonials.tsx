@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import "./Testimonials.css";
 
 export interface Testimonial {
@@ -17,11 +17,11 @@ function AnonymousAvatar({ index }: { index: number }) {
   return <svg className={`testimonials-avatar testimonials-avatar--${index % 4}`} viewBox="0 0 64 64" aria-hidden="true">{shapes[index % shapes.length]}</svg>;
 }
 
-export default function Testimonials({ items, productName }: { items: Testimonial[]; productName: string }) {
+export default function Testimonials({ items, productName, heading = <>Menos etapas.<br /><span>Na voz de quem usa.</span></> }: { items: Testimonial[]; productName: string; heading?: ReactNode }) {
   const [paused, setPaused] = useState(false);
   if (!items.length) return null;
   return <section className="testimonials" aria-labelledby="testimonials-title">
-    <div className="lp-container testimonials-heading"><div><span className="lp-section-label">NA ROTINA DE QUEM EDITA</span><h2 id="testimonials-title">Menos etapas.<br /><span>Na voz de quem usa.</span></h2><p>Feedbacks de quem testou o {productName}. Identidades preservadas com avatares abstratos.</p></div><button className="testimonials-pause" type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "Retomar movimento dos comentários" : "Pausar movimento dos comentários"}>{paused ? "RETOMAR →" : "PAUSAR Ⅱ"}</button></div>
+    <div className="lp-container testimonials-heading"><div><span className="lp-section-label">NA ROTINA DE QUEM EDITA</span><h2 id="testimonials-title">{heading}</h2><p>Feedbacks de quem testou o {productName}. Identidades preservadas com avatares abstratos.</p></div><button className="testimonials-pause" type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? "Retomar movimento dos comentários" : "Pausar movimento dos comentários"}>{paused ? "RETOMAR →" : "PAUSAR Ⅱ"}</button></div>
     <div className={`testimonials-window${paused ? " is-paused" : ""}`} tabIndex={0} role="region" aria-label="Comentários. Passe o mouse ou mantenha o foco aqui para pausar.">
       <div className="testimonials-track" style={{ animationDuration: `${items.length * 14}s` }}>
         {[0, 1].map(copy => <div className="testimonials-group" key={copy} aria-hidden={copy === 1 ? true : undefined}>{items.map((item, index) => <figure className="testimonials-card" key={item.id}>

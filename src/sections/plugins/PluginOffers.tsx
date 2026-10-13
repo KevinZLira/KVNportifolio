@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
 import { formatPriceAmount, getPurchaseHref, pluginBonus, pluginCombo, type PluginItem } from "../../data/plugins";
 import PluginPromotion from "./PluginPromotion";
 import "./PluginOffers.css";
@@ -11,7 +12,7 @@ const descriptions: Record<PluginItem["mockup"], { mark: string; title: string; 
 
 const toCents = (amount: number) => Math.round(amount * 100);
 
-export default function PluginOffers({ item }: { item: PluginItem }) {
+export default function PluginOffers({ item, heading = <>Mais dois atalhos.<br /><span>Para outras partes da edição.</span></> }: { item: PluginItem; heading?: ReactNode }) {
   const others = pluginCombo.items.filter(plugin => plugin.slug !== item.slug);
   const individualHref = getPurchaseHref(item.name, item.purchaseUrl);
   const comboHref = getPurchaseHref(`${pluginCombo.name} — ${pluginCombo.items.map(plugin => plugin.name).join(" + ")} — ${pluginCombo.price.currency} ${formatPriceAmount(pluginCombo.price.amount)}`, pluginCombo.purchaseUrl);
@@ -24,7 +25,7 @@ export default function PluginOffers({ item }: { item: PluginItem }) {
   return <>
     <section className="plugin-upsell lp-container" aria-labelledby="plugin-upsell-title">
       <div className="lp-section-label">COMPLETE SEU FLUXO</div>
-      <div className="lp-section-heading"><h2 id="plugin-upsell-title">Mais dois atalhos.<br /><span>Para outras partes da edição.</span></h2><p>Você já conheceu o {item.name}.<br />Veja o que os outros plugins fazem.</p></div>
+      <div className="lp-section-heading"><h2 id="plugin-upsell-title">{heading}</h2><p>Você já conheceu o {item.name}.<br />Veja o que os outros plugins fazem.</p></div>
       <div className="plugin-upsell-grid">{others.map(plugin => {
         const content = descriptions[plugin.mockup];
         return <article className="plugin-upsell-card" key={plugin.slug}>
