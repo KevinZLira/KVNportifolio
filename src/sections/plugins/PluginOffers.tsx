@@ -36,7 +36,7 @@ export default function PluginOffers({ item, heading = "Confira outros plugins n
           <Link className="plugin-upsell-link" to={`/plugins/${plugin.slug}`} aria-label={`Conhecer ${plugin.name}`}>CONHECER O PLUGIN <span>↗</span></Link>
         </article>;
       })}</div>
-      <div className="plugin-upsell-upgrade"><div><span className="lp-small-label">LEVE OS TRÊS NO COMBO</span><p>Por mais <strong>R$ {formatPriceAmount(upgradeAmount)}</strong> em relação ao {item.name}, leve também {others.map(plugin => plugin.name).join(" e ")}.</p></div><a href="#oferta" className="lp-button">QUERO COMPRAR <span aria-hidden="true">↗</span></a></div>
+      <div className="plugin-upsell-upgrade"><div><span className="lp-small-label">LEVE OS TRÊS NO COMBO</span><p>Por mais <strong>R$ {formatPriceAmount(upgradeAmount)}</strong> em relação ao {item.name}, leve também {others.map(plugin => plugin.name).join(" e ")}.</p></div><a href="#oferta" className="lp-button">QUERO FACILITAR MINHA EDIÇÃO <span aria-hidden="true">↗</span></a></div>
     </section>
     <section id="oferta" className="lp-offer"><div className="lp-container">
       <div className="lp-section-label">ESCOLHA SEU PRÓXIMO ATALHO</div>

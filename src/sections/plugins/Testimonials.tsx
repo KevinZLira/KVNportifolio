@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from "react";
-import SectionPurchaseLink from "./SectionPurchaseLink";
 import "./Testimonials.css";
 
 export interface Testimonial {
@@ -32,6 +31,6 @@ export default function Testimonials({ items, productName, heading = "Confira al
         </figure>)}</div>)}
       </div>
     </div>
-    <div className="lp-container"><SectionPurchaseLink /></div>
+    
   </section>;
 }
