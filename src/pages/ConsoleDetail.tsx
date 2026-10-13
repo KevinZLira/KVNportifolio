@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { formatPriceAmount, getPurchaseHref, type FaqItem, type PluginItem } from "../data/plugins";
+import { formatPriceAmount, getPurchaseHref, pluginCombo, type FaqItem, type PluginItem } from "../data/plugins";
 import ConsolePreview from "../sections/plugins/ConsolePreview";
+import PluginOffers from "../sections/plugins/PluginOffers";
 import OfferCountdown from "../sections/plugins/OfferCountdown";
 import SalesVideo from "../sections/plugins/SalesVideo";
 import FAQSection from "../sections/plugins/FAQSection";
@@ -22,12 +23,11 @@ const faq: FaqItem[] = [
   { question: "Como instalo no Windows?", answer: "Feche o Premiere e execute o instalador. Depois, abra Janela > Extensões > KVN Console - Atalhos, escolha a tecla para abrir o Console e conclua a configuração." },
   { question: "Preciso pagar mensalidade?", answer: "Não. O pagamento é único, com acesso vitalício e sem mensalidade." },
   { question: "Como recebo o plugin depois da compra?", answer: "A entrega é feita por WhatsApp e e-mail, com as orientações de instalação." },
-  { question: "O Console faz parte do combo de R$ 45,90?", answer: "Neste momento, o combo de R$ 45,90 inclui Copy & Pasta e KVN Importer. O KVN Console é vendido separadamente." },
+  { question: "O Console faz parte do combo?", answer: `Sim! O ${pluginCombo.name} inclui Copy & Pasta, KVN Importer e KVN Console por ${pluginCombo.price.currency} ${formatPriceAmount(pluginCombo.price.amount)}, em pagamento único.` },
 ];
 
 export default function ConsoleDetail({ item }: { item: PluginItem }) {
   const purchaseHref = getPurchaseHref(item.name, item.purchaseUrl);
-  const saving = item.price.originalAmount === undefined ? 0 : item.price.originalAmount - item.price.amount;
 
   return <article className="plugin-detail lp console-detail">
     <nav className="lp-nav" aria-label="Navegação do plugin"><Link to="/plugins" className="lp-brand">KVN<span> / PLUGINS</span></Link><div><a href="#como-funciona">O fluxo</a><a href="#faq">Dúvidas</a><a className="lp-nav-cta" href="#oferta">QUERO O MEU ↗</a></div></nav>
@@ -48,7 +48,7 @@ export default function ConsoleDetail({ item }: { item: PluginItem }) {
       { symbol: "⌘", title: "Um atalho do seu jeito", text: "Configure a abertura da busca e mantenha a ferramenta ao alcance do teclado." },
     ].map(benefit => <div key={benefit.title}><span aria-hidden="true">{benefit.symbol}</span><h3>{benefit.title}</h3><p>{benefit.text}</p></div>)}</div></section>
     <section className="lp-container lp-fit"><div className="lp-section-label">04 / SE RECONHECE?</div><div className="lp-split"><h2>Para quem está<br /><span>no ritmo da edição.</span></h2><div className="lp-fit-list">{["Você usa os mesmos efeitos e transições em vários projetos.", "Você quer trabalhar com atalhos e depender menos dos menus.", "Você está montando seu fluxo de edição e quer manter os recursos organizados."].map((line, index) => <p key={line}><span>0{index + 1}</span>{line}</p>)}</div></div><div className="lp-note"><span>CRIATIVIDADE CONTINUA SENDO SUA.</span><p>O Console encurta o acesso às ferramentas para você se concentrar no ritmo, no acabamento e na ideia.</p></div></section>
-    <section id="oferta" className="lp-offer"><div className="lp-container"><div className="lp-section-label">05 / SEU PRÓXIMO ATALHO</div><div className="lp-offer-heading"><h2>Menos procura.<br /><em>Um pagamento só.</em></h2><p>Oferta de lançamento para o KVN Console.<br />Acesso vitalício. Sem mensalidade.</p></div><div className="console-offer-layout"><div className="console-offer-copy"><span className="lp-small-label">UM CONSOLE. SEU FLUXO MAIS DIRETO.</span><h3>O efeito que você quer,<br />ao alcance de uma busca.</h3><p>Efeitos, transições, favoritos e histórico reunidos em uma ferramenta feita para acompanhar a sua edição.</p><div className="console-offer-path"><span>ATALHO</span><b>→</b><span>BUSCA</span><b>→</b><span>EDIÇÃO</span></div><p>Já usa Copy & Pasta ou KVN Importer? O Console cuida de outra parte do fluxo: encontrar os recursos que dão forma ao seu vídeo.</p></div><div className="lp-price-card lp-price-promo"><span className="lp-launch-badge">OFERTA DE LANÇAMENTO</span><span className="lp-small-label">SEUS EFEITOS POR PERTO</span><h3>{item.name}</h3><p>Busca de efeitos, transições, favoritos e atalhos.</p><div className="lp-price">{item.price.originalAmount !== undefined && <span className="lp-price-before">PREÇO NORMAL <s>R$ {formatPriceAmount(item.price.originalAmount)}</s></span>}<span className="lp-price-condition">AGORA, NA OFERTA DE LANÇAMENTO</span><strong>R$ {formatPriceAmount(item.price.amount)}</strong>{saving > 0 && <span className="lp-price-saving">VOCÊ ECONOMIZA R$ {formatPriceAmount(saving)}</span>}<small>Pagamento único • Acesso vitalício</small></div><ul><li>Plugin KVN Console</li><li>Busca de efeitos e transições</li><li>Favoritos, histórico e configuração de atalhos</li><li>Orientações de instalação para Windows e Mac</li><li>Entrega por WhatsApp e e-mail</li></ul><a className="lp-button lp-button-outline" href={purchaseHref}>APROVEITAR A OFERTA <span>↗</span></a></div></div><p className="lp-purchase-note">A compra começa por e-mail. Clique na oferta para solicitar o KVN Console.</p><div className="lp-trust"><span>01 / SEM MENSALIDADE</span><span>02 / ATALHO CONFIGURÁVEL</span><span>03 / WINDOWS E MAC</span></div></div></section>
+    <PluginOffers item={item} />
     <FAQSection items={faq} />
     <section className="lp-container lp-final"><span className="lp-section-label">SEU PRÓXIMO EFEITO ESTÁ MAIS PERTO.</span><h2>Menos menus.<br /><span>Mais edição.</span></h2><a className="lp-button" href="#oferta">QUERO O KVN CONSOLE <span>↗</span></a><Link to="/plugins" className="lp-text-link">Conheça todos os plugins KVN ↗</Link></section>
     <PluginsFooter purchaseHref={purchaseHref} showFaqAnchor />

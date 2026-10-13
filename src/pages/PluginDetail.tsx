@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { formatPriceAmount, getFaqForPlugin, getOtherPlugin, getPluginBySlug, getPurchaseHref, type PluginItem } from "../data/plugins";
+import { getFaqForPlugin, getPluginBySlug, getPurchaseHref, type PluginItem } from "../data/plugins";
 import { useSystem } from "../state/SystemContext";
 import FAQSection from "../sections/plugins/FAQSection";
 import PluginsFooter from "../sections/plugins/PluginsFooter";
@@ -8,6 +8,7 @@ import Testimonials from "../sections/plugins/Testimonials";
 import SalesVideo from "../sections/plugins/SalesVideo";
 import OfferCountdown from "../sections/plugins/OfferCountdown";
 import ConsoleDetail from "./ConsoleDetail";
+import PluginOffers from "../sections/plugins/PluginOffers";
 import { getTestimonialsForPlugin } from "../data/testimonials";
 import "./PluginDetail.css";
 
@@ -42,9 +43,7 @@ export default function PluginDetail() {
   if (!item) return <div className="plugin-detail-missing"><p>PLUGIN NÃO ENCONTRADO</p><Link to="/plugins">← VOLTAR AOS PLUGINS</Link></div>;
   if (item.mockup === "console") return <ConsoleDetail item={item} />;
   const paste = item.mockup === "paste";
-  const other = getOtherPlugin(item.slug);
   const individualHref = getPurchaseHref(item.name, item.purchaseUrl);
-  const comboHref = getPurchaseHref("Combo Copy & Pasta + KVN Importer — R$ 45,90");
   const steps = paste ? [
     { title: "Encontrou. Copiou.", text: "Copie a imagem que você quer usar na edição." },
     { title: "Voltou. Colou.", text: "Abra o Copy & Pasta dentro do Premiere e cole a imagem." },
@@ -69,12 +68,9 @@ export default function PluginDetail() {
     <section id="como-funciona" className="lp-how"><div className="lp-container"><div className="lp-section-label">02 / MENOS ETAPAS NA PRÁTICA</div><div className="lp-section-heading"><h2>{paste ? "Copiar. Colar. Criar." : "Um link. Seu próximo corte."}</h2><p>Um atalho para a sua rotina.<br />Dentro do editor que você já usa.</p></div><div className="lp-steps">{steps.map((step, i) => <div key={step.title}><span className="lp-step-number">0{i + 1}</span><h3>{step.title}</h3><p>{step.text}</p></div>)}</div><div className="lp-compat"><span>Pr</span><p>FEITO PARA ADOBE PREMIERE PRO<small>Compatível com as últimas versões. Guia de instalação para Mac e Windows incluído.</small></p></div></div></section>
     <section className="lp-container lp-fit"><div className="lp-section-label">03 / SE RECONHECE?</div><div className="lp-split"><h2>Para quem está<br /><span>no ritmo da edição.</span></h2><div className="lp-fit-list">{audiences.map((line, i) => <p key={line}><span>0{i + 1}</span>{line}</p>)}</div></div><div className="lp-note"><span>CRIATIVIDADE CONTINUA SENDO SUA.</span><p>O plugin remove etapas para você dedicar mais atenção ao corte, ao ritmo e à ideia.</p></div></section>
     <Testimonials items={getTestimonialsForPlugin(item.slug)} productName={item.name} />
-    <section id="oferta" className="lp-offer"><div className="lp-container"><div className="lp-section-label">04 / ESCOLHA SEU ATALHO</div><div className="lp-offer-heading"><h2>Menos trabalho repetitivo.<br /><em>Um pagamento só.</em></h2><p>Oferta de lançamento. Acesso vitalício.<br />Escolha um plugin ou leve os dois.</p></div><div className="lp-offer-grid">
-      <div className="lp-price-card lp-price-promo"><span className="lp-launch-badge">OFERTA DE LANÇAMENTO</span><span className="lp-small-label">SEU PRIMEIRO ATALHO</span><h3>{item.name}</h3><p>{paste ? "Imagens no Premiere com copiar e colar." : "Vídeos e músicas no Premiere através de links."}</p><div className="lp-price"><span className="lp-price-before">PREÇO NORMAL <s>R$ {formatPriceAmount(item.price.originalAmount ?? 49.9)}</s></span><span className="lp-price-condition">AGORA, NA OFERTA DE LANÇAMENTO</span><strong>R$ {formatPriceAmount(item.price.amount)}</strong><span className="lp-price-saving">VOCÊ ECONOMIZA R$ 22,00</span><small>Pagamento único • Acesso vitalício</small></div><ul><li>Plugin {item.name}</li><li>Guia de instalação para Mac e Windows</li><li>Acesso vitalício nos seus computadores</li><li>Entrega por WhatsApp e e-mail</li></ul><a className="lp-button lp-button-outline" href={individualHref}>APROVEITAR A OFERTA <span>↗</span></a></div>
-      <div className="lp-price-card lp-price-combo"><div className="lp-combo-badge">DOIS ATALHOS / UMA COMPRA</div><span className="lp-small-label">SEU FLUXO MAIS COMPLETO</span><h3>Combo KVN</h3><p>Copy & Pasta + KVN Importer.<br />Imagens, vídeos e músicas. Menos etapas.</p><div className="lp-price"><span>OS DOIS PLUGINS POR</span><strong>R$ 45,90</strong><small>Economize R$ 9,90 em relação à compra separada</small></div><ul><li>Copy & Pasta + KVN Importer</li><li>Guias de instalação para Mac e Windows</li><li>Acesso vitalício nos seus computadores</li><li>Entrega por WhatsApp e e-mail</li></ul><a className="lp-button" href={comboHref}>QUERO OS DOIS PLUGINS <span>↗</span></a></div>
-    </div><p className="lp-purchase-note">A compra começa por e-mail. Clique na sua opção para solicitar o plugin ou o combo.</p><div className="lp-trust"><span>01 / SEM MENSALIDADE</span><span>02 / SEM CHAVES DE ACESSO</span><span>03 / GUIA DE INSTALAÇÃO INCLUÍDO</span></div></div></section>
+    <PluginOffers item={item} />
     <FAQSection items={getFaqForPlugin(item.slug)} />
-    <section className="lp-container lp-final"><span className="lp-section-label">SUA PRÓXIMA EDIÇÃO PODE TER MENOS ETAPAS.</span><h2>Volte para a ideia.<br /><span>Encurte o caminho.</span></h2><a className="lp-button" href="#oferta">ESCOLHER MEU PLUGIN <span>↗</span></a>{other && <Link className="lp-text-link" to={`/plugins/${other.slug}`}>Conheça também o {other.name} ↗</Link>}</section>
+    <section className="lp-container lp-final"><span className="lp-section-label">SUA PRÓXIMA EDIÇÃO PODE TER MENOS ETAPAS.</span><h2>Volte para a ideia.<br /><span>Encurte o caminho.</span></h2><a className="lp-button" href="#oferta">ESCOLHER MEU PLUGIN <span>↗</span></a><Link className="lp-text-link" to="/plugins">Conheça todos os plugins KVN ↗</Link></section>
     <PluginsFooter purchaseHref={individualHref} showFaqAnchor />
     <div className="lp-bottom-bar"><span>{item.name}<small>Menos etapas. Mais edição.</small></span><a href="#oferta">VER OFERTAS ↗</a></div>
   </article>;

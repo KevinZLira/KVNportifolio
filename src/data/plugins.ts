@@ -79,7 +79,7 @@ export const copyPasta: PluginItem = {
     "MENOS ARQUIVO SOLTO NO COMPUTADOR.",
     "FEITO PRA QUEM EDITA TODO DIA.",
   ],
-  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
+  price: { amount: 22.9, currency: "R$", originalAmount: 49.9 },
   accent: "#80f425",
   mockup: "paste",
 };
@@ -127,7 +127,7 @@ export const youtubeImporter: PluginItem = {
     "MENOS ABA, MENOS DOWNLOAD, MENOS FRICÇÃO.",
     "FEITO PRA QUEM VIVE DENTRO DO PREMIERE.",
   ],
-  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
+  price: { amount: 34.9, currency: "R$", originalAmount: 49.9 },
   accent: "#80f425",
   mockup: "link",
 };
@@ -153,6 +153,17 @@ export const kvnConsole: PluginItem = {
 };
 
 export const plugins: PluginItem[] = [copyPasta, youtubeImporter, kvnConsole];
+
+export const pluginCombo: {
+  name: string;
+  price: PluginPrice;
+  items: PluginItem[];
+  purchaseUrl?: string;
+} = {
+  name: "Combo KVN",
+  price: { amount: 57.9, currency: "R$" },
+  items: [copyPasta, youtubeImporter, kvnConsole],
+};
 
 export function getPluginBySlug(slug: string | undefined) {
   return plugins.find((p) => p.slug === slug);
@@ -190,6 +201,10 @@ export const pluginsFaq: FaqItem[] = [
   {
     question: "Preciso pagar mensalidade?",
     answer: "Não. O pagamento é único e o acesso é vitalício — sem assinatura e sem mensalidade.",
+  },
+  {
+    question: "Quais plugins estão incluídos no combo?",
+    answer: `O ${pluginCombo.name} inclui Copy & Pasta, KVN Importer e KVN Console por ${pluginCombo.price.currency} ${formatPriceAmount(pluginCombo.price.amount)}, em pagamento único.`,
   },
   {
     question: "Como recebo o plugin depois da compra?",
