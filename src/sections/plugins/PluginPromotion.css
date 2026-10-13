@@ -1,10 +1,10 @@
 .plugin-promotion { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 22px; padding-block: 18px; margin-bottom: 26px; border-block: 1px solid var(--line-strong); }
 .plugin-promotion-price { display: flex; flex-direction: column; gap: 7px; }
 .plugin-promotion-before { font-size: 10px; color: var(--fg-dim); }
-.plugin-promotion-before s { margin-left: 5px; color: #c5c8bb; text-decoration-thickness: 1px; }
+.plugin-promotion-before s { margin-left: 5px; color: var(--error); text-decoration-thickness: 1px; }
 .plugin-promotion-now { color: var(--fg-dim); font-size: 9px; }
-.plugin-promotion-now strong { font-family: var(--font-display); font-size: 36px; line-height: 1.1; color: var(--warn); font-weight: 600; letter-spacing: -.04em; margin-left: 6px; white-space: nowrap; }
-.plugin-promotion-badge { color: #27210b; background: var(--warn); padding: 7px 10px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+.plugin-promotion-now strong { font-family: var(--font-display); font-size: 36px; line-height: 1.1; color: var(--primary); font-weight: 600; letter-spacing: -.04em; margin-left: 6px; white-space: nowrap; }
+.plugin-promotion-badge { color: #19220f; background: var(--primary); padding: 7px 10px; font-size: 9px; font-weight: 700; white-space: nowrap; }
 .plugin-promotion-bonus { display: flex; align-items: center; gap: 11px; width: 100%; padding-top: 13px; border-top: 1px solid var(--line); }
 .plugin-promotion-bonus > span { color: var(--primary); font-size: 23px; }
 .plugin-promotion-bonus p { color: var(--lp-muted, #b4b9ac); font-size: 10px; line-height: 1.8; margin: 0; }

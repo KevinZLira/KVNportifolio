@@ -29,3 +29,5 @@
 @media (max-width: 1000px) { .plugin-upsell-upgrade { align-items: flex-start; flex-direction: column; gap: 18px; } }
 @media (max-width: 760px) { .plugin-upsell { padding-block: 55px; } .plugin-upsell-grid { grid-template-columns: 1fr; gap: 18px; } .plugin-upsell-card { padding: 25px; } .plugin-upsell-upgrade { padding: 25px; } }
 @media (max-width: 360px) { .plugin-combo-items li { gap: 9px; } .plugin-combo-items strong { font-size: 11px; } .plugin-combo-items li > span:last-child { font-size: 9px; } }
+
+.lp-price s { color: var(--error); }
