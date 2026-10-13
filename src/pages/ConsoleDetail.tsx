@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { formatPriceAmount, getPurchaseHref, pluginCombo, type FaqItem, type PluginItem } from "../data/plugins";
+import { formatPriceAmount, getPurchaseHref, pluginBonus, pluginCombo, type FaqItem, type PluginItem } from "../data/plugins";
+import PluginPromotion from "../sections/plugins/PluginPromotion";
 import ConsolePreview from "../sections/plugins/ConsolePreview";
 import PluginOffers from "../sections/plugins/PluginOffers";
 import OfferCountdown from "../sections/plugins/OfferCountdown";
@@ -24,6 +25,7 @@ const faq: FaqItem[] = [
   { question: "Preciso pagar mensalidade?", answer: "Não. O pagamento é único, com acesso vitalício e sem mensalidade." },
   { question: "Como recebo o plugin depois da compra?", answer: "A entrega é feita por WhatsApp e e-mail, com as orientações de instalação." },
   { question: "O Console faz parte do combo?", answer: `Sim! O ${pluginCombo.name} inclui Copy & Pasta, KVN Importer e KVN Console por ${pluginCombo.price.currency} ${formatPriceAmount(pluginCombo.price.amount)}, em pagamento único.` },
+  { question: "O que recebo de bônus?", answer: `Na compra do KVN Console ou do combo, você recebe também um ${pluginBonus.name.toLowerCase()}, sem custo adicional.` },
 ];
 
 export default function ConsoleDetail({ item }: { item: PluginItem }) {
@@ -33,7 +35,7 @@ export default function ConsoleDetail({ item }: { item: PluginItem }) {
     <nav className="lp-nav" aria-label="Navegação do plugin"><Link to="/plugins" className="lp-brand">KVN<span> / PLUGINS</span></Link><div><a href="#como-funciona">O fluxo</a><a href="#faq">Dúvidas</a><a className="lp-nav-cta" href="#oferta">QUERO O MEU ↗</a></div></nav>
     <OfferCountdown />
     <header className="lp-hero lp-container">
-      <div className="lp-hero-copy"><div className="lp-eyebrow">{item.badge}<span>/ ADOBE PREMIERE PRO</span></div><p className="lp-product-name">{item.name}</p><h1>O efeito certo.<br /><em>Sem se perder nos painéis.</em></h1><p className="lp-lead">Abra com um atalho. Digite o que procura. Aplique e continue no corte. Efeitos, transições e favoritos a uma busca de distância, dentro do Premiere.</p><div className="lp-hero-actions"><a className="lp-button" href="#oferta">QUERO MEUS EFEITOS POR PERTO <span>↗</span></a><a className="lp-text-link" href="#previa">Experimente a busca ↓</a></div><div className="lp-hero-facts"><span>✓ Windows e Mac</span><span>✓ Acesso vitalício</span><span>✓ Atalho configurável</span></div></div>
+      <div className="lp-hero-copy"><div className="lp-eyebrow">{item.badge}<span>/ ADOBE PREMIERE PRO</span></div><p className="lp-product-name">{item.name}</p><h1>O efeito certo.<br /><em>Sem se perder nos painéis.</em></h1><p className="lp-lead">Abra com um atalho. Digite o que procura. Aplique e continue no corte. Efeitos, transições e favoritos a uma busca de distância, dentro do Premiere.</p><PluginPromotion item={item} /><div className="lp-hero-actions"><a className="lp-button" href="#oferta">QUERO MEUS EFEITOS POR PERTO <span>↗</span></a><a className="lp-text-link" href="#previa">Experimente a busca ↓</a></div><div className="lp-hero-facts"><span>✓ Windows e Mac</span><span>✓ Acesso vitalício</span><span>✓ Atalho configurável</span></div></div>
       <ConsolePreview />
       <div className="lp-hero-bottom"><span>MENOS TEMPO NOS PAINÉIS. MAIS ATENÇÃO NA TIMELINE.</span><span>DESENVOLVIDO POR KEVIN LIRA / KVN_SYSTEMS</span></div>
     </header>

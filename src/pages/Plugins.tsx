@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { plugins } from "../data/plugins";
+import { pluginBonus, plugins } from "../data/plugins";
+import PluginPromotion from "../sections/plugins/PluginPromotion";
 import { useSystem } from "../state/SystemContext";
 import { sfx } from "../lib/sound";
 import PluginsFooter from "../sections/plugins/PluginsFooter";
@@ -54,6 +55,8 @@ export default function Plugins() {
             <span className="showroom-card-badge t-mono">{item.badge}</span>
             <h2 className="showroom-card-name t-display">{item.name}</h2>
             <p className="showroom-card-desc t-mono">{item.pitch}</p>
+            <PluginPromotion item={item} compact />
+            <p className="showroom-bonus">＋ {pluginBonus.shortLabel}</p>
             <span className="showroom-card-cta t-mono">
               VER PLUGIN
               <span aria-hidden="true">→</span>

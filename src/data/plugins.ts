@@ -79,7 +79,7 @@ export const copyPasta: PluginItem = {
     "MENOS ARQUIVO SOLTO NO COMPUTADOR.",
     "FEITO PRA QUEM EDITA TODO DIA.",
   ],
-  price: { amount: 22.9, currency: "R$", originalAmount: 49.9 },
+  price: { amount: 22.9, currency: "R$", originalAmount: 42.9 },
   accent: "#80f425",
   mockup: "paste",
 };
@@ -127,7 +127,7 @@ export const youtubeImporter: PluginItem = {
     "MENOS ABA, MENOS DOWNLOAD, MENOS FRICÇÃO.",
     "FEITO PRA QUEM VIVE DENTRO DO PREMIERE.",
   ],
-  price: { amount: 34.9, currency: "R$", originalAmount: 49.9 },
+  price: { amount: 34.9, currency: "R$", originalAmount: 54.9 },
   accent: "#80f425",
   mockup: "link",
 };
@@ -147,12 +147,17 @@ export const kvnConsole: PluginItem = {
   demoCaption: "Um atalho. Uma busca. De volta à edição.",
   idealFor: ["Usa os mesmos efeitos em vários projetos", "Quer acessar transições com menos etapas", "Prefere trabalhar com atalhos", "Está montando um fluxo mais organizado no Premiere"],
   signals: ["SEU PRÓXIMO EFEITO, A UMA BUSCA DE DISTÂNCIA.", "FAVORITOS POR PERTO. MENOS TEMPO NOS MENUS.", "FEITO PARA QUEM VIVE DENTRO DO PREMIERE."],
-  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
+  price: { amount: 27.9, currency: "R$", originalAmount: 47.9 },
   accent: "#80f425",
   mockup: "console",
 };
 
 export const plugins: PluginItem[] = [copyPasta, youtubeImporter, kvnConsole];
+
+export const pluginBonus = {
+  name: "Pacote com 10 predefinições de animações e efeitos",
+  shortLabel: "Bônus: 10 predefinições de animações e efeitos",
+};
 
 export const pluginCombo: {
   name: string;
@@ -205,6 +210,10 @@ export const pluginsFaq: FaqItem[] = [
   {
     question: "Quais plugins estão incluídos no combo?",
     answer: `O ${pluginCombo.name} inclui Copy & Pasta, KVN Importer e KVN Console por ${pluginCombo.price.currency} ${formatPriceAmount(pluginCombo.price.amount)}, em pagamento único.`,
+  },
+  {
+    question: "O que recebo de bônus?",
+    answer: `Na compra de qualquer plugin avulso ou do combo, você recebe também um ${pluginBonus.name.toLowerCase()}, sem custo adicional.`,
   },
   {
     question: "Como recebo o plugin depois da compra?",

@@ -9,6 +9,7 @@ import SalesVideo from "../sections/plugins/SalesVideo";
 import OfferCountdown from "../sections/plugins/OfferCountdown";
 import ConsoleDetail from "./ConsoleDetail";
 import PluginOffers from "../sections/plugins/PluginOffers";
+import PluginPromotion from "../sections/plugins/PluginPromotion";
 import { getTestimonialsForPlugin } from "../data/testimonials";
 import "./PluginDetail.css";
 
@@ -58,7 +59,7 @@ export default function PluginDetail() {
     <nav className="lp-nav" aria-label="Navegação do plugin"><Link to="/plugins" className="lp-brand">KVN<span> / PLUGINS</span></Link><div><a href="#como-funciona">O fluxo</a><a href="#faq">Dúvidas</a><a className="lp-nav-cta" href="#oferta">QUERO O MEU ↗</a></div></nav>
     <OfferCountdown />
     <header className="lp-hero lp-container">
-      <div className="lp-hero-copy"><div className="lp-eyebrow">{item.badge} <span>/ ADOBE PREMIERE PRO</span></div><p className="lp-product-name">{item.name}</p><h1>{paste ? <>A imagem que você quer.<br /><em>Sem o caminho longo.</em></> : <>Do link à edição.<br /><em>Sem o caminho longo.</em></>}</h1><p className="lp-lead">{paste ? "Copie uma imagem e cole no Premiere. Elimine o ritual de salvar, procurar a pasta e importar — e continue de onde a sua ideia parou." : "YouTube, TikTok e Instagram direto no seu fluxo. Cole o link no plugin e importe para o Premiere, sem atravessar um monte de abas e pastas."}</p><div className="lp-hero-actions"><a className="lp-button" href="#oferta">QUERO SIMPLIFICAR MINHA EDIÇÃO <span>↗</span></a><a className="lp-text-link" href="#como-funciona">Explore o fluxo ↓</a></div><div className="lp-hero-facts"><span>✓ Mac e Windows</span><span>✓ Acesso vitalício</span><span>✓ Sem mensalidade</span></div></div>
+      <div className="lp-hero-copy"><div className="lp-eyebrow">{item.badge} <span>/ ADOBE PREMIERE PRO</span></div><p className="lp-product-name">{item.name}</p><h1>{paste ? <>A imagem que você quer.<br /><em>Sem o caminho longo.</em></> : <>Do link à edição.<br /><em>Sem o caminho longo.</em></>}</h1><p className="lp-lead">{paste ? "Copie uma imagem e cole no Premiere. Elimine o ritual de salvar, procurar a pasta e importar — e continue de onde a sua ideia parou." : "YouTube, TikTok e Instagram direto no seu fluxo. Cole o link no plugin e importe para o Premiere, sem atravessar um monte de abas e pastas."}</p><PluginPromotion item={item} /><div className="lp-hero-actions"><a className="lp-button" href="#oferta">QUERO SIMPLIFICAR MINHA EDIÇÃO <span>↗</span></a><a className="lp-text-link" href="#como-funciona">Explore o fluxo ↓</a></div><div className="lp-hero-facts"><span>✓ Mac e Windows</span><span>✓ Acesso vitalício</span><span>✓ Sem mensalidade</span></div></div>
       <WorkflowPreview item={item} />
       <div className="lp-hero-bottom"><span>FERRAMENTAS PEQUENAS. UM FLUXO MAIS LEVE.</span><span>DESENVOLVIDO POR KEVIN LIRA / KVN_SYSTEMS</span></div>
     </header>
