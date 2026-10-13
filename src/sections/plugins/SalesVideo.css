@@ -7,6 +7,7 @@
 .sales-video-bar i { display: inline-block; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; margin-right: 7px; }
 .sales-video-frame { aspect-ratio: 16 / 9; position: relative; }
 .sales-video-frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #080b06; }
+.sales-video-frame iframe { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 0; background: #080b06; }
 .sales-video-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; background: radial-gradient(ellipse at center, #80f4250c, transparent 65%), repeating-linear-gradient(0deg, transparent 0 39px, #4a4f4428 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, #4a4f4428 39px 40px); }
 .sales-video-monogram { font-family: var(--font-display); font-weight: 700; font-size: clamp(54px, 9vw, 125px); line-height: 1.1; color: #80f42563; letter-spacing: -.07em; margin-bottom: 22px; }
 .sales-video-status { color: var(--primary); font-size: 10px; line-height: 1.7; letter-spacing: .09em; }
@@ -15,3 +16,4 @@
 .sales-video-caption a { color: var(--primary); }
 @media (max-width: 760px) { .sales-video { padding-block: 35px 45px; } .sales-video-heading { align-items: flex-start; flex-direction: column; gap: 18px; } .sales-video-frame { aspect-ratio: 4 / 3; } }
 @media (max-width: 560px) { .sales-video-bar { font-size: 7px; padding: 12px; } .sales-video-status { font-size: 8px; } .sales-video-placeholder p { font-size: 10px; margin: 10px 0 15px; } .sales-video-monogram { margin-bottom: 14px; font-size: 52px; } .sales-video-placeholder { padding: 16px; } }
+.sales-video-frame--ready { width: 100%; min-width: 0; aspect-ratio: 16 / 9; min-height: 200px; }

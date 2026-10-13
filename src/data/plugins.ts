@@ -35,6 +35,7 @@ export interface PluginItem {
   newWay: string[];
   demoCaption: string;
   demoVideo?: string;
+  youtubeVideoId?: string;
   demoPoster?: string;
   idealFor: string[];
   signals: string[]; // short build-log lines for the ticker — creator's voice, not customer quotes
@@ -67,6 +68,7 @@ export const copyPasta: PluginItem = {
   oldWay: ["BROWSER", "DOWNLOAD", "PASTA", "LOCALIZAR ARQUIVO", "PREMIERE", "IMPORTAR"],
   newWay: ["COPY", "PREMIERE"],
   demoCaption: "Copiar → Colar → Pronto.",
+  youtubeVideoId: "Z5c3KnCIRT4",
   idealFor: [
     "Trabalha com referências visuais",
     "Usa screenshots e imagens durante a edição",
@@ -115,6 +117,7 @@ export const youtubeImporter: PluginItem = {
   oldWay: ["YOUTUBE / TIKTOK / INSTAGRAM", "DOWNLOAD", "PASTA", "PREMIERE", "IMPORTAR"],
   newWay: ["LINK", "PLUGIN", "PREMIERE"],
   demoCaption: "Copiar link → Colar → Importar.",
+  youtubeVideoId: "iwdgJjpi3N0",
   idealFor: [
     "Trabalha constantemente com vídeos online",
     "Usa YouTube, TikTok ou Instagram como fonte",
@@ -145,6 +148,7 @@ export const kvnConsole: PluginItem = {
   oldWay: ["ABRIR PAINEL", "NAVEGAR PASTAS", "LOCALIZAR EFEITO", "APLICAR", "VOLTAR AO CORTE"],
   newWay: ["ATALHO", "BUSCAR", "APLICAR"],
   demoCaption: "Um atalho. Uma busca. De volta à edição.",
+  youtubeVideoId: "k9DzHMLTNkM",
   idealFor: ["Usa os mesmos efeitos em vários projetos", "Quer acessar transições com menos etapas", "Prefere trabalhar com atalhos", "Está montando um fluxo mais organizado no Premiere"],
   signals: ["SEU PRÓXIMO EFEITO, A UMA BUSCA DE DISTÂNCIA.", "FAVORITOS POR PERTO. MENOS TEMPO NOS MENUS.", "FEITO PARA QUEM VIVE DENTRO DO PREMIERE."],
   price: { amount: 27.9, currency: "R$", originalAmount: 47.9 },
