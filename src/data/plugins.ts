@@ -167,8 +167,7 @@ export const pluginsFaq: FaqItem[] = [
   {
     question: "O plugin funciona no Adobe Premiere Pro?",
     answer:
-      "Sim, é feito especificamente para funcionar dentro do Adobe Premiere Pro. Compatibilidade com versões específicas ainda será confirmada aqui.",
-    placeholder: true,
+      "Sim! O plugin funciona nas últimas versões do Adobe Premiere Pro.",
   },
   {
     question: "Preciso pagar mensalidade?",
@@ -184,8 +183,7 @@ export const pluginsFaq: FaqItem[] = [
   },
   {
     question: "O plugin é difícil de instalar?",
-    answer: "A DEFINIR — o passo a passo de instalação será detalhado aqui.",
-    placeholder: true,
+    answer: "Não! A instalação é muito fácil. Após a compra, você receberá um guia de instalação para Mac e Windows.",
   },
   {
     question: "O YouTube Importer funciona com quais plataformas?",
@@ -194,8 +192,7 @@ export const pluginsFaq: FaqItem[] = [
   },
   {
     question: "Posso usar o plugin em mais de um computador?",
-    answer: "A DEFINIR — a política de uso em múltiplos computadores será detalhada aqui.",
-    placeholder: true,
+    answer: "Sim! O acesso é vitalício, e você pode usar o plugin em quantos computadores quiser. Para facilitar a instalação, ele não exige chaves de acesso. Só peço que não compartilhe o plugin com outras pessoas: confio na sua honestidade!",
   },
 ];
 
