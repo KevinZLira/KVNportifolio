@@ -7,6 +7,7 @@ import PluginsFooter from "../sections/plugins/PluginsFooter";
 import Testimonials from "../sections/plugins/Testimonials";
 import SalesVideo from "../sections/plugins/SalesVideo";
 import OfferCountdown from "../sections/plugins/OfferCountdown";
+import ConsoleDetail from "./ConsoleDetail";
 import { getTestimonialsForPlugin } from "../data/testimonials";
 import "./PluginDetail.css";
 
@@ -39,6 +40,7 @@ export default function PluginDetail() {
     return () => { document.title = previous; };
   }, [item, setSectionLabel]);
   if (!item) return <div className="plugin-detail-missing"><p>PLUGIN NÃO ENCONTRADO</p><Link to="/plugins">← VOLTAR AOS PLUGINS</Link></div>;
+  if (item.mockup === "console") return <ConsoleDetail item={item} />;
   const paste = item.mockup === "paste";
   const other = getOtherPlugin(item.slug);
   const individualHref = getPurchaseHref(item.name, item.purchaseUrl);

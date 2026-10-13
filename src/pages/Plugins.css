@@ -67,6 +67,14 @@
   transform: translateY(-2px);
 }
 
+@media (min-width: 641px) {
+  .showroom-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc((100% - clamp(16px, 2.4vw, 32px)) / 2);
+    justify-self: center;
+  }
+}
+
 .showroom-card-badge {
   font-size: 10px;
   letter-spacing: 0.14em;

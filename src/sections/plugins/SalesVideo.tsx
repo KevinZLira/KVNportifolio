@@ -13,7 +13,7 @@ export default function SalesVideo({ item }: { item: PluginItem }) {
           <span className="lp-section-label">MENOS ETAPAS. NA PRÁTICA.</span>
           <h2 id="sales-video-heading">Seu próximo atalho.<br /><span>Veja como funciona.</span></h2>
         </div>
-        <p>{item.mockup === "paste" ? "Da imagem copiada ao seu projeto no Premiere." : "Do link ao seu projeto no Premiere."}<br />Conheça o {item.name} em vídeo.</p>
+        <p>{item.mockup === "console" ? "Da busca ao efeito no seu clipe." : item.mockup === "paste" ? "Da imagem copiada ao seu projeto no Premiere." : "Do link ao seu projeto no Premiere."}<br />Conheça o {item.name} em vídeo.</p>
       </div>
       <div className="sales-video-window">
         <div className="sales-video-bar"><span><i /> {item.name.toUpperCase()}</span><span>DEMONSTRAÇÃO</span></div>
@@ -22,7 +22,7 @@ export default function SalesVideo({ item }: { item: PluginItem }) {
             <video key={item.demoVideo} src={item.demoVideo} poster={item.demoPoster} controls playsInline preload="metadata" aria-label={`Vídeo de apresentação do ${item.name}`} onError={() => setUnavailable(true)} />
           ) : (
             <div className="sales-video-placeholder">
-              <span className="sales-video-monogram" aria-hidden="true">{item.mockup === "paste" ? "C+V" : "URL"}</span>
+              <span className="sales-video-monogram" aria-hidden="true">{item.mockup === "console" ? "FX" : item.mockup === "paste" ? "C+V" : "URL"}</span>
               <span className="sales-video-status">{unavailable ? "VÍDEO INDISPONÍVEL NO MOMENTO" : "DEMONSTRAÇÃO EM VÍDEO EM BREVE"}</span>
               <p>Enquanto isso, explore o fluxo na prévia interativa.</p>
               <a href="#previa" className="lp-text-link">EXPLORAR A PRÉVIA ↑</a>

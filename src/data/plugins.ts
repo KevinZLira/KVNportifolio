@@ -41,7 +41,7 @@ export interface PluginItem {
   price: PluginPrice;
   purchaseUrl?: string; // no checkout link exists yet — every CTA falls back to mailto
   accent: string;
-  mockup: "paste" | "link";
+  mockup: "paste" | "link" | "console";
 }
 
 export const copyPasta: PluginItem = {
@@ -132,9 +132,27 @@ export const youtubeImporter: PluginItem = {
   mockup: "link",
 };
 
-// Only two products today — the array is the extension point: a third
-// plugin is a data entry here plus one PluginSection usage, nothing else.
-export const plugins: PluginItem[] = [copyPasta, youtubeImporter];
+export const kvnConsole: PluginItem = {
+  id: "03",
+  slug: "kvn-console",
+  badge: "PLUGIN #03",
+  name: "KVN Console",
+  headline: "Encontre o efeito. Continue no corte.",
+  pitch: "Busque efeitos e transições no Premiere Pro, mantenha seus favoritos por perto e abra a busca com um atalho configurável.",
+  pains: ["Procurar o mesmo efeito em painéis e pastas toda vez que precisa dele.", "Interromper a edição para navegar por menus e lembrar onde está cada recurso."],
+  explainerSteps: ["Selecione o clipe na timeline.", "Abra o Console pelo seu atalho.", "Busque o efeito ou a transição.", "Aplique e continue editando."],
+  benefits: ["Busca de efeitos e transições", "Favoritos para os recursos que você mais usa", "Histórico para reencontrar os últimos recursos", "Atalho configurável para abrir a busca", "Hub de atalhos no Windows", "Feito para usar dentro do Premiere Pro"],
+  oldWay: ["ABRIR PAINEL", "NAVEGAR PASTAS", "LOCALIZAR EFEITO", "APLICAR", "VOLTAR AO CORTE"],
+  newWay: ["ATALHO", "BUSCAR", "APLICAR"],
+  demoCaption: "Um atalho. Uma busca. De volta à edição.",
+  idealFor: ["Usa os mesmos efeitos em vários projetos", "Quer acessar transições com menos etapas", "Prefere trabalhar com atalhos", "Está montando um fluxo mais organizado no Premiere"],
+  signals: ["SEU PRÓXIMO EFEITO, A UMA BUSCA DE DISTÂNCIA.", "FAVORITOS POR PERTO. MENOS TEMPO NOS MENUS.", "FEITO PARA QUEM VIVE DENTRO DO PREMIERE."],
+  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
+  accent: "#80f425",
+  mockup: "console",
+};
+
+export const plugins: PluginItem[] = [copyPasta, youtubeImporter, kvnConsole];
 
 export function getPluginBySlug(slug: string | undefined) {
   return plugins.find((p) => p.slug === slug);
