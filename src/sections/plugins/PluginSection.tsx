@@ -43,7 +43,7 @@ function LinkMockup({ platforms }: { platforms: string[] }) {
       <div className="pmock-arrow">↓</div>
       <div className="pmock-url">youtube.com/watch?v=...</div>
       <div className="pmock-arrow">↓</div>
-      <div className="pmock-plugin-box">YouTube Importer</div>
+      <div className="pmock-plugin-box">KVN Importer</div>
       <div className="pmock-arrow">↓</div>
       <div className="pmock-premiere pmock-premiere--timeline">
         <span className="pmock-premiere-bar">Premiere Pro — Timeline</span>

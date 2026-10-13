@@ -79,7 +79,7 @@ export const copyPasta: PluginItem = {
     "MENOS ARQUIVO SOLTO NO COMPUTADOR.",
     "FEITO PRA QUEM EDITA TODO DIA.",
   ],
-  price: { amount: 27.9, currency: "R$" },
+  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
   accent: "#80f425",
   mockup: "paste",
 };
@@ -88,9 +88,9 @@ export const youtubeImporter: PluginItem = {
   id: "02",
   slug: "youtube-importer",
   badge: "PLUGIN #02",
-  name: "YouTube Importer",
+  name: "KVN Importer",
   headline: "Um link. O arquivo está no seu Premiere.",
-  pitch: "O YouTube Importer permite importar conteúdos diretamente para o Premiere Pro simplesmente colando o link.",
+  pitch: "O KVN Importer permite importar conteúdos diretamente para o Premiere Pro simplesmente colando o link.",
   platforms: ["YouTube", "TikTok", "Instagram"],
   pains: [
     "Abrir navegador, baixar arquivo, localizar pasta e importar manualmente.",
@@ -127,7 +127,7 @@ export const youtubeImporter: PluginItem = {
     "MENOS ABA, MENOS DOWNLOAD, MENOS FRICÇÃO.",
     "FEITO PRA QUEM VIVE DENTRO DO PREMIERE.",
   ],
-  price: { amount: 27.9, currency: "R$" },
+  price: { amount: 27.9, currency: "R$", originalAmount: 49.9 },
   accent: "#80f425",
   mockup: "link",
 };
@@ -186,7 +186,7 @@ export const pluginsFaq: FaqItem[] = [
     answer: "Não! A instalação é muito fácil. Após a compra, você receberá um guia de instalação para Mac e Windows.",
   },
   {
-    question: "O YouTube Importer funciona com quais plataformas?",
+    question: "O KVN Importer funciona com quais plataformas?",
     answer: "YouTube, TikTok e Instagram.",
     onlyFor: "youtube-importer",
   },

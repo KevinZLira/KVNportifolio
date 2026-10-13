@@ -20,7 +20,8 @@ function AppShell() {
   const { systemState, enterSystem } = useSystem();
   const [navOpen, setNavOpen] = useState(false);
   const location = useLocation();
-  const booting = systemState === "BOOT";
+  const pluginPage = location.pathname === "/plugins" || location.pathname.startsWith("/plugins/");
+  const booting = systemState === "BOOT" && !pluginPage;
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -43,11 +44,11 @@ function AppShell() {
           while hidden. */}
       <div className="app-shell" inert={booting}>
         <CustomCursor />
-        <BackgroundMusic />
+        {!pluginPage && <BackgroundMusic />}
         <SystemBar onMenu={() => setNavOpen((v) => !v)} />
         <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
         <SystemToaster />
-        <RandomEvents />
+        {!pluginPage && <RandomEvents />}
         {location.pathname === "/" && <ScrollHUD />}
 
         <main className="app-main" key={location.pathname}>
