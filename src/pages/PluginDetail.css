@@ -109,6 +109,16 @@
 .lp .lp-button-outline:hover { background: #80f42515; border-color: var(--primary); }
 .lp-price-combo { border-color: var(--primary); background: linear-gradient(145deg, #303b26, #252623 65%); }
 .lp-price-combo strong { color: var(--primary); }
+.lp #previa { scroll-margin-top: 145px; }
+.lp-price-promo { border-color: #8c803f; }
+.lp-launch-badge { display: inline-flex; align-self: flex-start; padding: 8px 12px; margin: -8px 0 22px; background: var(--warn); color: #27210b; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+.lp-price .lp-price-before { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; color: var(--lp-muted); }
+.lp-price-before s { color: #d1c9ba; font-family: var(--font-display); font-size: 25px; text-decoration-thickness: 2px; }
+.lp-price .lp-price-condition { margin-top: 17px; color: var(--warn); font-size: 9px; letter-spacing: .04em; line-height: 1.7; }
+.lp-price-promo strong { color: var(--warn); }
+.lp-price .lp-price-saving { align-self: flex-start; padding: 7px 10px; margin: 5px 0 12px; border: 1px solid #8c803f; color: var(--warn); background: #ffd23f08; font-size: 9px; line-height: 1.7; }
+.lp-price-promo .lp-button-outline { background: var(--warn); border-color: var(--warn); color: #27210b; }
+.lp-price-promo .lp-button-outline:hover { background: #ffe47d; border-color: #ffe47d; color: #27210b; }
 .lp-combo-badge { position: absolute; top: -13px; right: 22px; color: #19220f; background: var(--primary); padding: 7px 12px; font-size: 9px; font-weight: 700; letter-spacing: .04em; }
 .lp-purchase-note { font-size: 10px; color: var(--lp-muted); text-align: center; line-height: 1.8; margin: 24px 0 36px; }
 .lp-trust { display: flex; justify-content: space-between; gap: 16px; padding-top: 25px; border-top: 1px solid var(--line); font-size: 9px; line-height: 1.8; color: var(--fg-dim); }

@@ -1,0 +1,17 @@
+.sales-video { padding-block: 54px 64px; }
+.sales-video-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 35px; margin-bottom: 28px; }
+.sales-video-heading h2 { margin-top: 16px; font-size: clamp(30px, 3.5vw, 44px); }
+.sales-video-heading p { font-size: 11px; line-height: 1.9; color: var(--lp-muted); margin: 0; max-width: 40ch; }
+.sales-video-window { border: 1px solid #526046; background: #161a13; }
+.sales-video-bar { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 13px 18px; border-bottom: 1px solid var(--line-strong); font-size: 9px; letter-spacing: .08em; color: var(--lp-muted); }
+.sales-video-bar i { display: inline-block; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; margin-right: 7px; }
+.sales-video-frame { aspect-ratio: 16 / 9; position: relative; }
+.sales-video-frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #080b06; }
+.sales-video-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; background: radial-gradient(ellipse at center, #80f4250c, transparent 65%), repeating-linear-gradient(0deg, transparent 0 39px, #4a4f4428 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, #4a4f4428 39px 40px); }
+.sales-video-monogram { font-family: var(--font-display); font-weight: 700; font-size: clamp(54px, 9vw, 125px); line-height: 1.1; color: #80f42563; letter-spacing: -.07em; margin-bottom: 22px; }
+.sales-video-status { color: var(--primary); font-size: 10px; line-height: 1.7; letter-spacing: .09em; }
+.sales-video-placeholder p { color: var(--lp-muted); font-size: 11px; line-height: 1.8; margin: 14px 0 20px; }
+.sales-video-caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 15px; font-size: 8px; letter-spacing: .07em; color: var(--fg-dim); padding-top: 17px; }
+.sales-video-caption a { color: var(--primary); }
+@media (max-width: 760px) { .sales-video { padding-block: 35px 45px; } .sales-video-heading { align-items: flex-start; flex-direction: column; gap: 18px; } .sales-video-frame { aspect-ratio: 4 / 3; } }
+@media (max-width: 560px) { .sales-video-bar { font-size: 7px; padding: 12px; } .sales-video-status { font-size: 8px; } .sales-video-placeholder p { font-size: 10px; margin: 10px 0 15px; } .sales-video-monogram { margin-bottom: 14px; font-size: 52px; } .sales-video-placeholder { padding: 16px; } }
