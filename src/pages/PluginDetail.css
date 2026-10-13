@@ -107,8 +107,11 @@
 .lp-price-card .lp-button { margin-top: auto; width: 100%; }
 .lp .lp-button-outline { background: transparent; color: var(--fg); border-color: #647451; }
 .lp .lp-button-outline:hover { background: #80f42515; border-color: var(--primary); }
-.lp-price-combo { border-color: var(--primary); background: linear-gradient(145deg, #303b26, #252623 65%); }
+.lp-price-combo { --primary: #35ded0; --primary-dim: #236d68; --primary-glow: rgba(53, 222, 208, .3); border-color: var(--primary); background: linear-gradient(145deg, #203e3b, #232928 65%); }
 .lp-price-combo strong { color: var(--primary); }
+.lp-price-combo .lp-button { color: #102422; }
+.lp-price-combo .lp-button:hover { background: #79f5eb; border-color: #79f5eb; }
+.lp .lp-price-combo .plugin-offer-bonus { background: #35ded008; }
 .lp #previa { scroll-margin-top: calc(var(--lp-system-height) + var(--lp-nav-height) + var(--lp-banner-height) + 20px); }
 .lp-price-promo { border-color: var(--primary-dim); }
 .lp-launch-badge { display: inline-flex; align-self: flex-start; padding: 8px 12px; margin: -8px 0 22px; background: var(--primary); color: #19220f; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
