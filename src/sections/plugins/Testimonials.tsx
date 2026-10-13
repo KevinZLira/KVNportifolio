@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import SectionPurchaseLink from "./SectionPurchaseLink";
 import "./Testimonials.css";
 
 export interface Testimonial {
@@ -17,7 +18,7 @@ function AnonymousAvatar({ index }: { index: number }) {
   return <svg className={`testimonials-avatar testimonials-avatar--${index % 4}`} viewBox="0 0 64 64" aria-hidden="true">{shapes[index % shapes.length]}</svg>;
 }
 
-export default function Testimonials({ items, productName, heading = <>Menos etapas.<br /><span>Na voz de quem usa.</span></> }: { items: Testimonial[]; productName: string; heading?: ReactNode }) {
+export default function Testimonials({ items, productName, heading = "Confira alguns comentários de editores que já ajudamos com esse plugin!" }: { items: Testimonial[]; productName: string; heading?: ReactNode }) {
   const [paused, setPaused] = useState(false);
   if (!items.length) return null;
   return <section className="testimonials" aria-labelledby="testimonials-title">
@@ -31,5 +32,6 @@ export default function Testimonials({ items, productName, heading = <>Menos eta
         </figure>)}</div>)}
       </div>
     </div>
+    <div className="lp-container"><SectionPurchaseLink /></div>
   </section>;
 }

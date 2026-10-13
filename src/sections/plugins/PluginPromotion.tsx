@@ -9,6 +9,6 @@ export default function PluginPromotion({ item, compact = false }: { item: Plugi
       <span className="plugin-promotion-now">POR <strong>{item.price.currency} {formatPriceAmount(item.price.amount)}</strong></span>
     </div>
     {saving > 0 && <span className="plugin-promotion-badge">{item.price.currency} {formatPriceAmount(saving)} OFF</span>}
-    {!compact && <div className="plugin-promotion-bonus"><span aria-hidden="true">＋</span><p><strong>BÔNUS EM QUALQUER COMPRA</strong>{pluginBonus.name}</p></div>}
+    {!compact && <div className="plugin-promotion-bonus"><span aria-hidden="true">＋</span><p><strong>BÔNUS GRÁTIS EM QUALQUER COMPRA</strong>{pluginBonus.name}</p></div>}
   </div>;
 }

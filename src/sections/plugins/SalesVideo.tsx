@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { PluginItem } from "../../data/plugins";
+import SectionPurchaseLink from "./SectionPurchaseLink";
 import "./SalesVideo.css";
 
 export default function SalesVideo({ item }: { item: PluginItem }) {
@@ -40,7 +41,8 @@ export default function SalesVideo({ item }: { item: PluginItem }) {
           )}
         </div>
       </div>
-      <div className="sales-video-caption"><span>FEITO PARA O SEU FLUXO NO PREMIERE PRO.</span>{item.youtubeVideoId && <a href={`https://www.youtube.com/watch?v=${item.youtubeVideoId}`} target="_blank" rel="noopener noreferrer">ASSISTIR NO YOUTUBE ↗</a>}<a href="#oferta">CONHECER AS OFERTAS ↗</a></div>
+      <SectionPurchaseLink />
+      <div className="sales-video-caption"><span>FEITO PARA O SEU FLUXO NO PREMIERE PRO.</span>{item.youtubeVideoId && <a href={`https://www.youtube.com/watch?v=${item.youtubeVideoId}`} target="_blank" rel="noopener noreferrer">ASSISTIR NO YOUTUBE ↗</a>}</div>
     </section>
   );
 }

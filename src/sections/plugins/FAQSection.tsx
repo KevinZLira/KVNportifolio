@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FaqItem } from "../../data/plugins";
 import { sfx } from "../../lib/sound";
+import SectionPurchaseLink from "./SectionPurchaseLink";
 import "./FAQSection.css";
 
 export default function FAQSection({ items }: { items: FaqItem[] }) {
@@ -37,6 +38,7 @@ export default function FAQSection({ items }: { items: FaqItem[] }) {
           );
         })}
       </div>
+      <SectionPurchaseLink />
     </section>
   );
 }

@@ -159,8 +159,8 @@ export const kvnConsole: PluginItem = {
 export const plugins: PluginItem[] = [copyPasta, youtubeImporter, kvnConsole];
 
 export const pluginBonus = {
-  name: "Pacote com 10 predefinições de animações e efeitos",
-  shortLabel: "Bônus: 10 predefinições de animações e efeitos",
+  name: "Pack com mais de 10 predefinições de animações e efeitos",
+  shortLabel: "Grátis: pack com mais de 10 predefinições de animações e efeitos",
 };
 
 export const pluginCombo: {
