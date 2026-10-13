@@ -1,7 +1,7 @@
-.lp { --lp-muted: #b4b9ac; padding: 49px 0 76px; position: relative; background: var(--bg-000); }
+.lp { --lp-muted: #b4b9ac; --lp-system-height: 49px; --lp-nav-height: 76px; --lp-banner-height: 48px; padding: 49px 0 76px; position: relative; background: var(--bg-000); }
 .lp *, .lp *::before, .lp *::after { box-sizing: border-box; }
 .lp :is(a, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 5px; }
-.lp :is(section[id], #faq) { scroll-margin-top: 130px; }
+.lp :is(section[id], #faq) { scroll-margin-top: calc(var(--lp-system-height) + var(--lp-nav-height) + var(--lp-banner-height) + 20px); }
 .lp-container { width: min(1200px, 88%); margin: 0 auto; }
 .lp-nav { position: sticky; top: 49px; z-index: 310; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 17px 6%; background: #211f20f5; border-bottom: 1px solid var(--line-strong); backdrop-filter: blur(16px); }
 .lp-brand { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: -.06em; }
@@ -109,7 +109,7 @@
 .lp .lp-button-outline:hover { background: #80f42515; border-color: var(--primary); }
 .lp-price-combo { border-color: var(--primary); background: linear-gradient(145deg, #303b26, #252623 65%); }
 .lp-price-combo strong { color: var(--primary); }
-.lp #previa { scroll-margin-top: 145px; }
+.lp #previa { scroll-margin-top: calc(var(--lp-system-height) + var(--lp-nav-height) + var(--lp-banner-height) + 20px); }
 .lp-price-promo { border-color: #8c803f; }
 .lp-launch-badge { display: inline-flex; align-self: flex-start; padding: 8px 12px; margin: -8px 0 22px; background: var(--warn); color: #27210b; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
 .lp-price .lp-price-before { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; color: var(--lp-muted); }
@@ -155,7 +155,7 @@
   .lp-trust { flex-wrap: wrap; } .lp .faq { padding-block: 60px; }
 }
 @media (max-width: 560px) {
-  .lp { padding-top: 41px; } .lp-nav { top: 41px; padding-block: 12px; gap: 10px; }
+  .lp { --lp-system-height: 41px; padding-top: 41px; } .lp-nav { top: 41px; padding-block: 12px; gap: 10px; }
   .lp-nav > div { gap: 14px; } .lp-nav > div > a:not(.lp-nav-cta) { display: none; }
   .lp-brand { font-size: 21px; } .lp-brand span { margin-left: 5px; font-size: 8px; }
   .lp-nav .lp-nav-cta { font-size: 9px; padding: 10px 12px; }

@@ -1,0 +1,11 @@
+.offer-countdown { position: sticky; top: calc(var(--lp-system-height) + var(--lp-nav-height)); z-index: 300; display: flex; align-items: center; justify-content: center; gap: 24px; min-height: 48px; padding: 9px 6%; border-bottom: 1px solid #9a8335; background: #342f1cf5; backdrop-filter: blur(14px); color: var(--warn); }
+.offer-countdown-label { display: inline-flex; align-items: center; gap: 9px; font-size: 10px; font-weight: 700; letter-spacing: .08em; line-height: 1.5; }
+.offer-countdown-label > span { font-size: 19px; font-weight: 400; }
+.offer-countdown-time { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: .04em; white-space: nowrap; min-width: 5ch; text-align: center; }
+.offer-countdown-time > span { padding-inline: 2px; }
+.offer-countdown a { padding: 7px 10px; border: 1px solid #9a8335; font-size: 9px; line-height: 1.5; font-weight: 700; white-space: nowrap; }
+.offer-countdown a:hover { background: var(--warn); color: #27210b; }
+.offer-countdown.is-expired { background: #252623f5; border-color: var(--line-strong); color: var(--lp-muted); }
+.offer-countdown.is-expired a { border-color: var(--line-strong); }
+.offer-countdown-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 560px) { .offer-countdown { gap: 12px; padding: 9px 6%; min-height: 44px; } .offer-countdown-label { font-size: 8px; letter-spacing: .025em; gap: 6px; } .offer-countdown-label > span { font-size: 16px; } .offer-countdown-time { font-size: 22px; } .offer-countdown a { display: none; } }

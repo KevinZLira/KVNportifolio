@@ -6,6 +6,7 @@ import FAQSection from "../sections/plugins/FAQSection";
 import PluginsFooter from "../sections/plugins/PluginsFooter";
 import Testimonials from "../sections/plugins/Testimonials";
 import SalesVideo from "../sections/plugins/SalesVideo";
+import OfferCountdown from "../sections/plugins/OfferCountdown";
 import { getTestimonialsForPlugin } from "../data/testimonials";
 import "./PluginDetail.css";
 
@@ -54,7 +55,7 @@ export default function PluginDetail() {
   const audiences = paste ? ["Você monta vídeos com memes, screenshots e referências visuais.", "Você está começando e quer um fluxo mais simples desde o primeiro projeto.", "Você edita todo dia e quer cortar as tarefas repetitivas do caminho."] : ["Você trabalha com conteúdos do YouTube, TikTok e Instagram.", "Você está começando e quer importar vídeos e músicas com menos etapas.", "Você vive no Premiere e quer passar menos tempo alternando janelas."];
   return <article className="plugin-detail lp">
     <nav className="lp-nav" aria-label="Navegação do plugin"><Link to="/plugins" className="lp-brand">KVN<span> / PLUGINS</span></Link><div><a href="#como-funciona">O fluxo</a><a href="#faq">Dúvidas</a><a className="lp-nav-cta" href="#oferta">QUERO O MEU ↗</a></div></nav>
-    <div className="lp-announcement"><span className="lp-status-dot" />SEU TEMPO É PARA EDITAR. NÃO PARA REPETIR TAREFAS.</div>
+    <OfferCountdown />
     <header className="lp-hero lp-container">
       <div className="lp-hero-copy"><div className="lp-eyebrow">{item.badge} <span>/ ADOBE PREMIERE PRO</span></div><p className="lp-product-name">{item.name}</p><h1>{paste ? <>A imagem que você quer.<br /><em>Sem o caminho longo.</em></> : <>Do link à edição.<br /><em>Sem o caminho longo.</em></>}</h1><p className="lp-lead">{paste ? "Copie uma imagem e cole no Premiere. Elimine o ritual de salvar, procurar a pasta e importar — e continue de onde a sua ideia parou." : "YouTube, TikTok e Instagram direto no seu fluxo. Cole o link no plugin e importe para o Premiere, sem atravessar um monte de abas e pastas."}</p><div className="lp-hero-actions"><a className="lp-button" href="#oferta">QUERO SIMPLIFICAR MINHA EDIÇÃO <span>↗</span></a><a className="lp-text-link" href="#como-funciona">Explore o fluxo ↓</a></div><div className="lp-hero-facts"><span>✓ Mac e Windows</span><span>✓ Acesso vitalício</span><span>✓ Sem mensalidade</span></div></div>
       <WorkflowPreview item={item} />
