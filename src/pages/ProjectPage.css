@@ -176,3 +176,12 @@
     text-align: right;
   }
 }
+
+.project-title { overflow-wrap: anywhere; }
+.project-gallery { display: grid; gap: 16px; margin-bottom: 24px; }
+.project-gallery img { display: block; width: 100%; height: auto; }
+.project-gallery iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--line-strong); }
+.project-source { display: inline-block; color: var(--primary); font-size: 12px; margin-bottom: 36px; padding: 10px 0; }
+.project-source:hover { text-decoration: underline; }
+.project-nav { gap: 20px; }
+.project-nav-btn { min-width: 0; overflow-wrap: anywhere; }

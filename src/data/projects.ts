@@ -15,142 +15,181 @@ export interface Project {
   tools: string[];
   description: string;
   accent: string;
+  images: string[];
+  videos: string[];
+  behanceUrl: string;
 }
 
-// PLACEHOLDER DATASET — replace with real work later.
-// Structure is what matters: add/remove entries here, nothing
-// else in the app needs to change.
+// Imported from Kevin Lira’s public Behance projects. Years are publication years.
 export const projects: Project[] = [
   {
-    id: "001",
-    slug: "mrblurryface",
-    title: "MRBLURRYFACE",
-    subtitle: "Sequência de abertura para canal de música eletrônica",
-    category: "VIDEO",
-    year: 2026,
-    tools: ["AFTER EFFECTS", "PREMIERE PRO"],
-    description:
-      "Vinheta de abertura construída em camadas de ruído, distorção RGB e tipografia quebrada. O objetivo era simular a degradação de um sinal de vídeo analógico sendo recebido por um sistema desconhecido.",
-    accent: "#6dffa8",
+    "id": "001",
+    "slug": "prateleira-infinita",
+    "title": "Prateleira Infinita - RD Saúde",
+    "year": 2026,
+    "category": "BRANDING",
+    "subtitle": "Identidade visual para a Prateleira Infinita da RD Saúde",
+    "tools": [
+      "PHOTOSHOP",
+      "ILLUSTRATOR"
+    ],
+    "description": "Projeto de identidade visual para a Prateleira Infinita da RD Saúde.",
+    "accent": "#6dffa8",
+    "images": [
+      "/projects/prateleira-infinita/01.webp",
+      "/projects/prateleira-infinita/02.webp",
+      "/projects/prateleira-infinita/03.webp",
+      "/projects/prateleira-infinita/04.webp",
+      "/projects/prateleira-infinita/05.webp",
+      "/projects/prateleira-infinita/06.webp",
+      "/projects/prateleira-infinita/07.webp",
+      "/projects/prateleira-infinita/08.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/247317797/Prateleira-Infinita-RD-Saude",
+    "videos": [
+      "https://www-ccv.adobe.io/v1/player/ccv/8x8e5snz5SD/embed?api_key=behance1&bgcolor=%23191919"
+    ]
   },
   {
-    id: "002",
-    slug: "nullpoint",
-    title: "NULLPOINT",
-    subtitle: "Identidade visual para coletivo de arte generativa",
-    category: "BRANDING",
-    year: 2025,
-    tools: ["ILLUSTRATOR", "FIGMA"],
-    description:
-      "Sistema de marca modular baseado em coordenadas e grids de precisão. Cada aplicação da marca é gerada a partir de um conjunto de regras, nunca fixa.",
-    accent: "#ff2ec4",
+    "id": "002",
+    "slug": "pc-scifi",
+    "title": "PC Scifi",
+    "year": 2025,
+    "category": "DESIGN",
+    "subtitle": "Modelagem e renderização 3D de um computador sci-fi",
+    "tools": [
+      "BLENDER"
+    ],
+    "description": "Projeto de design de produto e modelagem 3D de um computador com estética de ficção científica.",
+    "accent": "#ff2ec4",
+    "images": [
+      "/projects/pc-scifi/01.webp",
+      "/projects/pc-scifi/02.webp",
+      "/projects/pc-scifi/03.webp",
+      "/projects/pc-scifi/04.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/231515391/PC-Scifi",
+    "videos": [
+      "https://www-ccv.adobe.io/v1/player/ccv/LAg5yVHDei4/embed?api_key=behance1&bgcolor=%23191919"
+    ]
   },
   {
-    id: "003",
-    slug: "signal-loss",
-    title: "SIGNAL_LOSS",
-    subtitle: "Curta-metragem experimental — motion + live action",
-    category: "MOTION",
-    year: 2025,
-    tools: ["AFTER EFFECTS", "BLENDER"],
-    description:
-      "Peça experimental que mistura captação real com camadas 3D de baixa resolução, propositalmente quebradas, evocando memória de VHS.",
-    accent: "#6dffa8",
+    "id": "003",
+    "slug": "lunoboy",
+    "title": "Lunoboy",
+    "year": 2025,
+    "category": "DESIGN",
+    "subtitle": "Conceito de console portátil retrofuturista",
+    "tools": [],
+    "description": "Projeto pessoal que explora a estética retrofuturista e a experiência de uso em jogos portáteis. O LunoBoy foi desenhado do zero, combinando formas nostálgicas com detalhes de cores marcantes.",
+    "accent": "#ffd23f",
+    "images": [
+      "/projects/lunoboy/01.webp",
+      "/projects/lunoboy/02.webp",
+      "/projects/lunoboy/03.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/231514841/Lunoboy",
+    "videos": [
+      "https://www-ccv.adobe.io/v1/player/ccv/EAVUSm2-L9t/embed?api_key=behance1&bgcolor=%23191919",
+      "https://www-ccv.adobe.io/v1/player/ccv/6kxczPDrHVm/embed?api_key=behance1&bgcolor=%23191919"
+    ]
   },
   {
-    id: "004",
-    slug: "ghostwire-poster",
-    title: "GHOSTWIRE",
-    subtitle: "Sistema de pôsteres para festival de cinema independente",
-    category: "DESIGN",
-    year: 2024,
-    tools: ["PHOTOSHOP", "ILLUSTRATOR"],
-    description:
-      "Série de dez pôsteres explorando tipografia digital quebrada e composições assimétricas, um para cada dia de festival.",
-    accent: "#ffd23f",
+    "id": "004",
+    "slug": "better-experience-for-3ds",
+    "title": "Better experience for 3DS",
+    "year": 2025,
+    "category": "DESIGN",
+    "subtitle": "Render de um Nintendo 3DS personalizado",
+    "tools": [
+      "BLENDER"
+    ],
+    "description": "Render de um 3DS personalizado, inspirado nos acessórios extras que ampliavam a experiência do Game Boy.",
+    "accent": "#6dffa8",
+    "images": [
+      "/projects/better-experience-for-3ds/01.webp",
+      "/projects/better-experience-for-3ds/02.webp",
+      "/projects/better-experience-for-3ds/03.webp",
+      "/projects/better-experience-for-3ds/04.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/231478009/Better-experience-for-3DS",
+    "videos": [
+      "https://www-ccv.adobe.io/v1/player/ccv/5_5cSeXXDMq/embed?api_key=behance1&bgcolor=%23191919"
+    ]
   },
   {
-    id: "005",
-    slug: "deep-idle",
-    title: "DEEP_IDLE",
-    subtitle: "Loop visual para instalação em galeria",
-    category: "EXPERIMENTAL",
-    year: 2024,
-    tools: ["TOUCHDESIGNER", "AFTER EFFECTS"],
-    description:
-      "Instalação de vídeo em loop de 40 minutos, sem repetição perceptível, pensada para rodar continuamente em uma sala escura.",
-    accent: "#6dffa8",
+    "id": "005",
+    "slug": "chroma",
+    "title": "Design - CHROMA",
+    "year": 2023,
+    "category": "DESIGN",
+    "subtitle": "Design gráfico — CHROMA",
+    "tools": [],
+    "description": "Projeto de design gráfico CHROMA.",
+    "accent": "#ff2ec4",
+    "images": [
+      "/projects/chroma/01.webp",
+      "/projects/chroma/02.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/185238925/Design-CHROMA",
+    "videos": []
   },
   {
-    id: "006",
-    slug: "protocol-9",
-    title: "PROTOCOL_9",
-    subtitle: "Trailer motion design para lançamento de produto",
-    category: "MOTION",
-    year: 2024,
-    tools: ["AFTER EFFECTS", "CINEMA 4D"],
-    description:
-      "Trailer de 45 segundos construído inteiramente com elementos de HUD e tipografia técnica, sem uso de imagem real do produto.",
-    accent: "#ff2ec4",
+    "id": "006",
+    "slug": "medusa-perseu",
+    "title": "Medusa X Perseu - Design",
+    "year": 2023,
+    "category": "DESIGN",
+    "subtitle": "Design gráfico — Medusa e Perseu",
+    "tools": [],
+    "description": "Projeto de design gráfico com o tema Medusa e Perseu.",
+    "accent": "#ffd23f",
+    "images": [
+      "/projects/medusa-perseu/01.webp",
+      "/projects/medusa-perseu/02.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/185237697/Medusa-X-Perseu-Design",
+    "videos": []
   },
   {
-    id: "007",
-    slug: "cathode",
-    title: "CATHODE",
-    subtitle: "Vídeo musical — edição rítmica e color grading",
-    category: "VIDEO",
-    year: 2023,
-    tools: ["PREMIERE PRO", "DAVINCI RESOLVE"],
-    description:
-      "Edição sincronizada quadro a quadro com a batida, usando cortes secos e glitches de compressão como elemento rítmico.",
-    accent: "#6dffa8",
+    "id": "007",
+    "slug": "aristoteles",
+    "title": "Aristóteles e seu pensamento empírico - Design",
+    "year": 2023,
+    "category": "DESIGN",
+    "subtitle": "Design gráfico — filosofia e pensamento empírico",
+    "tools": [],
+    "description": "Projeto de design gráfico sobre Aristóteles e seu pensamento empírico.",
+    "accent": "#6dffa8",
+    "images": [
+      "/projects/aristoteles/01.webp",
+      "/projects/aristoteles/02.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/185196543/Aristoteles-e-seu-pensamento-empirico-Design",
+    "videos": []
   },
   {
-    id: "008",
-    slug: "archive-01",
-    title: "ARCHIVE_01",
-    subtitle: "Identidade para arquivo digital de artistas visuais",
-    category: "BRANDING",
-    year: 2023,
-    tools: ["FIGMA", "ILLUSTRATOR"],
-    description:
-      "Sistema de identidade pensado para funcionar primeiro como interface, depois como marca — nasceu de uma tabela de dados.",
-    accent: "#ffd23f",
-  },
-  {
-    id: "009",
-    slug: "low-orbit",
-    title: "LOW_ORBIT",
-    subtitle: "Motion para abertura de podcast de tecnologia",
-    category: "MOTION",
-    year: 2023,
-    tools: ["AFTER EFFECTS"],
-    description:
-      "Sequência de 12 segundos com tipografia cinética e transições baseadas em corrupção de dados simulada.",
-    accent: "#6dffa8",
-  },
-  {
-    id: "010",
-    slug: "surface-tension",
-    title: "SURFACE_TENSION",
-    subtitle: "Peça experimental de tipografia cinética",
-    category: "EXPERIMENTAL",
-    year: 2022,
-    tools: ["AFTER EFFECTS", "PROCESSING"],
-    description:
-      "Estudo de tipografia reagindo a um campo de forças simulado, renderizado quadro a quadro fora do tempo real.",
-    accent: "#ff2ec4",
-  },
+    "id": "008",
+    "slug": "affliction",
+    "title": "Affliction - Design Brutalista",
+    "year": 2023,
+    "category": "DESIGN",
+    "subtitle": "Design gráfico de inspiração brutalista",
+    "tools": [
+      "ILLUSTRATOR"
+    ],
+    "description": "Projeto de design gráfico de inspiração brutalista.",
+    "accent": "#ff2ec4",
+    "images": [
+      "/projects/affliction/01.webp",
+      "/projects/affliction/02.webp"
+    ],
+    "behanceUrl": "https://www.behance.net/gallery/185194855/Affliction-Design-Brutalista",
+    "videos": []
+  }
 ];
 
-export const categories: (ProjectCategory | "ALL")[] = [
-  "ALL",
-  "DESIGN",
-  "VIDEO",
-  "MOTION",
-  "BRANDING",
-  "EXPERIMENTAL",
-];
+export const categories: (ProjectCategory | "ALL")[] = ["ALL", ...new Set(projects.map((p) => p.category))];
 
 export function getProjectBySlug(slug: string) {
   return projects.find((p) => p.slug === slug);
