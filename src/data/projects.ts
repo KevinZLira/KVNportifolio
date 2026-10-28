@@ -64,7 +64,6 @@ export const projects: Project[] = [
     "description": "Projeto de design de produto e modelagem 3D de um computador com estética de ficção científica.",
     "accent": "#ff2ec4",
     "images": [
-      "/projects/pc-scifi/01.webp",
       "/projects/pc-scifi/02.webp",
       "/projects/pc-scifi/03.webp",
       "/projects/pc-scifi/04.webp"
@@ -85,7 +84,6 @@ export const projects: Project[] = [
     "description": "Projeto pessoal que explora a estética retrofuturista e a experiência de uso em jogos portáteis. O LunoBoy foi desenhado do zero, combinando formas nostálgicas com detalhes de cores marcantes.",
     "accent": "#ffd23f",
     "images": [
-      "/projects/lunoboy/01.webp",
       "/projects/lunoboy/02.webp",
       "/projects/lunoboy/03.webp"
     ],
@@ -110,8 +108,7 @@ export const projects: Project[] = [
     "images": [
       "/projects/better-experience-for-3ds/01.webp",
       "/projects/better-experience-for-3ds/02.webp",
-      "/projects/better-experience-for-3ds/03.webp",
-      "/projects/better-experience-for-3ds/04.webp"
+      "/projects/better-experience-for-3ds/03.webp"
     ],
     "behanceUrl": "https://www.behance.net/gallery/231478009/Better-experience-for-3DS",
     "videos": [

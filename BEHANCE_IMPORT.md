@@ -14,3 +14,5 @@ Eight public projects imported on 2026-10-28. Local images preserve the order of
 - Affliction - Design Brutalista: https://www.behance.net/gallery/185194855/Affliction-Design-Brutalista
 
 CHROMA, Medusa × Perseu, Aristóteles and Affliction appear as one collection, Design gráfico — Explorações, with four named sections and their original links. The archive has five entries. Former slugs resolve to the collection.
+
+The Bunker Machine, Luno Boy and Concept for Nintendo title covers are excluded from galleries and previews; 24 images remain displayed. Source files are retained.
