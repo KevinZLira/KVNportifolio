@@ -12,3 +12,5 @@ Eight public projects imported on 2026-10-28. Local images preserve the order of
 - Medusa X Perseu - Design: https://www.behance.net/gallery/185237697/Medusa-X-Perseu-Design
 - Aristóteles e seu pensamento empírico - Design: https://www.behance.net/gallery/185196543/Aristoteles-e-seu-pensamento-empirico-Design
 - Affliction - Design Brutalista: https://www.behance.net/gallery/185194855/Affliction-Design-Brutalista
+
+CHROMA, Medusa × Perseu, Aristóteles and Affliction appear as one collection, Design gráfico — Explorações, with four named sections and their original links. The archive has five entries. Former slugs resolve to the collection.

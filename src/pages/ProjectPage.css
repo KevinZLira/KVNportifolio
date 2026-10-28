@@ -185,3 +185,6 @@
 .project-source:hover { text-decoration: underline; }
 .project-nav { gap: 20px; }
 .project-nav-btn { min-width: 0; overflow-wrap: anywhere; }
+
+.project-collection-section { display: grid; gap: 16px; min-width: 0; }
+.project-piece-title { font-size: clamp(1.4rem, 4vw, 2.5rem); line-height: 1.1; overflow-wrap: anywhere; margin: 12px 0; }

@@ -72,7 +72,17 @@ export default function ProjectPage() {
       </header>
 
       <div className="project-gallery" aria-label={`Galeria de ${project.title}`}>
-        {project.images.map((src, index) => (
+        {project.sections ? project.sections.map((section) => (
+          <section key={section.slug} className="project-collection-section" aria-labelledby={`piece-${section.slug}`}>
+            <h2 id={`piece-${section.slug}`} className="project-piece-title t-display">{section.title}</h2>
+            {section.images.map((src, index) => (
+              <img key={src} src={src} alt={`${section.title} — imagem ${index + 1}`} loading="lazy" decoding="async" />
+            ))}
+            <a className="project-source t-mono" href={section.behanceUrl} target="_blank" rel="noopener noreferrer">
+              VER NO BEHANCE ↗
+            </a>
+          </section>
+        )) : project.images.map((src, index) => (
           <img key={src} src={src} alt={`${project.title} — imagem ${index + 1}`}
             loading={index === 0 ? "eager" : "lazy"} decoding="async" />
         ))}
@@ -81,9 +91,9 @@ export default function ProjectPage() {
             loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen />
         ))}
       </div>
-      <a className="project-source t-mono" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
+      {project.behanceUrl && <a className="project-source t-mono" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
         VER PROJETO NO BEHANCE ↗
-      </a>
+      </a>}
 
       <div className="project-body">
         <section className="project-section">

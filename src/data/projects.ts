@@ -17,7 +17,8 @@ export interface Project {
   accent: string;
   images: string[];
   videos: string[];
-  behanceUrl: string;
+  behanceUrl?: string;
+  sections?: { slug: string; title: string; images: string[]; behanceUrl: string; tools: string[] }[];
 }
 
 // Imported from Kevin Lira’s public Behance projects. Years are publication years.
@@ -119,84 +120,81 @@ export const projects: Project[] = [
   },
   {
     "id": "005",
-    "slug": "chroma",
-    "title": "Design - CHROMA",
+    "slug": "design-grafico-exploracoes",
+    "title": "Design gráfico — Explorações",
     "year": 2023,
     "category": "DESIGN",
-    "subtitle": "Design gráfico — CHROMA",
+    "subtitle": "CHROMA, Medusa × Perseu, Aristóteles e Affliction",
     "tools": [],
-    "description": "Projeto de design gráfico CHROMA.",
+    "description": "Uma coleção de quatro explorações em design gráfico: CHROMA, Medusa × Perseu, Aristóteles e Affliction.",
     "accent": "#ff2ec4",
     "images": [
       "/projects/chroma/01.webp",
-      "/projects/chroma/02.webp"
-    ],
-    "behanceUrl": "https://www.behance.net/gallery/185238925/Design-CHROMA",
-    "videos": []
-  },
-  {
-    "id": "006",
-    "slug": "medusa-perseu",
-    "title": "Medusa X Perseu - Design",
-    "year": 2023,
-    "category": "DESIGN",
-    "subtitle": "Design gráfico — Medusa e Perseu",
-    "tools": [],
-    "description": "Projeto de design gráfico com o tema Medusa e Perseu.",
-    "accent": "#ffd23f",
-    "images": [
+      "/projects/chroma/02.webp",
       "/projects/medusa-perseu/01.webp",
-      "/projects/medusa-perseu/02.webp"
-    ],
-    "behanceUrl": "https://www.behance.net/gallery/185237697/Medusa-X-Perseu-Design",
-    "videos": []
-  },
-  {
-    "id": "007",
-    "slug": "aristoteles",
-    "title": "Aristóteles e seu pensamento empírico - Design",
-    "year": 2023,
-    "category": "DESIGN",
-    "subtitle": "Design gráfico — filosofia e pensamento empírico",
-    "tools": [],
-    "description": "Projeto de design gráfico sobre Aristóteles e seu pensamento empírico.",
-    "accent": "#6dffa8",
-    "images": [
+      "/projects/medusa-perseu/02.webp",
       "/projects/aristoteles/01.webp",
-      "/projects/aristoteles/02.webp"
-    ],
-    "behanceUrl": "https://www.behance.net/gallery/185196543/Aristoteles-e-seu-pensamento-empirico-Design",
-    "videos": []
-  },
-  {
-    "id": "008",
-    "slug": "affliction",
-    "title": "Affliction - Design Brutalista",
-    "year": 2023,
-    "category": "DESIGN",
-    "subtitle": "Design gráfico de inspiração brutalista",
-    "tools": [
-      "ILLUSTRATOR"
-    ],
-    "description": "Projeto de design gráfico de inspiração brutalista.",
-    "accent": "#ff2ec4",
-    "images": [
+      "/projects/aristoteles/02.webp",
       "/projects/affliction/01.webp",
       "/projects/affliction/02.webp"
     ],
-    "behanceUrl": "https://www.behance.net/gallery/185194855/Affliction-Design-Brutalista",
-    "videos": []
+    "videos": [],
+    "sections": [
+      {
+        "slug": "chroma",
+        "title": "Design - CHROMA",
+        "images": [
+          "/projects/chroma/01.webp",
+          "/projects/chroma/02.webp"
+        ],
+        "behanceUrl": "https://www.behance.net/gallery/185238925/Design-CHROMA",
+        "tools": []
+      },
+      {
+        "slug": "medusa-perseu",
+        "title": "Medusa X Perseu - Design",
+        "images": [
+          "/projects/medusa-perseu/01.webp",
+          "/projects/medusa-perseu/02.webp"
+        ],
+        "behanceUrl": "https://www.behance.net/gallery/185237697/Medusa-X-Perseu-Design",
+        "tools": []
+      },
+      {
+        "slug": "aristoteles",
+        "title": "Aristóteles e seu pensamento empírico - Design",
+        "images": [
+          "/projects/aristoteles/01.webp",
+          "/projects/aristoteles/02.webp"
+        ],
+        "behanceUrl": "https://www.behance.net/gallery/185196543/Aristoteles-e-seu-pensamento-empirico-Design",
+        "tools": []
+      },
+      {
+        "slug": "affliction",
+        "title": "Affliction - Design Brutalista",
+        "images": [
+          "/projects/affliction/01.webp",
+          "/projects/affliction/02.webp"
+        ],
+        "behanceUrl": "https://www.behance.net/gallery/185194855/Affliction-Design-Brutalista",
+        "tools": [
+          "ILLUSTRATOR"
+        ]
+      }
+    ]
   }
 ];
 
 export const categories: (ProjectCategory | "ALL")[] = ["ALL", ...new Set(projects.map((p) => p.category))];
 
 export function getProjectBySlug(slug: string) {
-  return projects.find((p) => p.slug === slug);
+  return projects.find((p) => p.slug === slug || p.sections?.some((section) => section.slug === slug));
 }
 
 export function getAdjacentProjects(slug: string) {
-  const idx = projects.findIndex((p) => p.slug === slug);
+  const project = getProjectBySlug(slug);
+  const idx = projects.findIndex((p) => p === project);
   const prev = projects[(idx - 1 + projects.length) % projects.length];
   const next = projects[(idx + 1) % projects.length];
   return { prev, next };
