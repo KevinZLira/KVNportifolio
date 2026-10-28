@@ -4,13 +4,12 @@ import { getAdjacentProjects, getProjectBySlug } from "../data/projects";
 import { useSystem } from "../state/SystemContext";
 import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
-import MediaPreview from "../components/Media/MediaPreview";
 import "./ProjectPage.css";
 
 export default function ProjectPage() {
   const { slug = "" } = useParams();
   const navigate = useNavigate();
-  const { setSectionLabel, setCursorMode } = useSystem();
+  const { setSectionLabel } = useSystem();
   const { runTransition } = useTransition();
 
   const project = getProjectBySlug(slug);
@@ -27,7 +26,7 @@ export default function ProjectPage() {
         <button
           type="button"
           className="project-back"
-          onClick={() => navigate("/work")}
+          onClick={() => navigate("/#work")}
         >
           [ BACK TO DATABASE ]
         </button>
@@ -67,18 +66,34 @@ export default function ProjectPage() {
         <span className="project-tag t-mono">PROJECT FILE</span>
         <h1 className="project-title t-display">{project.title}</h1>
         <div className="project-meta t-mono">
-          <span>{project.category} / MOTION DESIGN</span>
+          <span>{project.category}</span>
           <span>{project.year}</span>
         </div>
       </header>
 
-      <div
-        className="project-media"
-        onMouseEnter={() => setCursorMode({ kind: "busy", label: "VIEW SEQUENCE" })}
-        onMouseLeave={() => setCursorMode({ kind: "default" })}
-      >
-        <MediaPreview accent={project.accent} id={project.id} label={project.title} />
+      <div className="project-gallery" aria-label={`Galeria de ${project.title}`}>
+        {project.sections ? project.sections.map((section) => (
+          <section key={section.slug} className="project-collection-section" aria-labelledby={`piece-${section.slug}`}>
+            <h2 id={`piece-${section.slug}`} className="project-piece-title t-display">{section.title}</h2>
+            {section.images.map((src, index) => (
+              <img key={src} src={src} alt={`${section.title} — imagem ${index + 1}`} loading="lazy" decoding="async" />
+            ))}
+            <a className="project-source t-mono" href={section.behanceUrl} target="_blank" rel="noopener noreferrer">
+              VER NO BEHANCE ↗
+            </a>
+          </section>
+        )) : project.images.map((src, index) => (
+          <img key={src} src={src} alt={`${project.title} — imagem ${index + 1}`}
+            loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+        ))}
+        {project.videos.map((src, index) => (
+          <iframe key={src} src={src} title={`${project.title} — vídeo ${index + 1}`}
+            loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen />
+        ))}
       </div>
+      {project.behanceUrl && <a className="project-source t-mono" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
+        VER PROJETO NO BEHANCE ↗
+      </a>}
 
       <div className="project-body">
         <section className="project-section">
@@ -86,7 +101,7 @@ export default function ProjectPage() {
           <p className="project-desc t-mono">{project.description}</p>
         </section>
 
-        <section className="project-section">
+        {project.tools.length > 0 && <section className="project-section">
           <h2 className="t-mono project-section-title">TOOLS</h2>
           <ul className="project-tools">
             {project.tools.map((tool) => (
@@ -95,7 +110,7 @@ export default function ProjectPage() {
               </li>
             ))}
           </ul>
-        </section>
+        </section>}
       </div>
 
       <nav className="project-nav t-mono">

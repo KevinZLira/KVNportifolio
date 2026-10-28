@@ -6,7 +6,6 @@ import { useSystem } from "../state/SystemContext";
 import { useTransition } from "../state/TransitionContext";
 import { sfx } from "../lib/sound";
 import { emitToast } from "../lib/toast";
-import MediaPreview from "../components/Media/MediaPreview";
 import "./WorkDatabase.css";
 
 export default function WorkDatabase() {
@@ -96,7 +95,7 @@ export default function WorkDatabase() {
               <div className="workdb-row-expand">
                 <div className="workdb-row-expand-inner">
                   <div className="workdb-preview">
-                    <MediaPreview accent={project.accent} id={project.id} interactive={false} />
+                    <img src={project.images[0]} alt={project.title} loading="lazy" decoding="async" />
                   </div>
                   <div className="workdb-details t-mono">
                     <p className="workdb-details-desc">{project.subtitle}</p>

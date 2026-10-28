@@ -5,7 +5,6 @@ import { getProjectBySlug, type Project } from "../../data/projects";
 import { useSystem } from "../../state/SystemContext";
 import { useTransition } from "../../state/TransitionContext";
 import { sfx } from "../../lib/sound";
-import MediaPreview from "../Media/MediaPreview";
 import "./CreativeSystem.css";
 
 // CREATIVE_SYSTEM — an alternative to OBJECT_VIEWER/TIME_FIELD: instead of
@@ -16,7 +15,7 @@ import "./CreativeSystem.css";
 // in front of the hero text (see CreativeSystem.css for the z-index story);
 // nothing here touches Hero.tsx's own text/layout beyond where it mounts.
 
-const FRAGMENT_SLUGS = ["mrblurryface", "nullpoint", "ghostwire-poster"];
+const FRAGMENT_SLUGS = ["prateleira-infinita", "pc-scifi", "lunoboy"];
 
 const STATUS_CYCLE = ["PROCESSING", "ARCHIVED", "LOADING", "STANDBY"];
 
@@ -87,7 +86,7 @@ function PreviewFragment({ project, className, index }: FragmentProps) {
       />
       <span className="cs-fragment-label t-mono">/ SIGNAL_{project.id}</span>
       <div className="cs-fragment-media">
-        <MediaPreview accent={project.accent} id={project.id} interactive={false} />
+        <img src={project.images[0]} alt={project.title} loading="lazy" decoding="async" />
       </div>
       <div className="cs-fragment-foot t-mono">
         <span className="cs-fragment-status">STATUS: {status}</span>
